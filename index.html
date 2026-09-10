@@ -48,7 +48,7 @@
         }
 
         .container {
-            max-width: 950px;
+            max-width: 1250px;
             margin: 0 auto;
         }
 
@@ -88,11 +88,10 @@
 
         .search-container {
             position: relative;
-            width: 260px;
+            width: 280px;
         }
 
-        .search-container input,
-        .filter-select {
+        .search-container input {
             width: 100%;
             padding: 10px 14px 10px 38px;
             border: 1px solid var(--border-color);
@@ -104,14 +103,7 @@
             font-family: 'Segoe UI', Tahoma, sans-serif;
         }
 
-        .filter-select {
-            padding-left: 14px;
-            width: 180px;
-            cursor: pointer;
-        }
-
-        .search-container input:focus,
-        .filter-select:focus {
+        .search-container input:focus {
             outline: none;
             border-color: var(--accent-color);
             box-shadow: 0 0 0 3px rgba(85, 122, 70, 0.15);
@@ -127,29 +119,80 @@
             pointer-events: none;
         }
 
-        .filter-pills-bar {
+        /* Layout principale con Sidebar a destra */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 25px;
+            align-items: start;
+        }
+
+        @media (max-width: 950px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Stile Accordion Sidebar */
+        .sidebar {
             display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 15px;
-            background: rgba(255, 255, 255, 0.6);
-            padding: 12px 15px;
-            border-radius: 10px;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .accordion-item {
+            background: var(--card-bg);
             border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(46, 64, 51, 0.04);
+        }
+
+        .accordion-header {
+            background: #fff;
+            padding: 15px 18px;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--primary-color);
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        .accordion-header:hover {
+            background: #f4f8f5;
+        }
+
+        .accordion-content {
+            display: none;
+            padding: 15px;
+            background: #fafcfb;
+            border-top: 1px solid var(--border-color);
+            flex-direction: column;
+            gap: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .accordion-item.active .accordion-content {
+            display: flex;
         }
 
         .filter-pill {
             background-color: #fff;
             color: var(--primary-color);
             border: 1px solid var(--border-color);
-            padding: 6px 14px;
+            padding: 8px 14px;
             border-radius: 20px;
             font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             font-family: 'Segoe UI', Tahoma, sans-serif;
+            text-align: left;
         }
 
         .filter-pill:hover {
@@ -162,14 +205,6 @@
             color: white;
             border-color: var(--primary-color);
             box-shadow: 0 2px 6px rgba(46, 64, 51, 0.2);
-        }
-
-        .filter-pill-label {
-            font-size: 0.85rem;
-            font-weight: bold;
-            color: var(--text-light);
-            margin-right: 5px;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
         }
 
         .btn-toggle-form {
@@ -513,98 +548,124 @@
                 <button class="btn-toggle-form" onclick="toggleForm()">
                     <span>🌱 Aggiungi un Nuovo Libro</span>
                 </button>
-                <select id="authorFilter" class="filter-select" onchange="renderLibrary()">
-                    <option value="">Tutti gli autori</option>
-                </select>
             </div>
         </header>
 
-        <!-- Barra Pulsanti Generi -->
-        <div class="filter-pills-bar" id="genrePillsBar">
-            <span class="filter-pill-label">Genere:</span>
-            <button class="filter-pill active" onclick="setGenreFilter('')">Tutti i generi</button>
-            <button class="filter-pill" onclick="setGenreFilter('Romanzi')">Romanzi</button>
-            <button class="filter-pill" onclick="setGenreFilter('Manga&Artbook')">Manga&Artbook</button>
-            <button class="filter-pill" onclick="setGenreFilter('Graphic Novel')">Graphic Novel</button>
-            <button class="filter-pill" onclick="setGenreFilter('Fanfiction')">Fanfiction</button>
-            <button class="filter-pill" onclick="setGenreFilter('Libri di Studio')">Libri di Studio</button>
-            <button class="filter-pill" onclick="setGenreFilter('Libri di musica')">Libri di musica</button>
-            <button class="filter-pill" onclick="setGenreFilter('Poesia')">Poesia</button>
-        </div>
+        <!-- Layout principale: Contenuto a sinistra, Sidebar a destra -->
+        <div class="main-layout">
+            <!-- Colonna Sinistra (Form e Catalogo) -->
+            <div class="main-content">
+                <div class="card" id="formCard">
+                    <h2>Aggiungi un Nuovo Libro</h2>
+                    
+                    <!-- Pulsante e box per la fotocamera scanner -->
+                    <button type="button" class="btn-scanner" onclick="avviaScanner()">📸 Scansiona Codice a Barre (ISBN)</button>
+                    <div id="reader-container">
+                        <div id="reader"></div>
+                        <button type="button" class="btn-delete" style="margin-top: 10px; width: 100%;" onclick="chiudiScanner()">Chiudi Fotocamera</button>
+                    </div>
 
-        <!-- Barra Pulsanti Lettore -->
-        <div class="filter-pills-bar" id="readerPillsBar">
-            <span class="filter-pill-label">Lettore:</span>
-            <button class="filter-pill active" onclick="setReaderFilter('')">Tutti</button>
-            <button class="filter-pill" onclick="setReaderFilter('Clo')">Letto da Clo</button>
-            <button class="filter-pill" onclick="setReaderFilter('Maki')">Letto da Maki</button>
-            <button class="filter-pill" onclick="setReaderFilter('Entrambi')">Entrambi</button>
-            <button class="filter-pill" onclick="setReaderFilter('Nessuno')">Non letto</button>
-        </div>
+                    <form id="bookForm">
+                        <div class="form-grid">
+                            <div class="form-group full">
+                                <label for="titolo">Titolo del libro *</label>
+                                <input type="text" id="titolo" required placeholder="es. Grandi Speranze">
+                            </div>
+                            <div class="form-group">
+                                <label for="autore">Autore *</label>
+                                <input type="text" id="autore" required placeholder="es. Charles Dickens">
+                            </div>
+                            <div class="form-group">
+                                <label for="genere">Genere Letterario</label>
+                                <select id="genere">
+                                    <option value="Romanzi">Romanzi</option>
+                                    <option value="Manga&Artbook">Manga&Artbook</option>
+                                    <option value="Graphic Novel">Graphic Novel</option>
+                                    <option value="Fanfiction">Fanfiction</option>
+                                    <option value="Libri di Studio">Libri di Studio</option>
+                                    <option value="Libri di musica">Libri di musica</option>
+                                    <option value="Poesia">Poesia</option>
+                                    <option value="Altro">Altro</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="editore">Casa Editrice</label>
+                                <input type="text" id="editore" placeholder="es. Feltrinelli">
+                            </div>
+                            <div class="form-group">
+                                <label for="anno">Anno di pubblicazione</label>
+                                <input type="text" id="anno" placeholder="es. 1861">
+                            </div>
+                            <div class="form-group">
+                                <label for="copie">Numero di copie</label>
+                                <input type="number" id="copie" min="1" value="1">
+                            </div>
+                            <div class="form-group full">
+                                <label for="lettoDa">Chi lo ha letto?</label>
+                                <select id="lettoDa">
+                                    <option value="Nessuno">Nessuno (Non ancora letto)</option>
+                                    <option value="Clo">Clo</option>
+                                    <option value="Maki">Maki</option>
+                                    <option value="Entrambi">Entrambi</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit">Salva nella Libreria</button>
+                    </form>
+                </div>
 
-        <div class="card" id="formCard">
-            <h2>Aggiungi un Nuovo Libro</h2>
-            
-            <!-- Pulsante e box per la fotocamera scanner -->
-            <button type="button" class="btn-scanner" onclick="avviaScanner()">📸 Scansiona Codice a Barre (ISBN)</button>
-            <div id="reader-container">
-                <div id="reader"></div>
-                <button type="button" class="btn-delete" style="margin-top: 10px; width: 100%;" onclick="chiudiScanner()">Chiudi Fotocamera</button>
+                <div class="card">
+                    <div class="stats" id="statsBar"></div>
+                    <div id="authorsList"></div>
+                </div>
             </div>
 
-            <form id="bookForm">
-                <div class="form-grid">
-                    <div class="form-group full">
-                        <label for="titolo">Titolo del libro *</label>
-                        <input type="text" id="titolo" required placeholder="es. Grandi Speranze">
+            <!-- Sidebar Destra con Accordion per i Filtri -->
+            <aside class="sidebar">
+                <!-- Accordion Autore -->
+                <div class="accordion-item" id="authorAccordion">
+                    <div class="accordion-header" onclick="toggleAccordion('authorAccordion')">
+                        <span>✍️ Filtra per Autore</span>
+                        <span>▾</span>
                     </div>
-                    <div class="form-group">
-                        <label for="autore">Autore *</label>
-                        <input type="text" id="autore" required placeholder="es. Charles Dickens">
-                    </div>
-                    <div class="form-group">
-                        <label for="genere">Genere Letterario</label>
-                        <select id="genere">
-                            <option value="Romanzi">Romanzi</option>
-                            <option value="Manga&Artbook">Manga&Artbook</option>
-                            <option value="Graphic Novel">Graphic Novel</option>
-                            <option value="Fanfiction">Fanfiction</option>
-                            <option value="Libri di Studio">Libri di Studio</option>
-                            <option value="Libri di musica">Libri di musica</option>
-                            <option value="Poesia">Poesia</option>
-                            <option value="Altro">Altro</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="editore">Casa Editrice</label>
-                        <input type="text" id="editore" placeholder="es. Feltrinelli">
-                    </div>
-                    <div class="form-group">
-                        <label for="anno">Anno di pubblicazione</label>
-                        <input type="text" id="anno" placeholder="es. 1861">
-                    </div>
-                    <div class="form-group">
-                        <label for="copie">Numero di copie</label>
-                        <input type="number" id="copie" min="1" value="1">
-                    </div>
-                    <div class="form-group full">
-                        <label for="lettoDa">Chi lo ha letto?</label>
-                        <select id="lettoDa">
-                            <option value="Nessuno">Nessuno (Non ancora letto)</option>
-                            <option value="Clo">Clo</option>
-                            <option value="Maki">Maki</option>
-                            <option value="Entrambi">Entrambi</option>
-                        </select>
+                    <div class="accordion-content" id="authorPillsBar">
+                        <!-- Popolato dinamicamente via JS -->
                     </div>
                 </div>
-                <button type="submit">Salva nella Libreria</button>
-            </form>
-        </div>
 
-        <div class="card">
-            <h2>📚 Catalogo per Autore</h2>
-            <div class="stats" id="statsBar"></div>
-            <div id="authorsList"></div>
+                <!-- Accordion Genere -->
+                <div class="accordion-item" id="genreAccordion">
+                    <div class="accordion-header" onclick="toggleAccordion('genreAccordion')">
+                        <span>🏷️ Filtra per Genere</span>
+                        <span>▾</span>
+                    </div>
+                    <div class="accordion-content" id="genrePillsBar">
+                        <button class="filter-pill active" onclick="setGenreFilter('')">Tutti i generi</button>
+                        <button class="filter-pill" onclick="setGenreFilter('Romanzi')">Romanzi</button>
+                        <button class="filter-pill" onclick="setGenreFilter('Manga&Artbook')">Manga&Artbook</button>
+                        <button class="filter-pill" onclick="setGenreFilter('Graphic Novel')">Graphic Novel</button>
+                        <button class="filter-pill" onclick="setGenreFilter('Fanfiction')">Fanfiction</button>
+                        <button class="filter-pill" onclick="setGenreFilter('Libri di Studio')">Libri di Studio</button>
+                        <button class="filter-pill" onclick="setGenreFilter('Libri di musica')">Libri di musica</button>
+                        <button class="filter-pill" onclick="setGenreFilter('Poesia')">Poesia</button>
+                    </div>
+                </div>
+
+                <!-- Accordion Lettore -->
+                <div class="accordion-item" id="readerAccordion">
+                    <div class="accordion-header" onclick="toggleAccordion('readerAccordion')">
+                        <span>👥 Filtra per Lettore</span>
+                        <span>▾</span>
+                    </div>
+                    <div class="accordion-content" id="readerPillsBar">
+                        <button class="filter-pill active" onclick="setReaderFilter('')">Tutti</button>
+                        <button class="filter-pill" onclick="setReaderFilter('Clo')">Letto da Clo</button>
+                        <button class="filter-pill" onclick="setReaderFilter('Maki')">Letto da Maki</button>
+                        <button class="filter-pill" onclick="setReaderFilter('Entrambi')">Entrambi</button>
+                        <button class="filter-pill" onclick="setReaderFilter('Nessuno')">Non letto</button>
+                    </div>
+                </div>
+            </aside>
         </div>
     </div>
 
@@ -764,16 +825,17 @@
 
         let selectedGenre = "";
         let selectedReader = "";
+        let selectedAuthor = "";
         let html5QrCode = null;
 
         const bookForm = document.getElementById('bookForm');
         const formCard = document.getElementById('formCard');
         const authorsList = document.getElementById('authorsList');
         const searchInput = document.getElementById('searchInput');
-        const authorFilter = document.getElementById('authorFilter');
         const statsBar = document.getElementById('statsBar');
         const genrePillsBar = document.getElementById('genrePillsBar');
         const readerPillsBar = document.getElementById('readerPillsBar');
+        const authorPillsBar = document.getElementById('authorPillsBar');
 
         function toggleForm() {
             if (formCard.style.display === 'block') {
@@ -782,6 +844,12 @@
             } else {
                 formCard.style.display = 'block';
             }
+        }
+
+        // --- GESTIONE ACCORDION ---
+        function toggleAccordion(accordionId) {
+            const item = document.getElementById(accordionId);
+            item.classList.toggle('active');
         }
 
         // --- GESTIONE FOTOCAMERA E SCANNER ISBN ---
@@ -827,11 +895,9 @@
             isbn = isbn.trim();
             alert("Codice scansionato: " + isbn + "\nCerco i dati del libro online...");
 
-            // Tentativo 1: Google Books
             let trovato = await cercaGoogleBooks(isbn);
             if (trovato) return;
 
-            // Tentativo 2: Open Library (Fallback se Google fallisce)
             let trovatoOpenLibrary = await cercaOpenLibrary(isbn);
             if (trovatoOpenLibrary) return;
 
@@ -922,6 +988,12 @@
             renderLibrary();
         }
 
+        function setAuthorFilter(author) {
+            selectedAuthor = author;
+            updateSelectOptions();
+            renderLibrary();
+        }
+
         bookForm.addEventListener('submit', function (e) {
             e.preventDefault();
 
@@ -959,21 +1031,20 @@
         }
 
         function updateSelectOptions() {
-            const currentAuthor = authorFilter.value;
             const authors = Array.from(new Set(libri.map(l => l.autore))).sort();
-            authorFilter.innerHTML = '<option value="">Tutti gli autori</option>';
+            
+            let html = `<button class="filter-pill ${selectedAuthor === '' ? 'active' : ''}" onclick="setAuthorFilter('')">Tutti gli autori</button>`;
+            
             authors.forEach(a => {
-                const opt = document.createElement('option');
-                opt.value = a;
-                opt.textContent = a;
-                if (a === currentAuthor) opt.selected = true;
-                authorFilter.appendChild(opt);
+                const isActive = (a === selectedAuthor) ? 'active' : '';
+                html += `<button class="filter-pill ${isActive}" onclick="setAuthorFilter('${a.replace(/'/g, "\\'")}')">${a}</button>`;
             });
+            
+            authorPillsBar.innerHTML = html;
         }
 
         function renderLibrary() {
             const searchTerm = searchInput.value.toLowerCase();
-            const selectedAuthor = authorFilter.value;
 
             const libriFiltrati = libri.filter(l => {
                 const matchSearch = l.autore.toLowerCase().includes(searchTerm) ||
@@ -992,12 +1063,11 @@
                 return matchSearch && matchAuthor && matchGenre && matchReader;
             });
 
-            const totalAutori = new Set(libri.map(l => l.autore)).size;
             const totalCopie = libri.reduce((sum, l) => sum + l.copie, 0);
             const totalLettiClo = libri.filter(l => l.lettoDa === 'Clo' || l.lettoDa === 'Entrambi').length;
             const totalLettiMaki = libri.filter(l => l.lettoDa === 'Maki' || l.lettoDa === 'Entrambi').length;
 
-            statsBar.innerHTML = `<span>Autori: ${totalAutori}</span><span>Volumi totali: ${totalCopie}</span><span>Letti Clo: ${totalLettiClo}</span><span>Letti Maki: ${totalLettiMaki}</span>`;
+            statsBar.innerHTML = `<span>Libri totali: ${totalCopie}</span><span>Letti Clo: ${totalLettiClo}</span><span>Letti Maki: ${totalLettiMaki}</span>`;
 
             if (libriFiltrati.length === 0) {
                 authorsList.innerHTML = `<div class="empty-state">Nessun libro trovato con i filtri selezionati.</div>`;
