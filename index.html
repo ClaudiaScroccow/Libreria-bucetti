@@ -360,6 +360,43 @@
             display: none;
         }
 
+        /* Box di emergenza per ricerca esterna */
+        #external-search-box {
+            display: none;
+            background: #fff8f0;
+            border: 1px solid #f3d1b0;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        #external-search-box p {
+            margin-bottom: 8px;
+            color: #8c501e;
+            font-weight: bold;
+        }
+
+        .store-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-store {
+            background: #232f3e;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .btn-store.ibs { background: #0052cc; }
+        .btn-store.google { background: #db4437; }
+
         .author-item {
             border: 1px solid var(--border-color);
             border-radius: 8px;
@@ -538,7 +575,6 @@
             gap: 10px;
         }
 
-        /* --- MEDIA QUERIES MOBILE --- */
         @media (max-width: 950px) {
             .main-layout {
                 display: flex;
@@ -594,6 +630,12 @@
                         <div id="reader-container">
                             <div id="reader"></div>
                             <button type="button" class="btn-delete" style="margin-top: 10px; width: 100%;" onclick="chiudiScanner()">Chiudi Fotocamera</button>
+                        </div>
+                        
+                        <!-- Box di emergenza che compare se il libro non viene trovato -->
+                        <div id="external-search-box">
+                            <p id="external-msg">⚠️ Libro non trovato nei database automatici.</p>
+                            <div class="store-links" id="storeLinksContainer"></div>
                         </div>
                     </div>
 
@@ -703,10 +745,10 @@
             { id: "1710000000006", titolo: "L'Ascesa del drago", autore: "George RR Martin", isbn: "", genere: "Romanzi", copie: 1, lettoDa: "Entrambi" }
         ];
 
-        let libri = JSON.parse(localStorage.getItem('libreria_calda_v8_9'));
+        let libri = JSON.parse(localStorage.getItem('libreria_calda_v9_0'));
         if (!libri || libri.length === 0) {
             libri = defaultBooks;
-            localStorage.setItem('libreria_calda_v8_9', JSON.stringify(libri));
+            localStorage.setItem('libreria_calda_v9_0', JSON.stringify(libri));
         }
 
         let selectedGenre = "";
@@ -722,11 +764,14 @@
         const genrePillsBar = document.getElementById('genrePillsBar');
         const readerPillsBar = document.getElementById('readerPillsBar');
         const authorPillsBar = document.getElementById('authorPillsBar');
+        const externalSearchBox = document.getElementById('external-search-box');
+        const storeLinksContainer = document.getElementById('storeLinksContainer');
 
         function toggleForm() {
             if (formCard.style.display === 'block' && document.getElementById('editId').value === '') {
                 formCard.style.display = 'none';
                 chiudiScanner();
+                nascondiBoxEsterno();
             } else {
                 resetFormToCreate();
                 formCard.style.display = 'block';
@@ -740,6 +785,12 @@
             document.getElementById('submitBtn').textContent = "Salva nella Libreria";
             document.getElementById('scanner-section').style.display = 'block';
             document.getElementById('cancelEditBtn').style.display = 'none';
+            nascondiBoxEsterno();
+        }
+
+        function nascondiBoxEsterno() {
+            externalSearchBox.style.display = 'none';
+            storeLinksContainer.innerHTML = '';
         }
 
         function toggleAccordion(accordionId) {
@@ -750,6 +801,7 @@
         function avviaScanner() {
             const container = document.getElementById('reader-container');
             container.style.display = 'block';
+            nascondiBoxEsterno();
             
             if (!html5QrCode) {
                 html5QrCode = new Html5Qrcode("reader");
@@ -781,21 +833,38 @@
             }
         }
 
-        // --- SISTEMA DI RICERCA A PIÙ LIVELLI ---
         async function cercaLibroAutomatico(query) {
             query = query.trim();
+            nascondiBoxEsterno();
             
-            // Se sembra un ISBN proviamo prima con l'ISBN su Google e OpenLibrary
             if (/^\d{10,13}$/.test(query)) {
                 document.getElementById('isbn').value = query;
                 if (await cercaGoogleBooksIsbn(query)) return;
                 if (await cercaOpenLibraryIsbn(query)) return;
+            } else {
+                if (await cercaGoogleBooksTesto(query)) return;
             }
 
-            // Se fallisce l'ISBN o la query è un testo (es. titolo inserito a mano), cerchiamo per parole chiave
-            if (await cercaGoogleBooksTesto(query)) return;
+            // Se fallisce ovunque, mostriamo i link di ricerca rapida esterni (Amazon, IBS, Google)
+            mostraOpzioniEsterne(query);
+        }
 
-            alert("Nessun risultato trovato online per: '" + query + "'. Puoi inserire titolo e autore manualmente.");
+        function mostraOpzioniEsterne(termine) {
+            externalSearchBox.style.display = 'block';
+            let encoded = encodeURIComponent(termine);
+            
+            storeLinksContainer.innerHTML = `
+                <a href="https://www.amazon.it/s?k=${encoded}" target="_blank" class="btn-store">Cerca su Amazon.it ↗</a>
+                <a href="https://www.ibs.it/search/?ts=ft&query=${encoded}" target="_blank" class="btn-store ibs">Cerca su IBS ↗</a>
+                <a href="https://www.google.com/search?q=libro+${encoded}" target="_blank" class="btn-store google">Cerca su Google ↗</a>
+            `;
+            
+            // Se è un ISBN lo impostiamo direttamente nel campo ISBN del form
+            if (/^\d{10,13}$/.test(termine)) {
+                document.getElementById('isbn').value = termine;
+            } else {
+                document.getElementById('titolo').value = termine;
+            }
         }
 
         async function cercaGoogleBooksIsbn(isbn) {
@@ -847,14 +916,13 @@
             if (info.title) document.getElementById('titolo').value = info.title;
             if (info.authors) document.getElementById('autore').value = info.authors.join(", ");
             if (item.id) {
-                // Se ha un identificativo ISBN neiindustry identifiers lo salviamo
                 let isbnObj = info.industryIdentifiers?.find(i => i.type === "ISBN_13" || i.type === "ISBN_10");
                 if (isbnObj) document.getElementById('isbn').value = isbnObj.identifier;
             }
         }
 
         function cercaPerTitoloWeb() {
-            let termine = prompt("Inserisci parte del Titolo o dell'Autore da cercare online:");
+            let termine = prompt("Inserisci il Titolo o l'Autore da cercare:");
             if (termine) {
                 cercaLibroAutomatico(termine);
             }
@@ -947,7 +1015,7 @@
         }
 
         function salvaEAggiorna() {
-            localStorage.setItem('libreria_calda_v8_9', JSON.stringify(libri));
+            localStorage.setItem('libreria_calda_v9_0', JSON.stringify(libri));
             updateSelectOptions();
             renderLibrary();
         }
