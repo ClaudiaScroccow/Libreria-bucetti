@@ -417,21 +417,18 @@
             padding: 14px 18px;
             margin-bottom: 10px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
             gap: 15px;
+        }
+
+        .book-details {
+            flex-grow: 1;
         }
 
         .book-info h4 {
             font-size: 1.05rem;
             color: var(--primary-color);
             margin-bottom: 4px;
-        }
-
-        .book-info p {
-            font-size: 0.9rem;
-            color: var(--text-light);
-            font-family: 'Segoe UI', Tahoma, sans-serif;
         }
 
         .book-tags {
@@ -466,15 +463,17 @@
         .book-actions {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             flex-shrink: 0;
+            flex-wrap: wrap;
+            justify-content: flex-end;
         }
 
         .copies-badge {
             background: #e8f0eb;
-            padding: 6px 12px;
+            padding: 6px 10px;
             border-radius: 6px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: bold;
             color: var(--primary-color);
             font-family: 'Segoe UI', Tahoma, sans-serif;
@@ -484,7 +483,7 @@
             background-color: var(--edit-color);
             color: white;
             border: none;
-            padding: 7px 12px;
+            padding: 7px 10px;
             border-radius: 6px;
             font-size: 0.85rem;
             cursor: pointer;
@@ -500,7 +499,7 @@
             background-color: var(--danger-color);
             color: white;
             border: none;
-            padding: 7px 12px;
+            padding: 7px 10px;
             border-radius: 6px;
             font-size: 0.85rem;
             cursor: pointer;
@@ -546,7 +545,7 @@
                     <input type="text" id="searchInput" placeholder="Cerca libro o autore..." oninput="renderLibrary()">
                 </div>
                 <button class="btn-toggle-form" onclick="toggleForm()">
-                    <span>🌱 Aggiungi un Nuovo Libro</span>
+                    <span> Aggiungi un Nuovo Libro</span>
                 </button>
             </div>
         </header>
@@ -557,7 +556,7 @@
                     <h2 id="formTitle">Aggiungi un Nuovo Libro</h2>
                     
                     <div id="scanner-section">
-                        <button type="button" class="btn-scanner" onclick="avviaScanner()">📸 Scansiona Codice a Barre (ISBN)</button>
+                        <button type="button" class="btn-scanner" onclick="avviaScanner()">Scansiona Codice a Barre (ISBN)</button>
                         <div id="reader-container">
                             <div id="reader"></div>
                             <button type="button" class="btn-delete" style="margin-top: 10px; width: 100%;" onclick="chiudiScanner()">Chiudi Fotocamera</button>
@@ -576,6 +575,10 @@
                                 <input type="text" id="autore" required placeholder="es. Charles Dickens">
                             </div>
                             <div class="form-group">
+                                <label for="isbn">Codice ISBN (opzionale)</label>
+                                <input type="text" id="isbn" placeholder="es. 9788804668268">
+                            </div>
+                            <div class="form-group">
                                 <label for="genere">Genere Letterario</label>
                                 <select id="genere">
                                     <option value="Romanzi">Romanzi</option>
@@ -587,14 +590,6 @@
                                     <option value="Poesia">Poesia</option>
                                     <option value="Altro">Altro</option>
                                 </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="editore">Casa Editrice</label>
-                                <input type="text" id="editore" placeholder="es. Feltrinelli">
-                            </div>
-                            <div class="form-group">
-                                <label for="anno">Anno di pubblicazione</label>
-                                <input type="text" id="anno" placeholder="es. 1861">
                             </div>
                             <div class="form-group">
                                 <label for="copie">Numero di copie</label>
@@ -666,22 +661,18 @@
 
     <script>
         const defaultBooks = [
-            { id: "1710000000001", titolo: "Oliver Twist", autore: "Charles Dickens", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
-            { id: "1710000000002", titolo: "David Copperfield", autore: "Charles Dickens", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
-            { id: "1710000000003", titolo: "Grandi speranze", autore: "Charles Dickens", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
-            { id: "1710000000004", titolo: "Il Circolo Pickwick", autore: "Charles Dickens", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
-            { id: "1710000000005", titolo: "Fuoco e Sangue", autore: "George RR Martin", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
-            { id: "1710000000006", titolo: "L'Ascesa del drago", autore: "George RR Martin", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
-            { id: "1710000000007", titolo: "Twilight", autore: "Stephanie Meyer", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
-            { id: "1710000000008", titolo: "New Moon", autore: "Stephanie Meyer", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
-            { id: "1710000000009", titolo: "Eclipse", autore: "Stephanie Meyer", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
-            { id: "1710000000010", titolo: "Breaking Dawn", autore: "Stephanie Meyer", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" }
+            { id: "1710000000001", titolo: "Oliver Twist", autore: "Charles Dickens", isbn: "", genere: "Romanzi", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000002", titolo: "David Copperfield", autore: "Charles Dickens", isbn: "", genere: "Romanzi", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000003", titolo: "Grandi speranze", autore: "Charles Dickens", isbn: "", genere: "Romanzi", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000004", titolo: "Il Circolo Pickwick", autore: "Charles Dickens", isbn: "", genere: "Romanzi", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000005", titolo: "Fuoco e Sangue", autore: "George RR Martin", isbn: "", genere: "Romanzi", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000006", titolo: "L'Ascesa del drago", autore: "George RR Martin", isbn: "", genere: "Romanzi", copie: 1, lettoDa: "Entrambi" }
         ];
 
-        let libri = JSON.parse(localStorage.getItem('libreria_calda_v8_6'));
+        let libri = JSON.parse(localStorage.getItem('libreria_calda_v8_8'));
         if (!libri || libri.length === 0) {
             libri = defaultBooks;
-            localStorage.setItem('libreria_calda_v8_6', JSON.stringify(libri));
+            localStorage.setItem('libreria_calda_v8_8', JSON.stringify(libri));
         }
 
         let selectedGenre = "";
@@ -758,7 +749,8 @@
 
         async function cercaLibroPerIsbn(isbn) {
             isbn = isbn.trim();
-            alert("Codice scansionato: " + isbn + "\nCerco i dati del libro online...");
+            document.getElementById('isbn').value = isbn;
+            alert("Codice scansionato: " + isbn + "\nCerco titolo e autore online...");
 
             let trovato = await cercaGoogleBooks(isbn);
             if (trovato) return;
@@ -766,7 +758,7 @@
             let trovatoOpenLibrary = await cercaOpenLibrary(isbn);
             if (trovatoOpenLibrary) return;
 
-            alert("Non sono riuscito a trovare automaticamente i dettagli con questo ISBN. Inseriscili manualmente nei campi sottostanti.");
+            alert("Dettagli automatici non trovati, compila i campi manualmente.");
         }
 
         async function cercaGoogleBooks(isbn) {
@@ -778,8 +770,6 @@
                     let info = dati.items[0].volumeInfo;
                     document.getElementById('titolo').value = info.title || "";
                     document.getElementById('autore').value = info.authors ? info.authors.join(", ") : "";
-                    document.getElementById('editore').value = info.publisher || "";
-                    document.getElementById('anno').value = info.publishedDate ? info.publishedDate.substring(0, 4) : "";
                     return true;
                 }
             } catch (e) {
@@ -795,8 +785,6 @@
                 const data = await response.json();
 
                 if (data.title) document.getElementById('titolo').value = data.title;
-                if (data.publishers && data.publishers.length > 0) document.getElementById('editore').value = data.publishers[0];
-                if (data.publish_date) document.getElementById('anno').value = data.publish_date;
 
                 if (data.authors && data.authors.length > 0) {
                     const authorKey = data.authors[0].key;
@@ -855,23 +843,20 @@
             const editId = document.getElementById('editId').value;
             const titolo = document.getElementById('titolo').value.trim();
             const autore = document.getElementById('autore').value.trim();
+            const isbn = document.getElementById('isbn').value.trim();
             const genere = document.getElementById('genere').value;
-            const editore = document.getElementById('editore').value.trim() || 'Non specificato';
-            const anno = document.getElementById('anno').value.trim() || 'Non specificato';
             const copie = parseInt(document.getElementById('copie').value) || 1;
             const lettoDa = document.getElementById('lettoDa').value;
 
             if (editId) {
-                // Modifica libro esistente
                 const index = libri.findIndex(l => l.id === editId);
                 if (index !== -1) {
-                    libri[index] = { ...libri[index], titolo, autore, genere, editore, anno, copie, lettoDa };
+                    libri[index] = { ...libri[index], titolo, autore, isbn, genere, copie, lettoDa };
                 }
             } else {
-                // Aggiunta nuovo libro
                 const nuovoLibro = {
                     id: Date.now().toString(),
-                    titolo, autore, genere, editore, anno, copie, lettoDa
+                    titolo, autore, isbn, genere, copie, lettoDa
                 };
                 libri.push(nuovoLibro);
             }
@@ -888,9 +873,8 @@
             document.getElementById('editId').value = libro.id;
             document.getElementById('titolo').value = libro.titolo;
             document.getElementById('autore').value = libro.autore;
+            document.getElementById('isbn').value = libro.isbn || '';
             document.getElementById('genere').value = libro.genere || 'Romanzi';
-            document.getElementById('editore').value = libro.editore;
-            document.getElementById('anno').value = libro.anno;
             document.getElementById('copie').value = libro.copie || 1;
             document.getElementById('lettoDa').value = libro.lettoDa || 'Nessuno';
 
@@ -904,7 +888,7 @@
         }
 
         function salvaEAggiorna() {
-            localStorage.setItem('libreria_calda_v8_6', JSON.stringify(libri));
+            localStorage.setItem('libreria_calda_v8_8', JSON.stringify(libri));
             updateSelectOptions();
             renderLibrary();
         }
@@ -934,7 +918,6 @@
             const libriFiltrati = libri.filter(l => {
                 const matchSearch = l.autore.toLowerCase().includes(searchTerm) ||
                     l.titolo.toLowerCase().includes(searchTerm) ||
-                    l.editore.toLowerCase().includes(searchTerm) ||
                     (l.genere && l.genere.toLowerCase().includes(searchTerm));
 
                 const matchAuthor = !selectedAuthor || l.autore === selectedAuthor;
@@ -1006,12 +989,13 @@
 
                     html += `
                         <div class="book-card">
-                            <div class="book-info">
-                                <h4>📜 ${libro.titolo}</h4>
-                                <p>Editore: <strong>${libro.editore}</strong> &bull; Anno: <strong>${libro.anno}</strong></p>
-                                <div class="book-tags">
-                                    <span class="genre-tag">🏷️ ${genere}</span>
-                                    <span class="read-status ${statusClass}">${statusText}</span>
+                            <div class="book-details">
+                                <div class="book-info">
+                                    <h4>📜 ${libro.titolo}</h4>
+                                    <div class="book-tags">
+                                        <span class="genre-tag">🏷️ ${genere}</span>
+                                        <span class="read-status ${statusClass}">${statusText}</span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="book-actions">
