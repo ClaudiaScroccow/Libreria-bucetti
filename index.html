@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Libreria Virtuale - Angolo Letterario</title>
+    <!-- Libreria per la scansione dei codici a barre tramite fotocamera -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <style>
+        :root {
+            --bg-color: #f3efe6;
+            --card-bg: #fffcf8;
+            --primary-color: #2e4033;
+            --accent-color: #557a46;
+            --accent-hover: #436136;
+            --danger-color: #b83b3b;
+            --danger-hover: #962f2f;
+            --text-color: #232c25;
+            --text-light: #607064;
+            --border-color: #d6e2d9;
+            --badge-bg: #e2ede5;
+            --badge-color: #314a36;
+            --clo-bg: #e1f5fe;
+            --clo-color: #01579b;
+            --maki-bg: #fce4ec;
+            --maki-color: #880e4f;
+            --both-bg: #e8f5e9;
+            --both-color: #1b5e20;
+            --unread-bg: #fce4d6;
+            --unread-color: #c65911;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Georgia', serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 30px 20px;
+            background-image: radial-gradient(#cbdad0 1px, transparent 1px), radial-gradient(#cbdad0 1px, var(--bg-color) 1px);
+            background-size: 32px 32px;
+            background-position: 0 0, 16px 16px;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 25px;
+            margin-bottom: 25px;
+            background: rgba(255, 255, 255, 0.75);
+            padding: 25px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(46, 64, 51, 0.05);
+        }
+
+        .header-titles h1 {
+            color: var(--primary-color);
+            font-size: 2.3rem;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .header-titles p {
+            color: var(--text-light);
+            font-size: 1.05rem;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .header-filters-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .search-container {
+            position: relative;
+            width: 260px;
+        }
+
+        .search-container input,
+        .filter-select {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background-color: #fff;
+            color: var(--text-color);
+            transition: all 0.2s;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        .filter-select {
+            padding-left: 14px;
+            width: 180px;
+            cursor: pointer;
+        }
+
+        .search-container input:focus,
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(85, 122, 70, 0.15);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 0.95rem;
+            pointer-events: none;
+        }
+
+        .filter-pills-bar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            align-items: center;
+        }
+
+        .filter-pill {
+            background-color: #fff;
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        .filter-pill:hover {
+            border-color: var(--accent-color);
+            background-color: #f0f5f1;
+        }
+
+        .filter-pill.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 6px rgba(46, 64, 51, 0.2);
+        }
+
+        .filter-pill-label {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--text-light);
+            margin-right: 5px;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        .btn-toggle-form {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 10px rgba(46, 64, 51, 0.1);
+        }
+
+        .btn-toggle-form:hover {
+            background-color: #213025;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 6px 15px rgba(46, 64, 51, 0.06);
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color);
+        }
+
+        #formCard {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            font-size: 1.35rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group.full {
+            grid-column: span 2;
+        }
+
+        label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: var(--primary-color);
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: #fff;
+            color: var(--text-color);
+            transition: all 0.2s;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(85, 122, 70, 0.15);
+        }
+
+        button[type="submit"] {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            width: 100%;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        button[type="submit"]:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-scanner {
+            background-color: #3b5998;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            transition: background 0.2s;
+        }
+
+        .btn-scanner:hover {
+            background-color: #2d4373;
+        }
+
+        #reader-container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto 15px auto;
+            display: none;
+        }
+
+        .author-item {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            background: var(--card-bg);
+            transition: box-shadow 0.2s;
+        }
+
+        .author-item:hover {
+            box-shadow: 0 4px 10px rgba(46, 64, 51, 0.05);
+        }
+
+        .author-header {
+            background: #fff;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        .author-header:hover {
+            background: #f4f8f5;
+        }
+
+        .author-name {
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .author-badge {
+            background: var(--badge-bg);
+            color: var(--badge-color);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        .author-content {
+            display: none;
+            padding: 15px 20px;
+            border-top: 1px solid var(--border-color);
+            background: #f5f9f6;
+        }
+
+        .author-item.active .author-content {
+            display: block;
+        }
+
+        .book-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .book-info h4 {
+            font-size: 1.05rem;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+
+        .book-info p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        .book-tags {
+            display: flex;
+            gap: 8px;
+            margin-top: 6px;
+            flex-wrap: wrap;
+        }
+
+        .genre-tag {
+            background: #e8f0eb;
+            color: var(--primary-color);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        .read-status {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        .read-status.clo {
+            background: var(--clo-bg);
+            color: var(--clo-color);
+        }
+
+        .read-status.maki {
+            background: var(--maki-bg);
+            color: var(--maki-color);
+        }
+
+        .read-status.entrambi {
+            background: var(--both-bg);
+            color: var(--both-color);
+        }
+
+        .read-status.nessuno {
+            background: var(--unread-bg);
+            color: var(--unread-color);
+        }
+
+        .book-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-shrink: 0;
+        }
+
+        .copies-badge {
+            background: #e8f0eb;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        .btn-delete {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 7px 14px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            width: auto;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            transition: background 0.2s;
+        }
+
+        .btn-delete:hover {
+            background-color: var(--danger-hover);
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text-light);
+            padding: 25px;
+            font-style: italic;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <div class="header-titles">
+                <h1>Biblioteca virtuale dei bucetti topolinetti 🌿</h1>
+                <p>Collezione letteraria e archivio delle letture di Clo & Maki</p>
+            </div>
+            <div class="header-filters-row">
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Cerca libro o autore..." oninput="renderLibrary()">
+                </div>
+                <button class="btn-toggle-form" onclick="toggleForm()">
+                    <span>🌱 Aggiungi un Nuovo Libro</span>
+                </button>
+                <select id="authorFilter" class="filter-select" onchange="renderLibrary()">
+                    <option value="">Tutti gli autori</option>
+                </select>
+            </div>
+        </header>
+
+        <!-- Barra Pulsanti Generi -->
+        <div class="filter-pills-bar" id="genrePillsBar">
+            <span class="filter-pill-label">Genere:</span>
+            <button class="filter-pill active" onclick="setGenreFilter('')">Tutti i generi</button>
+            <button class="filter-pill" onclick="setGenreFilter('Romanzi')">Romanzi</button>
+            <button class="filter-pill" onclick="setGenreFilter('Manga&Artbook')">Manga&Artbook</button>
+            <button class="filter-pill" onclick="setGenreFilter('Graphic Novel')">Graphic Novel</button>
+            <button class="filter-pill" onclick="setGenreFilter('Fanfiction')">Fanfiction</button>
+            <button class="filter-pill" onclick="setGenreFilter('Libri di Studio')">Libri di Studio</button>
+            <button class="filter-pill" onclick="setGenreFilter('Libri di musica')">Libri di musica</button>
+            <button class="filter-pill" onclick="setGenreFilter('Poesia')">Poesia</button>
+        </div>
+
+        <!-- Barra Pulsanti Lettore -->
+        <div class="filter-pills-bar" id="readerPillsBar">
+            <span class="filter-pill-label">Lettore:</span>
+            <button class="filter-pill active" onclick="setReaderFilter('')">Tutti</button>
+            <button class="filter-pill" onclick="setReaderFilter('Clo')">Letto da Clo</button>
+            <button class="filter-pill" onclick="setReaderFilter('Maki')">Letto da Maki</button>
+            <button class="filter-pill" onclick="setReaderFilter('Entrambi')">Entrambi</button>
+            <button class="filter-pill" onclick="setReaderFilter('Nessuno')">Non letto</button>
+        </div>
+
+        <div class="card" id="formCard">
+            <h2>Aggiungi un Nuovo Libro</h2>
+            
+            <!-- Pulsante e box per la fotocamera scanner -->
+            <button type="button" class="btn-scanner" onclick="avviaScanner()">📸 Scansiona Codice a Barre (ISBN)</button>
+            <div id="reader-container">
+                <div id="reader"></div>
+                <button type="button" class="btn-delete" style="margin-top: 10px; width: 100%;" onclick="chiudiScanner()">Chiudi Fotocamera</button>
+            </div>
+
+            <form id="bookForm">
+                <div class="form-grid">
+                    <div class="form-group full">
+                        <label for="titolo">Titolo del libro *</label>
+                        <input type="text" id="titolo" required placeholder="es. Grandi Speranze">
+                    </div>
+                    <div class="form-group">
+                        <label for="autore">Autore *</label>
+                        <input type="text" id="autore" required placeholder="es. Charles Dickens">
+                    </div>
+                    <div class="form-group">
+                        <label for="genere">Genere Letterario</label>
+                        <select id="genere">
+                            <option value="Romanzi">Romanzi</option>
+                            <option value="Manga&Artbook">Manga&Artbook</option>
+                            <option value="Graphic Novel">Graphic Novel</option>
+                            <option value="Fanfiction">Fanfiction</option>
+                            <option value="Libri di Studio">Libri di Studio</option>
+                            <option value="Libri di musica">Libri di musica</option>
+                            <option value="Poesia">Poesia</option>
+                            <option value="Altro">Altro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editore">Casa Editrice</label>
+                        <input type="text" id="editore" placeholder="es. Feltrinelli">
+                    </div>
+                    <div class="form-group">
+                        <label for="anno">Anno di pubblicazione</label>
+                        <input type="text" id="anno" placeholder="es. 1861">
+                    </div>
+                    <div class="form-group">
+                        <label for="copie">Numero di copie</label>
+                        <input type="number" id="copie" min="1" value="1">
+                    </div>
+                    <div class="form-group full">
+                        <label for="lettoDa">Chi lo ha letto?</label>
+                        <select id="lettoDa">
+                            <option value="Nessuno">Nessuno (Non ancora letto)</option>
+                            <option value="Clo">Clo</option>
+                            <option value="Maki">Maki</option>
+                            <option value="Entrambi">Entrambi</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit">Salva nella Libreria</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>📚 Catalogo per Autore</h2>
+            <div class="stats" id="statsBar"></div>
+            <div id="authorsList"></div>
+        </div>
+    </div>
+
+    <script>
+        const defaultBooks = [
+            { id: "1710000000001", titolo: "Oliver Twist", autore: "Charles Dickens", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000002", titolo: "David Copperfield", autore: "Charles Dickens", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000003", titolo: "Grandi speranze", autore: "Charles Dickens", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000004", titolo: "Il Circolo Pickwick", autore: "Charles Dickens", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000005", titolo: "Fuoco e Sangue", autore: "George RR Martin", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000006", titolo: "L'Ascesa del drago", autore: "George RR Martin", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000007", titolo: "Twilight", autore: "Stephanie Meyer", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000008", titolo: "New Moon", autore: "Stephanie Meyer", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000009", titolo: "Eclipse", autore: "Stephanie Meyer", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000010", titolo: "Breaking Dawn", autore: "Stephanie Meyer", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000011", titolo: "Hunger Games (versione baby 1,2,3)", autore: "Suzanne Collins", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000012", titolo: "Hunger Games", autore: "Suzanne Collins", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000013", titolo: "La ragazza di fuoco", autore: "Suzanne Collins", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000014", titolo: "Il canto della rivolta", autore: "Suzanne Collins", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000015", titolo: "L'alba della mietitura", autore: "Suzanne Collins", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000016", titolo: "La ballata dell'usignolo e del serpente", autore: "Suzanne Collins", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000017", titolo: "Katie", autore: "Michael McDowell", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000018", titolo: "Blackwater, La piena", autore: "Michael McDowell", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000019", titolo: "Blackwater, La diga", autore: "Michael McDowell", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000020", titolo: "Blackwater, La casa", autore: "Michael McDowell", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000021", titolo: "Blackwater, La guerra", autore: "Michael McDowell", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000022", titolo: "Blackwater, La fortuna", autore: "Michael McDowell", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000023", titolo: "Blackwater, La pioggia", autore: "Michael McDowell", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000024", titolo: "Gli aghi d'oro", autore: "Michael McDowell", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000025", titolo: "Luna Chiara su Babylon", autore: "Michael McDowell", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000026", titolo: "L'Amuleto", autore: "Michael McDowell", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000027", titolo: "Geno Hastor Venti e il sigillo nero di Madame Crikken", autore: "Moony Witcher", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000028", titolo: "Geno Hastor Venti e la runa bianca del Girifalco d'oro", autore: "Moony Witcher", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000029", titolo: "Geno Hastor Venti e lo specchio rosso della verità", autore: "Moony Witcher", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000030", titolo: "Tre ciotole, rituali per un anno di crisi", autore: "Michela Murgia", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000031", titolo: "Mrs. Dalloway", autore: "Virginia Woolf", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000032", titolo: "Il priorato dell'albero delle arance", autore: "Samantha Shannon", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000033", titolo: "ACE", autore: "Angela Chen", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000034", titolo: "Intelligenza Emotiva", autore: "Daniel Goleman", genere: "Libri di Studio", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000035", titolo: "Obsessive intrusive magical thinking", autore: "Marianne Eloise", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000036", titolo: "Piccolo Principe", autore: "Antoine de Saint Exupery", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 17, lettoDa: "Entrambi" },
+            { id: "1710000000037", titolo: "Codice 612: chi ha ucciso il piccolo principe?", autore: "Michel Bussi", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000038", titolo: "La masseria delle allodole", autore: "Antonia Arsaln", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000039", titolo: "Vathek", autore: "William Beckford", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000040", titolo: "La storia", autore: "Elsa Morante", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000041", titolo: "L'isola di Arturo", autore: "Elsa Morante", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000042", titolo: "Orgoglio e Pregiudizio", autore: "Jane Austen", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000043", titolo: "Il nome della rosa illustrato vol 1", autore: "Umberto Eco", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000044", titolo: "Il nome della rosa illustrato vol 2", autore: "Umberto Eco", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000045", titolo: "Memorie di Adriano", autore: "Marguerite Yourcenar", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000046", titolo: "L'occhio della mente", autore: "Oliver Sacks", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000047", titolo: "Vedere voci", autore: "Oliver Sacks", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000048", titolo: "Allucinazioni", autore: "Oliver Sacks", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000049", titolo: "L'uomo che scambio sua moglie per un cappello", autore: "Oliver Sacks", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000050", titolo: "Emicrania", autore: "Oliver Sacks", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000051", titolo: "Musicofilia", autore: "Oliver Sacks", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000052", titolo: "La sovrana lettrice", autore: "Alan Bennett", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000053", titolo: "Anna Karenina", autore: "Lev Tolstoj", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000054", titolo: "La morte di Ivan Il'ic", autore: "Lev Tolstoj", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000055", titolo: "Cime tempestose", autore: "Emily Bronte", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000056", titolo: "L'idiota", autore: "Fedor Dostoevskij", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000057", titolo: "Le notti bianche", autore: "Fedor Dostoevskij", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000058", titolo: "I fratelli Karamazov", autore: "Fedor Dostoevskij", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000059", titolo: "Gianni Rodari - Favole al telefono", autore: "Gianni Rodari", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000060", titolo: "L'insostenibile leggerezza dell'essere", autore: "Milan Kundera", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000061", titolo: "La lentezza", autore: "Milan Kundera", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000062", titolo: "Eugenides - Middle Sex", autore: "Jeffrey Eugenides", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000063", titolo: "Thomas Malory - Storia di Re Artù e i suoi cavalieri", autore: "Thomas Malory", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000064", titolo: "Gasperetti - La società dei giornalisti estinti", autore: "Gasperetti", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000065", titolo: "Valentina Meloni - Il destino ha la sua puntualità", autore: "Valentina Meloni", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000066", titolo: "Bradbury - Fahrenheit 451", autore: "Bradbury", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000067", titolo: "Harper Lee - Il buio oltre la siepe", autore: "Harper Lee", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000068", titolo: "Federigo Tozzi - Con gli occhi chiusi, ricordi di un impiegato", autore: "Federigo Tozzi", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000069", titolo: "Italo Svevo - La Coscienza di Zeno", autore: "Italo Svevo", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000070", titolo: "Bassani - Gli occhiali d'oro", autore: "Giorgio Bassani", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000071", titolo: "Bassani - Il giardino dei Finzi-Contini", autore: "Giorgio Bassani", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000072", titolo: "Elie Wiesel - La notte", autore: "Elie Wiesel", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000073", titolo: "Il processo di Shamgorod", autore: "Elie Wiesel", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000074", titolo: "Levi - Il sistema periodico", autore: "Primo Levi", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000075", titolo: "Levi - Se questo è un uomo", autore: "Primo Levi", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000076", titolo: "Levi - Sommersi e salvati", autore: "Primo Levi", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000077", titolo: "La tregua", autore: "Primo Levi", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000078", titolo: "Le Armi della notte", autore: "Vercors", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000079", titolo: "Heike riprende a respirare", autore: "Schneider", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000080", titolo: "Il rogo di Berlino", autore: "Schneider", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000081", titolo: "Lasciami andare, madre", autore: "Schneider", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000082", titolo: "Il codice di Perelà", autore: "Aldo Palazzeschi", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000083", titolo: "La rosa bianca", autore: "Paolo Ghezzi", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000084", titolo: "Il fu Mattia Pascal", autore: "Luigi Pirandello", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000085", titolo: "Lo strano caso del cane ucciso a mezzanotte", autore: "Haddon", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000086", titolo: "Una stanza piena di gente", autore: "Daniel Keyes", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000087", titolo: "La ragazza con l'orecchino di perla", autore: "Tracy Chevalier", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000088", titolo: "I diari di Seaport", autore: "Elisa Bertini", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000089", titolo: "Il Gladiatore, il figlio di Spartaco", autore: "Simon Scarrow", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000090", titolo: "I medici, la saga completa 4 volumi", autore: "Matteo Strukul", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000091", titolo: "Narciso e Boccadoro", autore: "Herman Hesse", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000092", titolo: "Pappagalli verdi", autore: "Gino Strada", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000093", titolo: "C'era una svolta, 18 favole con un finale diverso", autore: "Autore Sconosciuto", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000094", titolo: "Suite francese", autore: "Irene Nemirovsky", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000095", titolo: "La banalità del male", autore: "Hannah Arendt", genere: "Libri di Studio", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000096", titolo: "Follia", autore: "McGrath", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000097", titolo: "Dieci donne", autore: "Marcela Serrano", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000098", titolo: "Queste oscure materie la trilogia completa", autore: "Philip Pullman", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000099", titolo: "Il conte di Montecristo", autore: "Alexandre Dumas", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000100", titolo: "I tre moschettieri", autore: "Alexandre Dumas", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000101", titolo: "Vent'anni dopo", autore: "Alexandre Dumas", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000102", titolo: "Il Visconte Bragellone", autore: "Alexandre Dumas", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000103", titolo: "I Medici", autore: "Alexandre Dumas", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000104", titolo: "Appartamento 401", autore: "Yoshida Shuici", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000105", titolo: "Le vite dei più eccellenti pittori, scultori e architetti", autore: "Giorgio Vasari", genere: "Libri di Studio", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000106", titolo: "Candido", autore: "Voltaire", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000107", titolo: "Veronika decide di morire", autore: "Paulo Coelho", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000108", titolo: "Kitchen", autore: "Banana Yoshimoto", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000109", titolo: "Le strane storie di Fukiage", autore: "Banana Yoshimoto", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000110", titolo: "Uno studio in rosso", autore: "Arthur Conan Doyle", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000111", titolo: "Il mastino dei Baskerville", autore: "Arthur Conan Doyle", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000112", titolo: "Le avventure di Sherlock Holmes", autore: "Arthur Conan Doyle", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000113", titolo: "La valle della paura", autore: "Arthur Conan Doyle", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000114", titolo: "Il segno dei quattro", autore: "Arthur Conan Doyle", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000115", titolo: "Le ossa parlano", autore: "Antonio Manzini", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000116", titolo: "Il giorno della civetta", autore: "Leonardo Sciascia", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000117", titolo: "Il gattopardo", autore: "Tomani di Lampedua", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000118", titolo: "Amore e Orgasmo", autore: "Alexander Lowen", genere: "Libri di Studio", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000119", titolo: "Al di là del bene e del male", autore: "Friedrich Nietzsche", genere: "Libri di Studio", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000120", titolo: "Così parlò Zarathustra", autore: "Friedrich Nietzsche", genere: "Libri di Studio", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000121", titolo: "L'Anticristo", autore: "Friedrich Nietzsche", genere: "Libri di Studio", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000122", titolo: "Sull'utilità e il danno della storia", autore: "Friedrich Nietzsche", genere: "Libri di Studio", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000123", titolo: "La Gaia Scienza", autore: "Friedrich Nietzsche", genere: "Libri di Studio", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000124", titolo: "Fedro", autore: "Platone", genere: "Libri di Studio", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000125", titolo: "La settima lettera", autore: "Platone", genere: "Libri di Studio", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000126", titolo: "La nuova Atlantide", autore: "Francis Bacon", genere: "Libri di Studio", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000127", titolo: "Non dirlo: il vangelo di Marco", autore: "Sandro Veronesi", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000128", titolo: "La nuova manomissione delle parole", autore: "Gianrico Carofiglio", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000129", titolo: "L'uomo che sapeva contare", autore: "Malba Tahan", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000130", titolo: "Profumo", autore: "Patrick Suskind", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000131", titolo: "Secondo Natura", autore: "Eva Cantarella", genere: "Libri di Studio", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000132", titolo: "Come un romanzo", autore: "Daniel Pennac", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000133", titolo: "Mickey 7", autore: "Edward Ashton", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000134", titolo: "Il quinto figlio", autore: "Doris Lessing", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000135", titolo: "Omero in ascensore", autore: "Theodoros Papakostas", genere: "Libri di Studio", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000136", titolo: "Il cavaliere inesistente", autore: "Italo Calvino", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000137", titolo: "Il sentiero dei nidi di ragno", autore: "Italo Calvino", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000138", titolo: "Tomatràs", autore: "Bianca Pitzorono", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000139", titolo: "Trilogia di Sandokan", autore: "Emilio Salgari", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000140", titolo: "Il piccolo principe delle tenebre", autore: "Nicola Pesce", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000141", titolo: "Il grande Gatsby", autore: "F. Scott Fitzegerald", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Entrambi" },
+            { id: "1710000000142", titolo: "I Mabinogion - tetralogia", autore: "Evangeline Walton", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000143", titolo: "La sonnambula", autore: "Bianca Pitzorno", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" },
+            { id: "1710000000144", titolo: "La ballata di Rohan McCoy", autore: "Colin Morgan", genere: "Romanzi", editore: "Non specificato", anno: "Non specificato", copie: 1, lettoDa: "Nessuno" }
+        ];
+
+        let libri = JSON.parse(localStorage.getItem('libreria_calda_v8_6'));
+        if (!libri || libri.length === 0) {
+            libri = defaultBooks;
+            localStorage.setItem('libreria_calda_v8_6', JSON.stringify(libri));
+        }
+
+        let selectedGenre = "";
+        let selectedReader = "";
+        let html5QrCode = null;
+
+        const bookForm = document.getElementById('bookForm');
+        const formCard = document.getElementById('formCard');
+        const authorsList = document.getElementById('authorsList');
+        const searchInput = document.getElementById('searchInput');
+        const authorFilter = document.getElementById('authorFilter');
+        const statsBar = document.getElementById('statsBar');
+        const genrePillsBar = document.getElementById('genrePillsBar');
+        const readerPillsBar = document.getElementById('readerPillsBar');
+
+        function toggleForm() {
+            if (formCard.style.display === 'block') {
+                formCard.style.display = 'none';
+                chiudiScanner();
+            } else {
+                formCard.style.display = 'block';
+            }
+        }
+
+        // --- GESTIONE FOTOCAMERA E SCANNER ISBN ---
+        function avviaScanner() {
+            const container = document.getElementById('reader-container');
+            container.style.display = 'block';
+            
+            if (!html5QrCode) {
+                html5QrCode = new Html5Qrcode("reader");
+            }
+
+            html5QrCode.start(
+                { facingMode: "environment" }, 
+                {
+                    fps: 10,
+                    qrbox: { width: 250, height: 100 }
+                },
+                (decodedText, decodedResult) => {
+                    chiudiScanner();
+                    cercaLibroPerIsbn(decodedText);
+                },
+                (errorMessage) => {}
+            ).catch((err) => {
+                alert("Impossibile accedere alla fotocamera. Assicurati di aver dato i permessi o di usare una connessione sicura (HTTPS / localhost).");
+                console.error(err);
+            });
+        }
+
+        function chiudiScanner() {
+            if (html5QrCode && html5QrCode.isScanning) {
+                html5QrCode.stop().then(() => {
+                    document.getElementById('reader-container').style.display = 'none';
+                }).catch(err => {
+                    console.error("Errore nella chiusura dello scanner", err);
+                });
+            } else {
+                document.getElementById('reader-container').style.display = 'none';
+            }
+        }
+
+        async function cercaLibroPerIsbn(isbn) {
+            isbn = isbn.trim();
+            alert("Codice scansionato: " + isbn + "\nCerco i dati del libro...");
+
+            try {
+                const response = await fetch(`https://openlibrary.org/isbn/${isbn}.json`);
+                if (!response.ok) throw new Error("Libro non trovato nel database");
+                const data = await response.json();
+
+                if (data.title) {
+                    document.getElementById('titolo').value = data.title;
+                }
+
+                if (data.publishers && data.publishers.length > 0) {
+                    document.getElementById('editore').value = data.publishers[0];
+                }
+
+                if (data.publish_date) {
+                    document.getElementById('anno').value = data.publish_date;
+                }
+
+                if (data.authors && data.authors.length > 0) {
+                    const authorKey = data.authors[0].key;
+                    const authResponse = await fetch(`https://openlibrary.org${authorKey}.json`);
+                    if (authResponse.ok) {
+                        const authData = await authResponse.json();
+                        if (authData.name) {
+                            document.getElementById('autore').value = authData.name;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error(error);
+                alert("Non sono riuscito a trovare automaticamente i dettagli con questo ISBN. Inseriscili manualmente nei campi sottostanti.");
+            }
+        }
+
+        function setGenreFilter(genre) {
+            selectedGenre = genre;
+            const pills = genrePillsBar.querySelectorAll('.filter-pill');
+            pills.forEach(p => {
+                if ((genre === "" && p.textContent === "Tutti i generi") || p.textContent === genre) {
+                    p.classList.add('active');
+                } else {
+                    p.classList.remove('active');
+                }
+            });
+            renderLibrary();
+        }
+
+        function setReaderFilter(reader) {
+            selectedReader = reader;
+            const pills = readerPillsBar.querySelectorAll('.filter-pill');
+            pills.forEach(p => {
+                if ((reader === "" && p.textContent === "Tutti") ||
+                    (reader === "Clo" && p.textContent === "Letto da Clo") ||
+                    (reader === "Maki" && p.textContent === "Letto da Maki") ||
+                    (reader === "Entrambi" && p.textContent === "Entrambi") ||
+                    (reader === "Nessuno" && p.textContent === "Non letto")) {
+                    p.classList.add('active');
+                } else {
+                    p.classList.remove('active');
+                }
+            });
+            renderLibrary();
+        }
+
+        bookForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const nuovoLibro = {
+                id: Date.now().toString(),
+                titolo: document.getElementById('titolo').value.trim(),
+                autore: document.getElementById('autore').value.trim(),
+                genere: document.getElementById('genere').value,
+                editore: document.getElementById('editore').value.trim() || 'Non specificato',
+                anno: document.getElementById('anno').value.trim() || 'Non specificato',
+                copie: parseInt(document.getElementById('copie').value) || 1,
+                lettoDa: document.getElementById('lettoDa').value
+            };
+
+            libri.push(nuovoLibro);
+            salvaEAggiorna();
+            bookForm.reset();
+            document.getElementById('copie').value = 1;
+            document.getElementById('lettoDa').value = "Nessuno";
+            document.getElementById('genere').value = "Romanzi";
+            formCard.style.display = 'none';
+        });
+
+        function salvaEAggiorna() {
+            localStorage.setItem('libreria_calda_v8_6', JSON.stringify(libri));
+            updateSelectOptions();
+            renderLibrary();
+        }
+
+        function eliminaLibro(id) {
+            if (confirm("Vuoi rimuovere questo libro dalla libreria?")) {
+                libri = libri.filter(libro => libro.id !== id);
+                salvaEAggiorna();
+            }
+        }
+
+        function updateSelectOptions() {
+            const currentAuthor = authorFilter.value;
+            const authors = Array.from(new Set(libri.map(l => l.autore))).sort();
+            authorFilter.innerHTML = '<option value="">Tutti gli autori</option>';
+            authors.forEach(a => {
+                const opt = document.createElement('option');
+                opt.value = a;
+                opt.textContent = a;
+                if (a === currentAuthor) opt.selected = true;
+                authorFilter.appendChild(opt);
+            });
+        }
+
+        function renderLibrary() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedAuthor = authorFilter.value;
+
+            const libriFiltrati = libri.filter(l => {
+                const matchSearch = l.autore.toLowerCase().includes(searchTerm) ||
+                    l.titolo.toLowerCase().includes(searchTerm) ||
+                    l.editore.toLowerCase().includes(searchTerm) ||
+                    (l.genere && l.genere.toLowerCase().includes(searchTerm));
+
+                const matchAuthor = !selectedAuthor || l.autore === selectedAuthor;
+                const matchGenre = !selectedGenre || (l.genere || 'Non specificato') === selectedGenre;
+
+                let matchReader = true;
+                if (selectedReader) {
+                    matchReader = (l.lettoDa === selectedReader);
+                }
+
+                return matchSearch && matchAuthor && matchGenre && matchReader;
+            });
+
+            const totalAutori = new Set(libri.map(l => l.autore)).size;
+            const totalCopie = libri.reduce((sum, l) => sum + l.copie, 0);
+            const totalLettiClo = libri.filter(l => l.lettoDa === 'Clo' || l.lettoDa === 'Entrambi').length;
+            const totalLettiMaki = libri.filter(l => l.lettoDa === 'Maki' || l.lettoDa === 'Entrambi').length;
+
+            statsBar.innerHTML = `<span>Autori: ${totalAutori}</span><span>Volumi totali: ${totalCopie}</span><span>Letti Clo: ${totalLettiClo}</span><span>Letti Maki: ${totalLettiMaki}</span>`;
+
+            if (libriFiltrati.length === 0) {
+                authorsList.innerHTML = `<div class="empty-state">Nessun libro trovato con i filtri selezionati.</div>`;
+                return;
+            }
+
+            const autoriDict = {};
+            libriFiltrati.forEach(libro => {
+                if (!autoriDict[libro.autore]) {
+                    autoriDict[libro.autore] = [];
+                }
+                autoriDict[libro.autore].push(libro);
+            });
+
+            const autoriOrdinati = Object.keys(autoriDict).sort();
+            let html = '';
+
+            autoriOrdinati.forEach((autore) => {
+                const opere = autoriDict[autore];
+                const copieAutore = opere.reduce((sum, l) => sum + l.copie, 0);
+
+                let badgeText = `${opere.length}`;
+                if (copieAutore !== opere.length) {
+                    badgeText = `${opere.length} (${copieAutore})`;
+                }
+
+                html = html + `
+                    <div class="author-item">
+                        <div class="author-header" onclick="toggleAuthor(this)">
+                            <span class="author-name">📖 ${autore}</span>
+                            <span class="author-badge">${badgeText}</span>
+                        </div>
+                        <div class="author-content">
+                `;
+
+                opere.forEach(libro => {
+                    let statusClass = 'nessuno';
+                    let statusText = '⏳ Non letto';
+
+                    if (libro.lettoDa === 'Clo') {
+                        statusClass = 'clo';
+                        statusText = '👤 Letto da Clo';
+                    } else if (libro.lettoDa === 'Maki') {
+                        statusClass = 'maki';
+                        statusText = '👤 Letto da Maki';
+                    } else if (libro.lettoDa === 'Entrambi') {
+                        statusClass = 'entrambi';
+                        statusText = '👥 Letto da entrambi';
+                    }
+
+                    const genere = libro.genere || 'Non specificato';
+
+                    html = html + `
+                        <div class="book-card">
+                            <div class="book-info">
+                                <h4>📜 ${libro.titolo}</h4>
+                                <p>Editore: <strong>${libro.editore}</strong> &bull; Anno: <strong>${libro.anno}</strong></p>
+                                <div class="book-tags">
+                                    <span class="genre-tag">🏷️ ${genere}</span>
+                                    <span class="read-status ${statusClass}">${statusText}</span>
+                                </div>
+                            </div>
+                            <div class="book-actions">
+                                <span class="copies-badge">Copie: ${libro.copie}</span>
+                                <button class="btn-delete" onclick="eliminaLibro('${libro.id}')">Rimuovi</button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html = html + `</div></div>`;
+            });
+
+            authorsList.innerHTML = html;
+        }
+
+        function toggleAuthor(headerElement) {
+            const item = headerElement.parentElement;
+            const content = item.querySelector('.author-content');
+            if (content.style.display === 'block') {
+                content.style.display = 'none';
+            } else {
+                content.style.display = 'block';
+            }
+        }
+
+        updateSelectOptions();
+        renderLibrary();
+    </script>
+</body>
+
+</html>
