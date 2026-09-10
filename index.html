@@ -750,15 +750,21 @@
         async function cercaLibroPerIsbn(isbn) {
             isbn = isbn.trim();
             document.getElementById('isbn').value = isbn;
-            alert("Codice scansionato: " + isbn + "\nCerco titolo e autore online...");
+            console.log("ISBN scansionato:", isbn);
 
             let trovato = await cercaGoogleBooks(isbn);
-            if (trovato) return;
+            if (trovato) {
+                console.log("Trovato con Google Books!");
+                return;
+            }
 
             let trovatoOpenLibrary = await cercaOpenLibrary(isbn);
-            if (trovatoOpenLibrary) return;
+            if (trovatoOpenLibrary) {
+                console.log("Trovato con Open Library!");
+                return;
+            }
 
-            alert("Dettagli automatici non trovati, compila i campi manualmente.");
+            alert("Codice ISBN scansionato: " + isbn + "\nIl libro non è stato trovato nei database online (Google Books / Open Library). Compila i campi titolo e autore manualmente.");
         }
 
         async function cercaGoogleBooks(isbn) {
@@ -773,7 +779,7 @@
                     return true;
                 }
             } catch (e) {
-                console.log("Errore Google Books", e);
+                console.log("Errore Google Books:", e);
             }
             return false;
         }
@@ -796,7 +802,7 @@
                 }
                 return true;
             } catch (error) {
-                console.log("Errore Open Library", error);
+                console.log("Errore Open Library:", error);
             }
             return false;
         }
