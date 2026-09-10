@@ -111,27 +111,11 @@
             box-shadow: 0 0 0 3px rgba(85, 122, 70, 0.15);
         }
 
-        .search-icon {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-light);
-            font-size: 0.95rem;
-            pointer-events: none;
-        }
-
         .main-layout {
             display: grid;
             grid-template-columns: 1fr 320px;
             gap: 25px;
             align-items: start;
-        }
-
-        @media (max-width: 950px) {
-            .main-layout {
-                grid-template-columns: 1fr;
-            }
         }
 
         .sidebar {
@@ -243,14 +227,8 @@
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         h2 {
@@ -324,6 +302,13 @@
             background-color: var(--accent-hover);
         }
 
+        .scanner-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
         .btn-scanner {
             background-color: #3b5998;
             color: white;
@@ -333,16 +318,39 @@
             font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
-            margin-bottom: 15px;
             display: inline-flex;
             align-items: center;
             gap: 8px;
             font-family: 'Segoe UI', Tahoma, sans-serif;
             transition: background 0.2s;
+            flex: 1;
+            justify-content: center;
         }
 
         .btn-scanner:hover {
             background-color: #2d4373;
+        }
+
+        .btn-manual-search {
+            background-color: #4a5568;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            transition: background 0.2s;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .btn-manual-search:hover {
+            background-color: #2d3748;
         }
 
         #reader-container {
@@ -529,6 +537,29 @@
             flex-wrap: wrap;
             gap: 10px;
         }
+
+        /* --- MEDIA QUERIES MOBILE --- */
+        @media (max-width: 950px) {
+            .main-layout {
+                display: flex;
+                flex-direction: column-reverse;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 15px 10px; }
+            .header-titles h1 { font-size: 1.7rem; }
+            .form-grid { grid-template-columns: 1fr; }
+            .form-group.full { grid-column: span 1; }
+            .header-filters-row { flex-direction: column; width: 100%; }
+            .search-container { width: 100%; }
+            .btn-toggle-form { width: 100%; justify-content: center; }
+            .scanner-actions { flex-direction: column; }
+            .book-card { flex-direction: column; align-items: stretch; gap: 12px; }
+            .book-actions { justify-content: space-between; border-top: 1px solid var(--border-color); padding-top: 10px; }
+            .card { padding: 15px; }
+        }
     </style>
 </head>
 
@@ -545,7 +576,7 @@
                     <input type="text" id="searchInput" placeholder="Cerca libro o autore..." oninput="renderLibrary()">
                 </div>
                 <button class="btn-toggle-form" onclick="toggleForm()">
-                    <span> Aggiungi un Nuovo Libro</span>
+                    <span>➕ Aggiungi un Nuovo Libro</span>
                 </button>
             </div>
         </header>
@@ -556,7 +587,10 @@
                     <h2 id="formTitle">Aggiungi un Nuovo Libro</h2>
                     
                     <div id="scanner-section">
-                        <button type="button" class="btn-scanner" onclick="avviaScanner()">Scansiona Codice a Barre (ISBN)</button>
+                        <div class="scanner-actions">
+                            <button type="button" class="btn-scanner" onclick="avviaScanner()">📷 Scansiona ISBN</button>
+                            <button type="button" class="btn-manual-search" onclick="cercaPerTitoloWeb()">🔍 Cerca per Nome/Titolo</button>
+                        </div>
                         <div id="reader-container">
                             <div id="reader"></div>
                             <button type="button" class="btn-delete" style="margin-top: 10px; width: 100%;" onclick="chiudiScanner()">Chiudi Fotocamera</button>
@@ -669,10 +703,10 @@
             { id: "1710000000006", titolo: "L'Ascesa del drago", autore: "George RR Martin", isbn: "", genere: "Romanzi", copie: 1, lettoDa: "Entrambi" }
         ];
 
-        let libri = JSON.parse(localStorage.getItem('libreria_calda_v8_8'));
+        let libri = JSON.parse(localStorage.getItem('libreria_calda_v8_9'));
         if (!libri || libri.length === 0) {
             libri = defaultBooks;
-            localStorage.setItem('libreria_calda_v8_8', JSON.stringify(libri));
+            localStorage.setItem('libreria_calda_v8_9', JSON.stringify(libri));
         }
 
         let selectedGenre = "";
@@ -726,11 +760,11 @@
                 { fps: 10, qrbox: { width: 250, height: 100 } },
                 (decodedText, decodedResult) => {
                     chiudiScanner();
-                    cercaLibroPerIsbn(decodedText);
+                    cercaLibroAutomatico(decodedText);
                 },
                 (errorMessage) => {}
             ).catch((err) => {
-                alert("Impossibile accedere alla fotocamera. Assicurati di aver dato i permessi o di usare una connessione sicura (HTTPS / localhost).");
+                alert("Impossibile accedere alla fotocamera. Assicurati di usare HTTPS o localhost.");
                 console.error(err);
             });
         }
@@ -740,71 +774,90 @@
                 html5QrCode.stop().then(() => {
                     document.getElementById('reader-container').style.display = 'none';
                 }).catch(err => {
-                    console.error("Errore nella chiusura dello scanner", err);
+                    console.error("Errore chiusura scanner", err);
                 });
             } else {
                 document.getElementById('reader-container').style.display = 'none';
             }
         }
 
-        async function cercaLibroPerIsbn(isbn) {
-            isbn = isbn.trim();
-            document.getElementById('isbn').value = isbn;
-            console.log("ISBN scansionato:", isbn);
-
-            let trovato = await cercaGoogleBooks(isbn);
-            if (trovato) {
-                console.log("Trovato con Google Books!");
-                return;
+        // --- SISTEMA DI RICERCA A PIÙ LIVELLI ---
+        async function cercaLibroAutomatico(query) {
+            query = query.trim();
+            
+            // Se sembra un ISBN proviamo prima con l'ISBN su Google e OpenLibrary
+            if (/^\d{10,13}$/.test(query)) {
+                document.getElementById('isbn').value = query;
+                if (await cercaGoogleBooksIsbn(query)) return;
+                if (await cercaOpenLibraryIsbn(query)) return;
             }
 
-            let trovatoOpenLibrary = await cercaOpenLibrary(isbn);
-            if (trovatoOpenLibrary) {
-                console.log("Trovato con Open Library!");
-                return;
-            }
+            // Se fallisce l'ISBN o la query è un testo (es. titolo inserito a mano), cerchiamo per parole chiave
+            if (await cercaGoogleBooksTesto(query)) return;
 
-            alert("Codice ISBN scansionato: " + isbn + "\nIl libro non è stato trovato nei database online (Google Books / Open Library). Compila i campi titolo e autore manualmente.");
+            alert("Nessun risultato trovato online per: '" + query + "'. Puoi inserire titolo e autore manualmente.");
         }
 
-        async function cercaGoogleBooks(isbn) {
+        async function cercaGoogleBooksIsbn(isbn) {
             try {
-                let risposta = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`);
-                let dati = await risposta.json();
-
+                let res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`);
+                let dati = await res.json();
                 if (dati.totalItems > 0 && dati.items) {
-                    let info = dati.items[0].volumeInfo;
-                    document.getElementById('titolo').value = info.title || "";
-                    document.getElementById('autore').value = info.authors ? info.authors.join(", ") : "";
+                    riempiCampiDaGoogle(dati.items[0]);
                     return true;
                 }
-            } catch (e) {
-                console.log("Errore Google Books:", e);
-            }
+            } catch (e) { console.log("Errore Google ISBN", e); }
             return false;
         }
 
-        async function cercaOpenLibrary(isbn) {
+        async function cercaOpenLibraryIsbn(isbn) {
             try {
-                const response = await fetch(`https://openlibrary.org/isbn/${isbn}.json`);
-                if (!response.ok) return false;
-                const data = await response.json();
-
-                if (data.title) document.getElementById('titolo').value = data.title;
-
-                if (data.authors && data.authors.length > 0) {
-                    const authorKey = data.authors[0].key;
-                    const authResponse = await fetch(`https://openlibrary.org${authorKey}.json`);
-                    if (authResponse.ok) {
-                        const authData = await authResponse.json();
-                        if (authData.name) document.getElementById('autore').value = authData.name;
+                let res = await fetch(`https://openlibrary.org/isbn/${isbn}.json`);
+                if (!res.ok) return false;
+                let data = await res.json();
+                if (data.title) {
+                    document.getElementById('titolo').value = data.title;
+                    if (data.authors && data.authors.length > 0) {
+                        let authRes = await fetch(`https://openlibrary.org${data.authors[0].key}.json`);
+                        if (authRes.ok) {
+                            let authData = await authRes.json();
+                            if (authData.name) document.getElementById('autore').value = authData.name;
+                        }
                     }
+                    return true;
                 }
-                return true;
-            } catch (error) {
-                console.log("Errore Open Library:", error);
-            }
+            } catch (e) { console.log("Errore OpenLibrary ISBN", e); }
             return false;
+        }
+
+        async function cercaGoogleBooksTesto(testo) {
+            try {
+                let res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(testo)}`);
+                let dati = await res.json();
+                if (dati.totalItems > 0 && dati.items) {
+                    riempiCampiDaGoogle(dati.items[0]);
+                    return true;
+                }
+            } catch (e) { console.log("Errore Google Testo", e); }
+            return false;
+        }
+
+        function riempiCampiDaGoogle(item) {
+            let info = item.volumeInfo;
+            if (info.title) document.getElementById('titolo').value = info.title;
+            if (info.authors) document.getElementById('autore').value = info.authors.join(", ");
+            if (item.id) {
+                // Se ha un identificativo ISBN neiindustry identifiers lo salviamo
+                let isbnObj = info.industryIdentifiers?.find(i => i.type === "ISBN_13" || i.type === "ISBN_10");
+                if (isbnObj) document.getElementById('isbn').value = isbnObj.identifier;
+            }
+        }
+
+        function cercaPerTitoloWeb() {
+            let termine = prompt("Inserisci parte del Titolo o dell'Autore da cercare online:");
+            if (termine) {
+                cercaLibroAutomatico(termine);
+            }
         }
 
         function setGenreFilter(genre) {
@@ -894,7 +947,7 @@
         }
 
         function salvaEAggiorna() {
-            localStorage.setItem('libreria_calda_v8_8', JSON.stringify(libri));
+            localStorage.setItem('libreria_calda_v8_9', JSON.stringify(libri));
             updateSelectOptions();
             renderLibrary();
         }
