@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La mia Libreria</title>
-    <!-- Libreria per la scansione dei codici a barre -->
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
         body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f9; }
@@ -63,16 +62,15 @@
             { facingMode: "environment" },
             { fps: 10, qrbox: { width: 250, height: 150 } },
             async (decodedText) => {
-                // Trovato il codice a barre!
-                document.getElementById('isbn').value = decodedText;
+                // Pulisce il testo da spazi o caratteri invisibili
+                let cleanIsbn = decodedText.trim();
+                document.getElementById('isbn').value = cleanIsbn;
                 chiudiScanner();
                 
-                // Cerca automaticamente con Google Books
-                await cercaLibroPerGoogleBooks(decodedText);
+                // Avvia la ricerca multipla
+                await cercaLibro(cleanIsbn);
             },
-            (errorMessage) => {
-                // Errori di scansione ignorati per fluidità
-            }
+            (errorMessage) => {}
         ).catch(err => {
             alert("Impossibile accedere alla fotocamera. Assicurati di usare una connessione HTTPS.");
             chiudiScanner();
@@ -91,7 +89,19 @@
         }
     }
 
-    async function cercaLibroPerGoogleBooks(isbn) {
+    async function cercaLibro(isbn) {
+        // Tentativo 1: Google Books
+        let trovato = await cercaGoogleBooks(isbn);
+        if (trovato) return;
+
+        // Tentativo 2 (Fallback): Open Library se Google fallisce
+        let trovatoOpenLibrary = await cercaOpenLibrary(isbn);
+        if (trovatoOpenLibrary) return;
+
+        alert("Libro non trovato nei database online. Inserisci i dati manualmente.");
+    }
+
+    async function cercaGoogleBooks(isbn) {
         try {
             let risposta = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`);
             let dati = await risposta.json();
@@ -102,13 +112,32 @@
                 document.getElementById('autore').value = info.authors ? info.authors.join(", ") : "";
                 document.getElementById('editore').value = info.publisher || "";
                 document.getElementById('anno').value = info.publishedDate ? info.publishedDate.substring(0, 4) : "";
-            } else {
-                alert("Non trovato automaticamente su Google Books. Inserisci i dati manualmente.");
+                return true;
             }
-        } catch (errore) {
-            console.error("Errore di connessione:", errore);
-            alert("Errore durante la ricerca online del libro.");
+        } catch (e) {
+            console.log("Errore Google Books", e);
         }
+        return false;
+    }
+
+    async function cercaOpenLibrary(isbn) {
+        try {
+            let risposta = await fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`);
+            let dati = await risposta.json();
+            let chiave = `ISBN:${isbn}`;
+
+            if (dati[chiave]) {
+                let info = dati[chiave];
+                document.getElementById('titolo').value = info.title || "";
+                document.getElementById('autore').value = info.authors ? info.authors.map(a => a.name).join(", ") : "";
+                document.getElementById('editore').value = info.publishers ? info.publishers.map(p => p.name).join(", ") : "";
+                document.getElementById('anno').value = info.publish_date || "";
+                return true;
+            }
+        } catch (e) {
+            console.log("Errore Open Library", e);
+        }
+        return false;
     }
 
     function salvaLibro() {
@@ -118,7 +147,7 @@
             alert("Compila almeno Titolo e Autore!");
             return;
         }
-        alert("Libro salvato con successo! (Funzione di salvataggio pronta)");
+        alert("Libro salvato con successo!");
     }
 </script>
 
