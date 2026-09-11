@@ -1321,60 +1321,74 @@
             // Aggiorna lista autori nella sidebar
             const autoriUnici = [...new Set(libri.map(l => l.autore))].sort();
             authorPillsBar.innerHTML = `<button class="filter-pill ${selectedAuthor === '' ? 'active' : ''}" onclick="setAuthorFilter('')"><span>Tutti gli autori</span></button>`;
-            autoriUnici.forEach(aut => {
-                const count = libri.filter(l => l.autore === aut).length;
-                const activeClass = selectedAuthor === aut ? 'active' : '';
-                authorPillsBar.innerHTML += `<button class="filter-pill ${activeClass}" onclick="setAuthorFilter('${aut.replace(/'/g, "\\'")}')"><span>${aut}</span> <span class="author-badge">${count}</span></button>`;
+            
+            autoriUnici.forEach(autore => {
+                const count = libri.filter(l => l.autore === autore).length;
+                authorPillsBar.innerHTML += `<button class="filter-pill ${selectedAuthor === autore ? 'active' : ''}" onclick="setAuthorFilter('${autore.replace(/'/g, "\\'")}')"><span>${autore}</span><span class="author-badge">${count}</span></button>`;
             });
 
-            // Raggruppa per autore
-            const raggruppati = {};
-            filtrati.forEach(l => {
-                if (!raggruppati[l.autore]) raggruppati[l.autore] = [];
-                raggruppati[l.autore].push(l);
-            });
-
-            if (Object.keys(raggruppati).length === 0) {
-                authorsList.innerHTML = `<div class="empty-state">Nessun libro trovato con i filtri correnti.</div>`;
+            if (filtrati.length === 0) {
+                authorsList.innerHTML = `<div class="empty-state">Nessun libro trovato con i filtri selezionati.</div>`;
                 return;
             }
 
-            authorsList.innerHTML = '';
-            for (const [autore, books] of Object.entries(raggruppati).sort()) {
-                let booksHtml = '';
-                books.forEach(b => {
-                    const status = b.lettoDa || 'Nessuno';
-                    booksHtml += `
+            // Raggruppa per autore
+            const autoriFiltrati = [...new Set(filtrati.map(l => l.autore))].sort();
+            
+            let html = '';
+            autoriFiltrati.forEach(autore => {
+                const libriAutore = filtrati.filter(l => l.autore === autore);
+                const isAuthorActive = selectedAuthor === autore || autoriFiltrati.length === 1;
+                
+                html += `
+                    <div class="author-item ${isAuthorActive ? 'active' : ''}">
+                        <div class="author-header" onclick="this.parentElement.classList.toggle('active')">
+                            <div class="author-name">
+                                <span>${autore}</span>
+                                <span class="author-badge">${libriAutore.length}</span>
+                            </div>
+                            <span>▾</span>
+                        </div>
+                        <div class="author-content">
+                `;
+
+                libriAutore.forEach(libro => {
+                    let statusClass = 'nessuno';
+                    let statusText = 'Non letto';
+                    if (libro.lettoDa === 'Clo') { statusClass = 'clo'; statusText = 'Letto da Clo'; }
+                    else if (libro.lettoDa === 'Maki') { statusClass = 'maki'; statusText = 'Letto da Maki'; }
+                    else if (libro.lettoDa === 'Entrambi') { statusClass = 'entrambi'; statusText = 'Letto da Entrambi'; }
+
+                    html += `
                         <div class="book-card">
                             <div class="book-info">
-                                <h4>${b.titolo}</h4>
+                                <h4>${libro.titolo}</h4>
                                 <div class="book-tags">
-                                    <span class="genre-tag">${b.genere || 'Altro'}</span>
-                                    <span class="read-status ${status.toLowerCase()}">${status}</span>
-                                    ${b.copie > 1 ? `<span class="genre-tag">Copie: ${b.copie}</span>` : ''}
+                                    <span class="genre-tag">${libro.genere || 'Romanzi'}</span>
+                                    <span class="read-status ${statusClass}">${statusText}</span>
+                                    ${libro.copie > 1 ? `<span class="genre-tag">Copie: ${libro.copie}</span>` : ''}
                                 </div>
                             </div>
                             <div class="book-actions">
-                                <button class="btn-edit" onclick="modificaLibro('${b.id}')">Modifica</button>
-                                <button class="btn-delete" onclick="eliminaLibro('${b.id}')">Elimina</button>
+                                <button class="btn-edit" onclick="modificaLibro('${libro.id}')">Modifica</button>
+                                <button class="btn-delete" onclick="eliminaLibro('${libro.id}')">Elimina</button>
                             </div>
                         </div>
                     `;
                 });
 
-                authorsList.innerHTML += `
-                    <div class="author-item">
-                        <div class="author-header" onclick="this.parentElement.classList.toggle('active')">
-                            <div class="author-name">✍️ ${autore} <span class="author-badge">${books.length}</span></div>
-                            <span>▾</span>
+                html += `
                         </div>
-                        <div class="author-content">${booksHtml}</div>
                     </div>
                 `;
-            }
+            });
+
+            authorsList.innerHTML = html;
         }
 
+        // Avvio iniziale
         renderLibrary();
     </script>
 </body>
+
 </html>
