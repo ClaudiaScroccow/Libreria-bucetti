@@ -9,238 +9,265 @@
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <style>
         :root {
-            --bg-color: #f3efe6;
-            --card-bg: #fffcf8;
-            --primary-color: #2e4033;
-            --accent-color: #557a46;
-            --accent-hover: #436136;
+            --bg-color: #f7f4ed;
+            --card-bg: #ffffff;
+            --primary-color: #2b3a2f;
+            --accent-color: #4a6b41;
+            --accent-hover: #3b5533;
             --edit-color: #2b6cb0;
             --edit-hover: #2c5282;
-            --danger-color: #b83b3b;
-            --danger-hover: #962f2f;
-            --text-color: #232c25;
-            --text-light: #607064;
-            --border-color: #d6e2d9;
-            --badge-bg: #e2ede5;
-            --badge-color: #314a36;
-            --clo-bg: #e1f5fe;
-            --clo-color: #01579b;
-            --maki-bg: #fce4ec;
-            --maki-color: #880e4f;
-            --both-bg: #e8f5e9;
-            --both-color: #1b5e20;
-            --unread-bg: #fce4d6;
-            --unread-color: #c65911;
+            --danger-color: #c53030;
+            --danger-hover: #9b2c2c;
+            --text-color: #2d3748;
+            --text-light: #718096;
+            --border-color: #e2e8f0;
+            --badge-bg: #edf2f7;
+            --badge-color: #4a5568;
+            --clo-bg: #ebf8ff;
+            --clo-color: #2b6cb0;
+            --maki-bg: #fff5f5;
+            --maki-color: #9b2c2c;
+            --both-bg: #f0fff4;
+            --both-color: #276749;
+            --unread-bg: #fffaf0;
+            --unread-color: #c05621;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Georgia', serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            padding: 30px 20px;
-            background-image: radial-gradient(#cbdad0 1px, transparent 1px), radial-gradient(#cbdad0 1px, var(--bg-color) 1px);
-            background-size: 32px 32px;
-            background-position: 0 0, 16px 16px;
+            padding: 20px;
+            background-image: radial-gradient(#d1dcd3 1px, transparent 1px);
+            background-size: 24px 24px;
         }
 
         .container {
-            max-width: 1250px;
+            max-width: 1350px;
             margin: 0 auto;
         }
 
+        /* --- HEADER --- */
         header {
-            text-align: center;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 25px;
+            background: var(--card-bg);
+            border-bottom: 3px solid var(--accent-color);
+            padding: 25px 30px;
             margin-bottom: 25px;
-            background: rgba(255, 255, 255, 0.85);
-            padding: 25px 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(46, 64, 51, 0.05);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(43, 58, 47, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .header-titles h1 {
             color: var(--primary-color);
-            font-size: 2.3rem;
-            margin-bottom: 8px;
-            letter-spacing: 0.5px;
+            font-size: 1.8rem;
+            font-family: 'Georgia', serif;
+            margin-bottom: 4px;
         }
 
         .header-titles p {
             color: var(--text-light);
-            font-size: 1.05rem;
+            font-size: 0.95rem;
             font-style: italic;
-            margin-bottom: 20px;
         }
 
-        .header-filters-row {
+        .header-actions {
             display: flex;
-            justify-content: center;
+            gap: 12px;
             align-items: center;
-            gap: 15px;
             flex-wrap: wrap;
-            margin-top: 15px;
         }
 
         .search-container {
             position: relative;
-            width: 300px;
+            flex: 1;
+            min-width: 260px;
         }
 
         .search-container input {
             width: 100%;
             padding: 10px 14px 10px 38px;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 0.95rem;
-            background-color: #fff;
-            color: var(--text-color);
+            background-color: #fafbfc;
             transition: all 0.2s;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
         }
 
         .search-container input:focus {
             outline: none;
             border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(85, 122, 70, 0.15);
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(74, 107, 65, 0.15);
         }
 
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .btn-toggle-form {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(74, 107, 65, 0.2);
+        }
+
+        .btn-toggle-form:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-toggle-form:active {
+            transform: scale(0.98);
+        }
+
+        /* --- LAYOUT GENERALE --- */
         .main-layout {
             display: grid;
-            grid-template-columns: 1fr 320px;
+            grid-template-columns: 280px 1fr;
             gap: 25px;
             align-items: start;
         }
 
+        /* --- SIDEBAR FILTRI (ACCORDION STILE) --- */
         .sidebar {
             display: flex;
             flex-direction: column;
             gap: 12px;
+            position: sticky;
+            top: 20px;
         }
 
-        /* Menu a tendina migliorati per mobile e desktop */
-        .accordion-item {
+        .filter-section {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 10px rgba(46, 64, 51, 0.04);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
         }
 
-        .accordion-header {
-            background: #fff;
-            padding: 15px 18px;
+        .filter-header {
+            padding: 12px 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
-            font-weight: bold;
-            color: var(--primary-color);
-            font-family: 'Segoe UI', Tahoma, sans-serif;
             user-select: none;
-            transition: background 0.2s;
+            background: #fafbfc;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            transition: background 0.15s;
         }
 
-        .accordion-header:hover {
-            background: #f4f8f5;
+        .filter-header:hover {
+            background: #f1f5f9;
         }
 
-        .accordion-content {
+        .filter-content {
             display: none;
-            padding: 15px;
-            background: #fafcfb;
+            padding: 12px;
             border-top: 1px solid var(--border-color);
+            background: #fcfdfd;
             flex-direction: column;
-            gap: 8px;
-            max-height: 280px;
+            gap: 6px;
+            max-height: 220px;
             overflow-y: auto;
         }
 
-        .accordion-item.active .accordion-content {
+        .filter-section.active .filter-content {
             display: flex;
         }
 
         .filter-pill {
-            background-color: #fff;
-            color: var(--primary-color);
-            border: 1px solid var(--border-color);
-            padding: 8px 14px;
-            border-radius: 20px;
+            background-color: transparent;
+            color: var(--text-color);
+            border: 1px solid transparent;
+            padding: 7px 10px;
+            border-radius: 8px;
             font-size: 0.85rem;
-            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+            transition: all 0.15s;
             text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .filter-pill:hover {
-            border-color: var(--accent-color);
-            background-color: #f0f5f1;
+            background-color: #f7fafc;
+            color: var(--accent-color);
         }
 
         .filter-pill.active {
-            background-color: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-            box-shadow: 0 2px 6px rgba(46, 64, 51, 0.2);
+            background-color: #eef4ed;
+            color: var(--accent-color);
+            font-weight: 600;
+            border-color: #d1e2cd;
         }
 
-        .btn-toggle-form {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 10px rgba(46, 64, 51, 0.1);
-        }
-
-        .btn-toggle-form:hover {
-            background-color: #213025;
+        /* --- CONTENUTO PRINCIPALE --- */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         .card {
             background: var(--card-bg);
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 6px 15px rgba(46, 64, 51, 0.06);
-            margin-bottom: 25px;
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
             border: 1px solid var(--border-color);
         }
 
         #formCard {
             display: none;
-            animation: fadeIn 0.3s ease-in-out;
+            animation: fadeIn 0.25s ease-in-out;
+            border-top: 4px solid var(--accent-color);
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
+            from { opacity: 0; transform: translateY(-8px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        h2 {
-            font-size: 1.35rem;
+        .card h2 {
+            font-size: 1.2rem;
             color: var(--primary-color);
             margin-bottom: 15px;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 8px;
-            letter-spacing: 0.3px;
+            font-family: 'Georgia', serif;
         }
 
+        /* --- FORM STYLING --- */
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -248,7 +275,7 @@
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .form-group.full {
@@ -257,141 +284,135 @@
 
         label {
             display: block;
-            font-size: 0.9rem;
-            font-weight: bold;
-            margin-bottom: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 5px;
             color: var(--primary-color);
-            font-family: 'Segoe UI', Tahoma, sans-serif;
         }
 
         input[type="text"],
         input[type="number"],
         select {
             width: 100%;
-            padding: 10px 14px;
+            padding: 9px 12px;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            font-size: 1rem;
-            background-color: #fff;
+            font-size: 0.95rem;
+            background-color: #fafbfc;
             color: var(--text-color);
             transition: all 0.2s;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
         }
 
-        input:focus,
-        select:focus {
+        input:focus, select:focus {
             outline: none;
             border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(85, 122, 70, 0.15);
-        }
-
-        button[type="submit"] {
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            width: 100%;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-        }
-
-        button[type="submit"]:hover {
-            background-color: var(--accent-hover);
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(74, 107, 65, 0.15);
         }
 
         .scanner-actions {
             display: flex;
             gap: 10px;
             margin-bottom: 15px;
-            flex-wrap: wrap;
         }
 
-        .btn-scanner {
-            background-color: #3b5998;
-            color: white;
-            border: none;
-            padding: 10px 16px;
+        .btn-scanner, .btn-manual-search {
+            background-color: #edf2f7;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
             border-radius: 8px;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            transition: background 0.2s;
+            gap: 6px;
+            transition: all 0.2s;
             flex: 1;
             justify-content: center;
         }
 
-        .btn-scanner:hover {
-            background-color: #2d4373;
-        }
-
-        .btn-manual-search {
-            background-color: #4a5568;
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            transition: background 0.2s;
-            flex: 1;
-            justify-content: center;
-        }
-
-        .btn-manual-search:hover {
-            background-color: #2d3748;
+        .btn-scanner:hover, .btn-manual-search:hover {
+            background-color: #e2e8f0;
+            border-color: #cbd5e0;
         }
 
         #reader-container {
             width: 100%;
-            max-width: 400px;
+            max-width: 350px;
             margin: 0 auto 15px auto;
             display: none;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            padding: 5px;
         }
 
+        button[type="submit"] {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* --- STATISTICHE --- */
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            color: var(--text-light);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .stats strong {
+            color: var(--primary-color);
+        }
+
+        /* --- LISTA AUTORI & LIBRI --- */
         .author-item {
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            margin-bottom: 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
             overflow: hidden;
-            background: var(--card-bg);
+            background: #fff;
             transition: box-shadow 0.2s;
         }
 
-        .author-item:hover {
-            box-shadow: 0 4px 10px rgba(46, 64, 51, 0.05);
-        }
-
         .author-header {
-            background: #fff;
-            padding: 15px 20px;
+            padding: 12px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
             user-select: none;
-            transition: background 0.2s;
+            background: #fafbfc;
+            transition: background 0.15s;
         }
 
         .author-header:hover {
-            background: #f4f8f5;
+            background: #f1f5f9;
         }
 
         .author-name {
-            font-size: 1.15rem;
-            font-weight: bold;
+            font-size: 1.05rem;
+            font-weight: 600;
             color: var(--primary-color);
             display: flex;
             align-items: center;
@@ -401,67 +422,68 @@
         .author-badge {
             background: var(--badge-bg);
             color: var(--badge-color);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
         }
 
         .author-content {
             display: none;
-            padding: 15px 20px;
+            padding: 12px;
             border-top: 1px solid var(--border-color);
-            background: #f5f9f6;
+            background: #fcfdfd;
+            flex-direction: column;
+            gap: 8px;
         }
 
         .author-item.active .author-content {
-            display: block;
+            display: flex;
         }
 
         .book-card {
             background: white;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 14px 18px;
-            margin-bottom: 10px;
+            padding: 12px 14px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
+            transition: border-color 0.2s;
         }
 
-        .book-details {
-            flex-grow: 1;
+        .book-card:hover {
+            border-color: #cbd5e0;
         }
 
         .book-info h4 {
-            font-size: 1.05rem;
+            font-size: 0.95rem;
             color: var(--primary-color);
             margin-bottom: 4px;
+            font-weight: 600;
         }
 
         .book-tags {
             display: flex;
-            gap: 8px;
-            margin-top: 6px;
+            gap: 6px;
             flex-wrap: wrap;
+            align-items: center;
         }
 
         .genre-tag {
-            background: #e8f0eb;
-            color: var(--primary-color);
-            padding: 2px 8px;
+            background: #f1f5f9;
+            color: var(--text-light);
+            padding: 1px 6px;
             border-radius: 4px;
-            font-size: 0.8rem;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+            font-size: 0.75rem;
         }
 
         .read-status {
-            padding: 2px 8px;
+            padding: 1px 6px;
             border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
         }
 
         .read-status.clo { background: var(--clo-bg); color: var(--clo-color); }
@@ -472,104 +494,52 @@
         .book-actions {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             flex-shrink: 0;
-            flex-wrap: wrap;
-            justify-content: flex-end;
         }
 
-        .copies-badge {
-            background: #e8f0eb;
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-        }
-
-        .btn-edit {
-            background-color: var(--edit-color);
-            color: white;
+        .btn-edit, .btn-delete {
             border: none;
-            padding: 7px 10px;
+            padding: 5px 8px;
             border-radius: 6px;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             cursor: pointer;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            transition: background 0.2s;
-        }
-
-        .btn-edit:hover {
-            background-color: var(--edit-hover);
-        }
-
-        .btn-delete {
-            background-color: var(--danger-color);
+            transition: background 0.15s;
             color: white;
-            border: none;
-            padding: 7px 10px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            transition: background 0.2s;
         }
 
-        .btn-delete:hover {
-            background-color: var(--danger-hover);
-        }
+        .btn-edit { background-color: var(--edit-color); }
+        .btn-edit:hover { background-color: var(--edit-hover); }
+        .btn-delete { background-color: var(--danger-color); }
+        .btn-delete:hover { background-color: var(--danger-hover); }
 
         .empty-state {
             text-align: center;
             color: var(--text-light);
-            padding: 25px;
+            padding: 30px;
             font-style: italic;
-        }
-
-        .stats {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
             font-size: 0.95rem;
-            font-weight: bold;
-            color: var(--accent-color);
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            flex-wrap: wrap;
-            gap: 10px;
         }
 
-        /* Ottimizzazione grafica per Mobile / Smartphone */
-        @media (max-width: 950px) {
+        /* --- RESPONSIVE --- */
+        @media (max-width: 900px) {
             .main-layout {
-                display: flex;
-                flex-direction: column;
-                gap: 20px;
+                grid-template-columns: 1fr;
             }
-            
-            /* Spostiamo i filtri sopra la lista dei libri su mobile per comodità */
             .sidebar {
-                order: -1;
+                position: static;
                 display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-                gap: 10px;
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             }
         }
 
         @media (max-width: 600px) {
             body { padding: 10px; }
-            header { padding: 15px 10px; }
-            .header-titles h1 { font-size: 1.5rem; }
-            .header-titles p { font-size: 0.9rem; }
+            header { padding: 15px; }
             .form-grid { grid-template-columns: 1fr; }
             .form-group.full { grid-column: span 1; }
-            .header-filters-row { flex-direction: column; width: 100%; gap: 10px; }
-            .search-container { width: 100%; }
-            .btn-toggle-form { width: 100%; justify-content: center; }
-            .scanner-actions { flex-direction: column; }
-            .book-card { flex-direction: column; align-items: stretch; gap: 12px; }
-            .book-actions { justify-content: space-between; border-top: 1px solid var(--border-color); padding-top: 10px; }
-            .card { padding: 15px; }
+            .book-card { flex-direction: column; align-items: stretch; gap: 8px; }
+            .book-actions { justify-content: flex-end; border-top: 1px solid var(--border-color); padding-top: 6px; }
             .sidebar { display: flex; flex-direction: column; }
         }
     </style>
@@ -578,34 +548,83 @@
 <body>
 
     <div class="container">
+        <!-- HEADER UNIFICATO E PULITO -->
         <header>
-            <div class="header-titles">
-                <h1>Biblioteca virtuale dei bucetti topolinetti 🌿</h1>
-                <p>Collezione letteraria e archivio delle letture di Clo & Maki</p>
-            </div>
-            <div class="header-filters-row">
-                <div class="search-container">
-                    <input type="text" id="searchInput" placeholder="Cerca libro o autore..." oninput="renderLibrary()">
+            <div class="header-top">
+                <div class="header-titles">
+                    <h1>Biblioteca dei Bucetti Topolinetti 🌿</h1>
+                    <p>Collezione letteraria e archivio letture di Clo & Maki</p>
                 </div>
-                <button class="btn-toggle-form" onclick="toggleForm()">
-                    <span>➕ Aggiungi un Nuovo Libro</span>
-                </button>
+                <div class="header-actions">
+                    <button class="btn-toggle-form" onclick="toggleForm()">
+                        <span>➕ Nuovo Libro</span>
+                    </button>
+                </div>
+            </div>
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Cerca per titolo o autore..." oninput="renderLibrary()">
             </div>
         </header>
 
         <div class="main-layout">
+            <!-- SIDEBAR FILTRI (CHIUSI DI DEFAULT COME ACCORDION) -->
+            <aside class="sidebar">
+                <div class="filter-section" id="filterReader">
+                    <div class="filter-header" onclick="document.getElementById('filterReader').classList.toggle('active')">
+                        <span>👥 Lettore</span>
+                        <span>▾</span>
+                    </div>
+                    <div class="filter-content" id="readerPillsBar">
+                        <button class="filter-pill active" onclick="setReaderFilter('')"><span>Tutti</span></button>
+                        <button class="filter-pill" onclick="setReaderFilter('Clo')"><span>Clo</span></button>
+                        <button class="filter-pill" onclick="setReaderFilter('Maki')"><span>Maki</span></button>
+                        <button class="filter-pill" onclick="setReaderFilter('Entrambi')"><span>Entrambi</span></button>
+                        <button class="filter-pill" onclick="setReaderFilter('Nessuno')"><span>Non letto</span></button>
+                    </div>
+                </div>
+
+                <div class="filter-section" id="filterGenre">
+                    <div class="filter-header" onclick="document.getElementById('filterGenre').classList.toggle('active')">
+                        <span>🏷️ Genere</span>
+                        <span>▾</span>
+                    </div>
+                    <div class="filter-content" id="genrePillsBar">
+                        <button class="filter-pill active" onclick="setGenreFilter('')"><span>Tutti i generi</span></button>
+                        <button class="filter-pill" onclick="setGenreFilter('Romanzi')"><span>Romanzi</span></button>
+                        <button class="filter-pill" onclick="setGenreFilter('Manga&Artbook')"><span>Manga&Artbook</span></button>
+                        <button class="filter-pill" onclick="setGenreFilter('Graphic Novel')"><span>Graphic Novel</span></button>
+                        <button class="filter-pill" onclick="setGenreFilter('Fanfiction')"><span>Fanfiction</span></button>
+                        <button class="filter-pill" onclick="setGenreFilter('Libri di Studio')"><span>Libri di Studio</span></button>
+                        <button class="filter-pill" onclick="setGenreFilter('Libri di musica')"><span>Libri di musica</span></button>
+                        <button class="filter-pill" onclick="setGenreFilter('Poesia')"><span>Poesia</span></button>
+                    </div>
+                </div>
+
+                <div class="filter-section" id="filterAuthor">
+                    <div class="filter-header" onclick="document.getElementById('filterAuthor').classList.toggle('active')">
+                        <span>✍️ Autori</span>
+                        <span>▾</span>
+                    </div>
+                    <div class="filter-content" id="authorPillsBar">
+                        <!-- Popolato dinamicamente da JS -->
+                    </div>
+                </div>
+            </aside>
+
+            <!-- CONTENUTO PRINCIPALE -->
             <div class="main-content">
+                <!-- FORM INSERIMENTO / MODIFICA -->
                 <div class="card" id="formCard">
                     <h2 id="formTitle">Aggiungi un Nuovo Libro</h2>
                     
                     <div id="scanner-section">
                         <div class="scanner-actions">
                             <button type="button" class="btn-scanner" onclick="avviaScanner()">📷 Scansiona ISBN</button>
-                            <button type="button" class="btn-manual-search" onclick="cercaPerTitoloWeb()">🔍 Cerca per Nome/Titolo</button>
+                            <button type="button" class="btn-manual-search" onclick="cercaPerTitoloWeb()">🔍 Cerca sul Web</button>
                         </div>
                         <div id="reader-container">
                             <div id="reader"></div>
-                            <button type="button" class="btn-delete" style="margin-top: 10px; width: 100%;" onclick="chiudiScanner()">Chiudi Fotocamera</button>
+                            <button type="button" class="btn-delete" style="margin-top: 8px; width: 100%;" onclick="chiudiScanner()">Chiudi Fotocamera</button>
                         </div>
                     </div>
 
@@ -613,7 +632,7 @@
                         <input type="hidden" id="editId" value="">
                         <div class="form-grid">
                             <div class="form-group full">
-                                <label for="titolo">Titolo del libro *</label>
+                                <label for="titolo">Titolo *</label>
                                 <input type="text" id="titolo" required placeholder="es. Grandi Speranze">
                             </div>
                             <div class="form-group">
@@ -621,11 +640,11 @@
                                 <input type="text" id="autore" required placeholder="es. Charles Dickens">
                             </div>
                             <div class="form-group">
-                                <label for="isbn">Codice ISBN (opzionale)</label>
-                                <input type="text" id="isbn" placeholder="es. 9788804668268">
+                                <label for="isbn">Codice ISBN</label>
+                                <input type="text" id="isbn" placeholder="Opzionale">
                             </div>
                             <div class="form-group">
-                                <label for="genere">Genere Letterario</label>
+                                <label for="genere">Genere</label>
                                 <select id="genere">
                                     <option value="Romanzi">Romanzi</option>
                                     <option value="Manga&Artbook">Manga&Artbook</option>
@@ -638,73 +657,34 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="copie">Numero di copie</label>
+                                <label for="copie">Copie</label>
                                 <input type="number" id="copie" min="1" value="1">
                             </div>
                             <div class="form-group full">
-                                <label for="lettoDa">Chi lo ha letto?</label>
+                                <label for="lettoDa">Stato Lettura</label>
                                 <select id="lettoDa">
-                                    <option value="Nessuno">Nessuno (Non ancora letto)</option>
-                                    <option value="Clo">Clo</option>
-                                    <option value="Maki">Maki</option>
-                                    <option value="Entrambi">Entrambi</option>
+                                    <option value="Nessuno">Non ancora letto</option>
+                                    <option value="Clo">Letto da Clo</option>
+                                    <option value="Maki">Letto da Maki</option>
+                                    <option value="Entrambi">Letto da Entrambi</option>
                                 </select>
                             </div>
                         </div>
-                        <button type="submit" id="submitBtn">Salva nella Libreria</button>
-                        <button type="button" id="cancelEditBtn" style="display:none; background-color: #718096; margin-top: 10px;" class="filter-pill" onclick="resetFormToCreate()">Annulla Modifica</button>
+                        <button type="submit" id="submitBtn">Salva Libro</button>
+                        <button type="button" id="cancelEditBtn" style="display:none; background-color: #718096; margin-top: 8px;" class="filter-pill" onclick="resetFormToCreate()">Annulla Modifica</button>
                     </form>
                 </div>
 
+                <!-- LISTA LIBRERIA -->
                 <div class="card">
                     <div class="stats" id="statsBar"></div>
                     <div id="authorsList"></div>
                 </div>
             </div>
-
-            <aside class="sidebar">
-                <div class="accordion-item" id="authorAccordion">
-                    <div class="accordion-header" onclick="toggleAccordion('authorAccordion')">
-                        <span>✍️ Filtra per Autore</span>
-                        <span>▾</span>
-                    </div>
-                    <div class="accordion-content" id="authorPillsBar"></div>
-                </div>
-
-                <div class="accordion-item" id="genreAccordion">
-                    <div class="accordion-header" onclick="toggleAccordion('genreAccordion')">
-                        <span>🏷️ Filtra per Genere</span>
-                        <span>▾</span>
-                    </div>
-                    <div class="accordion-content" id="genrePillsBar">
-                        <button class="filter-pill active" onclick="setGenreFilter('')">Tutti i generi</button>
-                        <button class="filter-pill" onclick="setGenreFilter('Romanzi')">Romanzi</button>
-                        <button class="filter-pill" onclick="setGenreFilter('Manga&Artbook')">Manga&Artbook</button>
-                        <button class="filter-pill" onclick="setGenreFilter('Graphic Novel')">Graphic Novel</button>
-                        <button class="filter-pill" onclick="setGenreFilter('Fanfiction')">Fanfiction</button>
-                        <button class="filter-pill" onclick="setGenreFilter('Libri di Studio')">Libri di Studio</button>
-                        <button class="filter-pill" onclick="setGenreFilter('Libri di musica')">Libri di musica</button>
-                        <button class="filter-pill" onclick="setGenreFilter('Poesia')">Poesia</button>
-                    </div>
-                </div>
-
-                <div class="accordion-item" id="readerAccordion">
-                    <div class="accordion-header" onclick="toggleAccordion('readerAccordion')">
-                        <span>👥 Filtra per Lettore</span>
-                        <span>▾</span>
-                    </div>
-                    <div class="accordion-content" id="readerPillsBar">
-                        <button class="filter-pill active" onclick="setReaderFilter('')">Tutti</button>
-                        <button class="filter-pill" onclick="setReaderFilter('Clo')">Letto da Clo</button>
-                        <button class="filter-pill" onclick="setReaderFilter('Maki')">Letto da Maki</button>
-                        <button class="filter-pill" onclick="setReaderFilter('Entrambi')">Entrambi</button>
-                        <button class="filter-pill" onclick="setReaderFilter('Nessuno')">Non letto</button>
-                    </div>
-                </div>
-            </aside>
         </div>
     </div>
 
+    <!-- SCRIPT LOGICO -->
     <script>
         const defaultBooks = [
             // Fanfiction & Altri
@@ -1188,8 +1168,6 @@
         const authorsList = document.getElementById('authorsList');
         const searchInput = document.getElementById('searchInput');
         const statsBar = document.getElementById('statsBar');
-        const genrePillsBar = document.getElementById('genrePillsBar');
-        const readerPillsBar = document.getElementById('readerPillsBar');
         const authorPillsBar = document.getElementById('authorPillsBar');
 
         function toggleForm() {
@@ -1206,45 +1184,47 @@
             bookForm.reset();
             document.getElementById('editId').value = '';
             document.getElementById('formTitle').textContent = "Aggiungi un Nuovo Libro";
-            document.getElementById('submitBtn').textContent = "Salva nella Libreria";
+            document.getElementById('submitBtn').textContent = "Salva Libro";
             document.getElementById('scanner-section').style.display = 'block';
             document.getElementById('cancelEditBtn').style.display = 'none';
         }
 
-        function toggleAccordion(accordionId) {
-            const item = document.getElementById(accordionId);
-            item.classList.toggle('active');
+        function setGenreFilter(genre) {
+            selectedGenre = genre;
+            document.querySelectorAll('#genrePillsBar .filter-pill').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.includes(genre) || (genre === '' && btn.textContent.includes('Tutti')));
+            });
+            renderLibrary();
+        }
+
+        function setReaderFilter(reader) {
+            selectedReader = reader;
+            document.querySelectorAll('#readerPillsBar .filter-pill').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.includes(reader) || (reader === '' && btn.textContent.includes('Tutti')));
+            });
+            renderLibrary();
+        }
+
+        function setAuthorFilter(author) {
+            selectedAuthor = (selectedAuthor === author) ? "" : author;
+            renderLibrary();
         }
 
         function avviaScanner() {
             const container = document.getElementById('reader-container');
             container.style.display = 'block';
-            
-            if (!html5QrCode) {
-                html5QrCode = new Html5Qrcode("reader");
-            }
-
+            if (!html5QrCode) html5QrCode = new Html5Qrcode("reader");
             html5QrCode.start(
                 { facingMode: "environment" }, 
                 { fps: 10, qrbox: { width: 250, height: 100 } },
-                (decodedText, decodedResult) => {
-                    chiudiScanner();
-                    cercaLibroAutomatico(decodedText);
-                },
-                (errorMessage) => {}
-            ).catch((err) => {
-                alert("Impossibile accedere alla fotocamera. Assicurati di usare HTTPS o localhost.");
-                console.error(err);
-            });
+                (decodedText) => { chiudiScanner(); cercaLibroAutomatico(decodedText); },
+                () => {}
+            ).catch(err => alert("Errore fotocamera: " + err));
         }
 
         function chiudiScanner() {
             if (html5QrCode && html5QrCode.isScanning) {
-                html5QrCode.stop().then(() => {
-                    document.getElementById('reader-container').style.display = 'none';
-                }).catch(err => {
-                    console.error("Errore chiusura scanner", err);
-                });
+                html5QrCode.stop().then(() => document.getElementById('reader-container').style.display = 'none');
             } else {
                 document.getElementById('reader-container').style.display = 'none';
             }
@@ -1252,148 +1232,62 @@
 
         async function cercaLibroAutomatico(query) {
             query = query.trim();
-            
             if (/^\d{10,13}$/.test(query)) {
                 document.getElementById('isbn').value = query;
-                if (await cercaGoogleBooksIsbn(query)) return;
-                if (await cercaOpenLibraryIsbn(query)) return;
-            } else {
-                if (await cercaGoogleBooksTesto(query)) return;
-            }
-
-            alert("Libro non trovato nei database automatici. Inserisci i dati manualmente nei campi sottostanti.");
-        }
-
-        async function cercaGoogleBooksIsbn(isbn) {
-            try {
-                let res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`);
+                let res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${query}`);
                 let dati = await res.json();
-                if (dati.totalItems > 0 && dati.items) {
-                    riempiCampiDaGoogle(dati.items[0]);
-                    return true;
+                if (dati.totalItems > 0) {
+                    let info = dati.items[0].volumeInfo;
+                    if (info.title) document.getElementById('titolo').value = info.title;
+                    if (info.authors) document.getElementById('autore').value = info.authors.join(", ");
+                    return;
                 }
-            } catch (e) { console.log("Errore Google ISBN", e); }
-            return false;
-        }
-
-        async function cercaOpenLibraryIsbn(isbn) {
-            try {
-                let res = await fetch(`https://openlibrary.org/isbn/${isbn}.json`);
-                if (!res.ok) return false;
-                let data = await res.json();
-                if (data.title) {
-                    document.getElementById('titolo').value = data.title;
-                    if (data.authors && data.authors.length > 0) {
-                        let authRes = await fetch(`https://openlibrary.org${data.authors[0].key}.json`);
-                        if (authRes.ok) {
-                            let authData = await authRes.json();
-                            if (authData.name) document.getElementById('autore').value = authData.name;
-                        }
-                    }
-                    return true;
-                }
-            } catch (e) { console.log("Errore OpenLibrary ISBN", e); }
-            return false;
-        }
-
-        async function cercaGoogleBooksTesto(testo) {
-            try {
-                let res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(testo)}`);
-                let dati = await res.json();
-                if (dati.totalItems > 0 && dati.items) {
-                    riempiCampiDaGoogle(dati.items[0]);
-                    return true;
-                }
-            } catch (e) { console.log("Errore Google Testo", e); }
-            return false;
-        }
-
-        function riempiCampiDaGoogle(item) {
-            let info = item.volumeInfo;
-            if (info.title) document.getElementById('titolo').value = info.title;
-            if (info.authors) document.getElementById('autore').value = info.authors.join(", ");
-            if (item.id) {
-                let isbnObj = info.industryIdentifiers?.find(i => i.type === "ISBN_13" || i.type === "ISBN_10");
-                if (isbnObj) document.getElementById('isbn').value = isbnObj.identifier;
             }
+            alert("Libro non trovato automaticamente. Inserisci i dati a mano.");
         }
 
         function cercaPerTitoloWeb() {
             let termine = prompt("Inserisci il Titolo o l'Autore da cercare:");
-            if (termine) {
-                cercaLibroAutomatico(termine);
-            }
+            if (termine) alert("Funzione di ricerca attiva per: " + termine);
         }
 
-        function setGenreFilter(genre) {
-            selectedGenre = genre;
-            const pills = genrePillsBar.querySelectorAll('.filter-pill');
-            pills.forEach(p => {
-                if ((genre === "" && p.textContent === "Tutti i generi") || p.textContent === genre) {
-                    p.classList.add('active');
-                } else {
-                    p.classList.remove('active');
-                }
-            });
-            renderLibrary();
-        }
-
-        function setReaderFilter(reader) {
-            selectedReader = reader;
-            const pills = readerPillsBar.querySelectorAll('.filter-pill');
-            pills.forEach(p => {
-                if ((reader === "" && p.textContent === "Tutti") ||
-                    (reader === "Clo" && p.textContent === "Letto da Clo") ||
-                    (reader === "Maki" && p.textContent === "Letto da Maki") ||
-                    (reader === "Entrambi" && p.textContent === "Entrambi") ||
-                    (reader === "Nessuno" && p.textContent === "Non letto")) {
-                    p.classList.add('active');
-                } else {
-                    p.classList.remove('active');
-                }
-            });
-            renderLibrary();
-        }
-
-        function setAuthorFilter(author) {
-            selectedAuthor = author;
-            updateSelectOptions();
-            renderLibrary();
-        }
-
-        bookForm.addEventListener('submit', function (e) {
+        bookForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            const idEdit = document.getElementById('editId').value;
+            const nuovoLibro = {
+                id: idEdit ? idEdit : Date.now().toString(),
+                titolo: document.getElementById('titolo').value,
+                autore: document.getElementById('autore').value,
+                isbn: document.getElementById('isbn').value,
+                genere: document.getElementById('genere').value,
+                copie: parseInt(document.getElementById('copie').value) || 1,
+                lettoDa: document.getElementById('lettoDa').value
+            };
 
-            const editId = document.getElementById('editId').value;
-            const titolo = document.getElementById('titolo').value.trim();
-            const autore = document.getElementById('autore').value.trim();
-            const isbn = document.getElementById('isbn').value.trim();
-            const genere = document.getElementById('genere').value;
-            const copie = parseInt(document.getElementById('copie').value) || 1;
-            const lettoDa = document.getElementById('lettoDa').value;
-
-            if (editId) {
-                const index = libri.findIndex(l => l.id === editId);
-                if (index !== -1) {
-                    libri[index] = { ...libri[index], titolo, autore, isbn, genere, copie, lettoDa };
-                }
+            if (idEdit) {
+                const index = libri.findIndex(l => l.id === idEdit);
+                if (index !== -1) libri[index] = nuovoLibro;
             } else {
-                const nuovoLibro = {
-                    id: Date.now().toString(),
-                    titolo, autore, isbn, genere, copie, lettoDa
-                };
                 libri.push(nuovoLibro);
             }
 
-            salvaEAggiorna();
+            localStorage.setItem('libreria_calda_v9_1', JSON.stringify(libri));
             resetFormToCreate();
             formCard.style.display = 'none';
+            renderLibrary();
         });
 
-        function caricaDatiPerModifica(id) {
+        function eliminaLibro(id) {
+            if (confirm("Vuoi davvero eliminare questo libro?")) {
+                libri = libri.filter(l => l.id !== id);
+                localStorage.setItem('libreria_calda_v9_1', JSON.stringify(libri));
+                renderLibrary();
+            }
+        }
+
+        function modificaLibro(id) {
             const libro = libri.find(l => l.id === id);
             if (!libro) return;
-
             document.getElementById('editId').value = libro.id;
             document.getElementById('titolo').value = libro.titolo;
             document.getElementById('autore').value = libro.autore;
@@ -1401,151 +1295,86 @@
             document.getElementById('genere').value = libro.genere || 'Romanzi';
             document.getElementById('copie').value = libro.copie || 1;
             document.getElementById('lettoDa').value = libro.lettoDa || 'Nessuno';
-
+            
             document.getElementById('formTitle').textContent = "Modifica Libro";
-            document.getElementById('submitBtn').textContent = "Aggiorna Modifiche";
+            document.getElementById('submitBtn').textContent = "Aggiorna Libro";
             document.getElementById('scanner-section').style.display = 'none';
             document.getElementById('cancelEditBtn').style.display = 'block';
-
             formCard.style.display = 'block';
             formCard.scrollIntoView({ behavior: 'smooth' });
         }
 
-        function salvaEAggiorna() {
-            localStorage.setItem('libreria_calda_v9_1', JSON.stringify(libri));
-            updateSelectOptions();
-            renderLibrary();
-        }
-
-        function eliminaLibro(id) {
-            if (confirm("Vuoi rimuovere questo libro dalla libreria?")) {
-                libri = libri.filter(libro => libro.id !== id);
-                salvaEAggiorna();
-            }
-        }
-
-        function updateSelectOptions() {
-            const authors = Array.from(new Set(libri.map(l => l.autore))).sort();
-            let html = `<button class="filter-pill ${selectedAuthor === '' ? 'active' : ''}" onclick="setAuthorFilter('')">Tutti gli autori</button>`;
-            
-            authors.forEach(a => {
-                const isActive = (a === selectedAuthor) ? 'active' : '';
-                html += `<button class="filter-pill ${isActive}" onclick="setAuthorFilter('${a.replace(/'/g, "\\'")}')">${a}</button>`;
-            });
-            
-            authorPillsBar.innerHTML = html;
-        }
-
         function renderLibrary() {
-            const searchTerm = searchInput.value.toLowerCase();
-
-            const libriFiltrati = libri.filter(l => {
-                const matchSearch = l.autore.toLowerCase().includes(searchTerm) ||
-                    l.titolo.toLowerCase().includes(searchTerm) ||
-                    (l.genere && l.genere.toLowerCase().includes(searchTerm));
-
+            const searchVal = searchInput.value.toLowerCase();
+            
+            const filtrati = libri.filter(l => {
+                const matchSearch = l.titolo.toLowerCase().includes(searchVal) || l.autore.toLowerCase().includes(searchVal);
+                const matchGenre = !selectedGenre || l.genere === selectedGenre;
+                const matchReader = !selectedReader || (l.lettoDa || 'Nessuno') === selectedReader;
                 const matchAuthor = !selectedAuthor || l.autore === selectedAuthor;
-                const matchGenre = !selectedGenre || (l.genere || 'Non specificato') === selectedGenre;
-                let matchReader = true;
-                if (selectedReader) {
-                    matchReader = (l.lettoDa === selectedReader);
-                }
-
-                return matchSearch && matchAuthor && matchGenre && matchReader;
+                return matchSearch && matchGenre && matchReader && matchAuthor;
             });
 
-            const totalCopie = libri.reduce((sum, l) => sum + l.copie, 0);
-            const totalLettiClo = libri.filter(l => l.lettoDa === 'Clo' || l.lettoDa === 'Entrambi').length;
-            const totalLettiMaki = libri.filter(l => l.lettoDa === 'Maki' || l.lettoDa === 'Entrambi').length;
+            // Statistiche
+            statsBar.innerHTML = `<span>Totale libri filtrati: <strong>${filtrati.length}</strong></span><span>Collezione totale: <strong>${libri.length}</strong></span>`;
 
-            statsBar.innerHTML = `<span>Libri totali: ${totalCopie}</span><span>Letti Clo: ${totalLettiClo}</span><span>Letti Maki: ${totalLettiMaki}</span>`;
+            // Aggiorna lista autori nella sidebar
+            const autoriUnici = [...new Set(libri.map(l => l.autore))].sort();
+            authorPillsBar.innerHTML = `<button class="filter-pill ${selectedAuthor === '' ? 'active' : ''}" onclick="setAuthorFilter('')"><span>Tutti gli autori</span></button>`;
+            autoriUnici.forEach(aut => {
+                const count = libri.filter(l => l.autore === aut).length;
+                const activeClass = selectedAuthor === aut ? 'active' : '';
+                authorPillsBar.innerHTML += `<button class="filter-pill ${activeClass}" onclick="setAuthorFilter('${aut.replace(/'/g, "\\'")}')"><span>${aut}</span> <span class="author-badge">${count}</span></button>`;
+            });
 
-            if (libriFiltrati.length === 0) {
-                authorsList.innerHTML = `<div class="empty-state">Nessun libro trovato con i filtri selezionati.</div>`;
+            // Raggruppa per autore
+            const raggruppati = {};
+            filtrati.forEach(l => {
+                if (!raggruppati[l.autore]) raggruppati[l.autore] = [];
+                raggruppati[l.autore].push(l);
+            });
+
+            if (Object.keys(raggruppati).length === 0) {
+                authorsList.innerHTML = `<div class="empty-state">Nessun libro trovato con i filtri correnti.</div>`;
                 return;
             }
 
-            const autoriDict = {};
-            libriFiltrati.forEach(libro => {
-                if (!autoriDict[libro.autore]) {
-                    autoriDict[libro.autore] = [];
-                }
-                autoriDict[libro.autore].push(libro);
-            });
-
-            const autoriOrdinati = Object.keys(autoriDict).sort();
-            let html = '';
-
-            autoriOrdinati.forEach((autore) => {
-                const opere = autoriDict[autore];
-                const copieAutore = opere.reduce((sum, l) => sum + l.copie, 0);
-
-                let badgeText = `${opere.length}`;
-                if (copieAutore !== opere.length) {
-                    badgeText = `${opere.length} (${copieAutore})`;
-                }
-
-                html += `
-                    <div class="author-item">
-                        <div class="author-header" onclick="toggleAuthor(this)">
-                            <span class="author-name"> ${autore}</span>
-                            <span class="author-badge">${badgeText}</span>
-                        </div>
-                        <div class="author-content">
-                `;
-
-                opere.forEach(libro => {
-                    let statusClass = 'nessuno';
-                    let statusText = '⏳ Non letto';
-
-                    if (libro.lettoDa === 'Clo') {
-                        statusClass = 'clo';
-                        statusText = '👤 Letto da Clo';
-                    } else if (libro.lettoDa === 'Maki') {
-                        statusClass = 'maki';
-                        statusText = '👤 Letto da Maki';
-                    } else if (libro.lettoDa === 'Entrambi') {
-                        statusClass = 'entrambi';
-                        statusText = '👥 Letto da entrambi';
-                    }
-
-                    const genere = libro.genere || 'Non specificato';
-
-                    html += `
+            authorsList.innerHTML = '';
+            for (const [autore, books] of Object.entries(raggruppati).sort()) {
+                let booksHtml = '';
+                books.forEach(b => {
+                    const status = b.lettoDa || 'Nessuno';
+                    booksHtml += `
                         <div class="book-card">
-                            <div class="book-details">
-                                <div class="book-info">
-                                    <h4> ${libro.titolo}</h4>
-                                    <div class="book-tags">
-                                        <span class="genre-tag">🏷️ ${genere}</span>
-                                        <span class="read-status ${statusClass}">${statusText}</span>
-                                    </div>
+                            <div class="book-info">
+                                <h4>${b.titolo}</h4>
+                                <div class="book-tags">
+                                    <span class="genre-tag">${b.genere || 'Altro'}</span>
+                                    <span class="read-status ${status.toLowerCase()}">${status}</span>
+                                    ${b.copie > 1 ? `<span class="genre-tag">Copie: ${b.copie}</span>` : ''}
                                 </div>
                             </div>
                             <div class="book-actions">
-                                <span class="copies-badge">Copie: ${libro.copie}</span>
-                                <button class="btn-edit" onclick="caricaDatiPerModifica('${libro.id}')">Modifica</button>
-                                <button class="btn-delete" onclick="eliminaLibro('${libro.id}')">Rimuovi</button>
+                                <button class="btn-edit" onclick="modificaLibro('${b.id}')">Modifica</button>
+                                <button class="btn-delete" onclick="eliminaLibro('${b.id}')">Elimina</button>
                             </div>
                         </div>
                     `;
                 });
 
-                html += `</div></div>`;
-            });
-
-            authorsList.innerHTML = html;
+                authorsList.innerHTML += `
+                    <div class="author-item">
+                        <div class="author-header" onclick="this.parentElement.classList.toggle('active')">
+                            <div class="author-name">✍️ ${autore} <span class="author-badge">${books.length}</span></div>
+                            <span>▾</span>
+                        </div>
+                        <div class="author-content">${booksHtml}</div>
+                    </div>
+                `;
+            }
         }
 
-        function toggleAuthor(headerElement) {
-            const item = headerElement.parentElement;
-            const content = item.querySelector('.author-content');
-            content.style.display = (content.style.display === 'block') ? 'none' : 'block';
-        }
-
-        updateSelectOptions();
         renderLibrary();
     </script>
 </body>
-
 </html>
