@@ -171,7 +171,7 @@
             border: 1px solid var(--border-color);
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
         }
 
         .filter-header {
@@ -245,7 +245,7 @@
             background: var(--card-bg);
             border-radius: 14px;
             padding: 24px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
             border: 1px solid var(--border-color);
         }
 
@@ -256,8 +256,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-8px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .card h2 {
@@ -303,7 +310,8 @@
             transition: all 0.2s;
         }
 
-        input:focus, select:focus {
+        input:focus,
+        select:focus {
             outline: none;
             border-color: var(--accent-color);
             background-color: #fff;
@@ -316,7 +324,8 @@
             margin-bottom: 15px;
         }
 
-        .btn-scanner, .btn-manual-search {
+        .btn-scanner,
+        .btn-manual-search {
             background-color: #edf2f7;
             color: var(--text-color);
             border: 1px solid var(--border-color);
@@ -333,7 +342,8 @@
             justify-content: center;
         }
 
-        .btn-scanner:hover, .btn-manual-search:hover {
+        .btn-scanner:hover,
+        .btn-manual-search:hover {
             background-color: #e2e8f0;
             border-color: #cbd5e0;
         }
@@ -486,10 +496,25 @@
             font-weight: 600;
         }
 
-        .read-status.clo { background: var(--clo-bg); color: var(--clo-color); }
-        .read-status.maki { background: var(--maki-bg); color: var(--maki-color); }
-        .read-status.entrambi { background: var(--both-bg); color: var(--both-color); }
-        .read-status.nessuno { background: var(--unread-bg); color: var(--unread-color); }
+        .read-status.clo {
+            background: var(--clo-bg);
+            color: var(--clo-color);
+        }
+
+        .read-status.maki {
+            background: var(--maki-bg);
+            color: var(--maki-color);
+        }
+
+        .read-status.entrambi {
+            background: var(--both-bg);
+            color: var(--both-color);
+        }
+
+        .read-status.nessuno {
+            background: var(--unread-bg);
+            color: var(--unread-color);
+        }
 
         .book-actions {
             display: flex;
@@ -498,7 +523,8 @@
             flex-shrink: 0;
         }
 
-        .btn-edit, .btn-delete {
+        .btn-edit,
+        .btn-delete {
             border: none;
             padding: 5px 8px;
             border-radius: 6px;
@@ -508,10 +534,21 @@
             color: white;
         }
 
-        .btn-edit { background-color: var(--edit-color); }
-        .btn-edit:hover { background-color: var(--edit-hover); }
-        .btn-delete { background-color: var(--danger-color); }
-        .btn-delete:hover { background-color: var(--danger-hover); }
+        .btn-edit {
+            background-color: var(--edit-color);
+        }
+
+        .btn-edit:hover {
+            background-color: var(--edit-hover);
+        }
+
+        .btn-delete {
+            background-color: var(--danger-color);
+        }
+
+        .btn-delete:hover {
+            background-color: var(--danger-hover);
+        }
 
         .empty-state {
             text-align: center;
@@ -526,6 +563,7 @@
             .main-layout {
                 grid-template-columns: 1fr;
             }
+
             .sidebar {
                 position: static;
                 display: grid;
@@ -534,13 +572,38 @@
         }
 
         @media (max-width: 600px) {
-            body { padding: 10px; }
-            header { padding: 15px; }
-            .form-grid { grid-template-columns: 1fr; }
-            .form-group.full { grid-column: span 1; }
-            .book-card { flex-direction: column; align-items: stretch; gap: 8px; }
-            .book-actions { justify-content: flex-end; border-top: 1px solid var(--border-color); padding-top: 6px; }
-            .sidebar { display: flex; flex-direction: column; }
+            body {
+                padding: 10px;
+            }
+
+            header {
+                padding: 15px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: span 1;
+            }
+
+            .book-card {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+
+            .book-actions {
+                justify-content: flex-end;
+                border-top: 1px solid var(--border-color);
+                padding-top: 6px;
+            }
+
+            .sidebar {
+                display: flex;
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -562,7 +625,8 @@
                 </div>
             </div>
             <div class="search-container">
-                <input type="text" id="searchInput" placeholder="Cerca per titolo o autore..." oninput="renderLibrary()">
+                <input type="text" id="searchInput" placeholder="Cerca per titolo o autore..."
+                    oninput="renderLibrary()">
             </div>
         </header>
 
@@ -570,7 +634,8 @@
             <!-- SIDEBAR FILTRI (CHIUSI DI DEFAULT COME ACCORDION) -->
             <aside class="sidebar">
                 <div class="filter-section" id="filterReader">
-                    <div class="filter-header" onclick="document.getElementById('filterReader').classList.toggle('active')">
+                    <div class="filter-header"
+                        onclick="document.getElementById('filterReader').classList.toggle('active')">
                         <span>👥 Lettore</span>
                         <span>▾</span>
                     </div>
@@ -584,24 +649,32 @@
                 </div>
 
                 <div class="filter-section" id="filterGenre">
-                    <div class="filter-header" onclick="document.getElementById('filterGenre').classList.toggle('active')">
+                    <div class="filter-header"
+                        onclick="document.getElementById('filterGenre').classList.toggle('active')">
                         <span>🏷️ Genere</span>
                         <span>▾</span>
                     </div>
                     <div class="filter-content" id="genrePillsBar">
-                        <button class="filter-pill active" onclick="setGenreFilter('')"><span>Tutti i generi</span></button>
+                        <button class="filter-pill active" onclick="setGenreFilter('')"><span>Tutti i
+                                generi</span></button>
                         <button class="filter-pill" onclick="setGenreFilter('Romanzi')"><span>Romanzi</span></button>
-                        <button class="filter-pill" onclick="setGenreFilter('Manga&Artbook')"><span>Manga&Artbook</span></button>
-                        <button class="filter-pill" onclick="setGenreFilter('Graphic Novel')"><span>Graphic Novel</span></button>
-                        <button class="filter-pill" onclick="setGenreFilter('Fanfiction')"><span>Fanfiction</span></button>
-                        <button class="filter-pill" onclick="setGenreFilter('Libri di Studio')"><span>Libri di Studio</span></button>
-                        <button class="filter-pill" onclick="setGenreFilter('Libri di musica')"><span>Libri di musica</span></button>
+                        <button class="filter-pill"
+                            onclick="setGenreFilter('Manga&Artbook')"><span>Manga&Artbook</span></button>
+                        <button class="filter-pill" onclick="setGenreFilter('Graphic Novel')"><span>Graphic
+                                Novel</span></button>
+                        <button class="filter-pill"
+                            onclick="setGenreFilter('Fanfiction')"><span>Fanfiction</span></button>
+                        <button class="filter-pill" onclick="setGenreFilter('Libri di Studio')"><span>Libri di
+                                Studio</span></button>
+                        <button class="filter-pill" onclick="setGenreFilter('Libri di musica')"><span>Libri di
+                                musica</span></button>
                         <button class="filter-pill" onclick="setGenreFilter('Poesia')"><span>Poesia</span></button>
                     </div>
                 </div>
 
                 <div class="filter-section" id="filterAuthor">
-                    <div class="filter-header" onclick="document.getElementById('filterAuthor').classList.toggle('active')">
+                    <div class="filter-header"
+                        onclick="document.getElementById('filterAuthor').classList.toggle('active')">
                         <span>✍️ Autori</span>
                         <span>▾</span>
                     </div>
@@ -616,15 +689,18 @@
                 <!-- FORM INSERIMENTO / MODIFICA -->
                 <div class="card" id="formCard">
                     <h2 id="formTitle">Aggiungi un Nuovo Libro</h2>
-                    
+
                     <div id="scanner-section">
                         <div class="scanner-actions">
-                            <button type="button" class="btn-scanner" onclick="avviaScanner()">📷 Scansiona ISBN</button>
-                            <button type="button" class="btn-manual-search" onclick="cercaPerTitoloWeb()">🔍 Cerca sul Web</button>
+                            <button type="button" class="btn-scanner" onclick="avviaScanner()">📷 Scansiona
+                                ISBN</button>
+                            <button type="button" class="btn-manual-search" onclick="cercaPerTitoloWeb()">🔍 Cerca sul
+                                Web</button>
                         </div>
                         <div id="reader-container">
                             <div id="reader"></div>
-                            <button type="button" class="btn-delete" style="margin-top: 8px; width: 100%;" onclick="chiudiScanner()">Chiudi Fotocamera</button>
+                            <button type="button" class="btn-delete" style="margin-top: 8px; width: 100%;"
+                                onclick="chiudiScanner()">Chiudi Fotocamera</button>
                         </div>
                     </div>
 
@@ -671,7 +747,9 @@
                             </div>
                         </div>
                         <button type="submit" id="submitBtn">Salva Libro</button>
-                        <button type="button" id="cancelEditBtn" style="display:none; background-color: #718096; margin-top: 8px;" class="filter-pill" onclick="resetFormToCreate()">Annulla Modifica</button>
+                        <button type="button" id="cancelEditBtn"
+                            style="display:none; background-color: #718096; margin-top: 8px;" class="filter-pill"
+                            onclick="resetFormToCreate()">Annulla Modifica</button>
                     </form>
                 </div>
 
@@ -687,482 +765,482 @@
     <!-- SCRIPT LOGICO -->
     <script>
         const defaultBooks = [
-            {id:"1", autore:"A.Summers", titolo:"La fine degli zar", genere:"Storia", copie: 1,},
-{id:"2", autore:"Aa. Vv. Pomo di Venerə", titolo:"Cose del Gender. Testimonianze LGBTQIAP+", genere:"Saggio", copie: 1,},
-{id:"3", autore:"Adriano Fabris", titolo:"L’etica del giornalismo negli attuali scenari comunicativi", genere:"Filosofia", copie: 1,},
-{id:"4", autore:"Adriano Fabris", titolo:"Etica delle nuove tecnologie", genere:"Filosofia", copie: 1,},
-{id:"5", autore:"Agota Kristof", titolo:"Trilogia Città di K", genere:"Narrativa", copie: 1,},
-{id:"6", autore:"Alan Bennett", titolo:"La sovrana lettrice", genere:"Narrativa", copie: 1,},
-{id:"7", autore:"Alberto Casadei", titolo:"Il Novecento", genere:"Critica letteraria", copie: 1,},
-{id:"8", autore:"Aldo Palazzeschi", titolo:"Il codice di Perelà", genere:"Narrativa", copie: 1,},
-{id:"9", autore:"Alessandro Baricco", titolo:"Novecento", genere:"Narrativa", copie: 1,},
-{id:"10", autore:"Alessandro Baricco", titolo:"Oceano Mare", genere:"Narrativa", copie: 1,},
-{id:"11", autore:"Alessandro Baricco", titolo:"L’Iliade", genere:"Mitologia", copie: 1,},
-{id:"12", autore:"Alessandro Baricco", titolo:"City", genere:"Narrativa", copie: 1,},
-{id:"13", autore:"Alessandro Baricco", titolo:"Castelli di Rabbia", genere:"Narrativa", copie: 1,},
-{id:"14", autore:"Alessandro Baricco", titolo:"Seta", genere:"Narrativa", copie: 1,},
-{id:"15", autore:"Alessandro Baricco", titolo:"Tre volte all’alba", genere:"Narrativa", copie: 1,},
-{id:"16", autore:"Alessandro Baricco", titolo:"La sposa giovane", genere:"Narrativa", copie: 1,},
-{id:"17", autore:"Alessandro Baricco", titolo:"Abel", genere:"Narrativa", copie: 1,},
-{id:"18", autore:"Alessandro Baricco", titolo:"Senza Sangue", genere:"Narrativa", copie: 1,},
-{id:"19", autore:"Alessandro D'Avenia", titolo:"L’arte di essere fragili", genere:"Saggio", copie: 1,},
-{id:"20", autore:"Alexandre Dumas", titolo:"Il conte di Montecristo", genere:"Romanzo storico", copie: 1,},
-{id:"21", autore:"Alexandre Dumas", titolo:"I tre moschettieri", genere:"Romanzo storico", copie: 1,},
-{id:"22", autore:"Alexandre Dumas", titolo:"Vent’anni dopo", genere:"Romanzo storico", copie: 1,},
-{id:"23", autore:"Alexandre Dumas", titolo:"Il Visconte Bragellone", genere:"Romanzo storico", copie: 1,},
-{id:"24", autore:"Alexandre Dumas", titolo:"I Medici", genere:"Romanzo storico", copie: 1,},
-{id:"25", autore:"Alfons Mucha", titolo:"Catalogo mostra", genere:"Arte", copie: 1,},
-{id:"26", autore:"Alice Oseman", titolo:"Heartstopper", genere:"Graphic novel", copie: 4,},
-{id:"27", autore:"Anaïs Flogny", titolo:"Rive lontane", genere:"Narrativa", copie: 1,},
-{id:"28", autore:"Andrzej Sapkowski", titolo:"Il guardiano degli innocenti", genere:"Fantasy", copie: 1,},
-{id:"29", autore:"Andrzej Sapkowski", titolo:"La spada del destino", genere:"Fantasy", copie: 1,},
-{id:"30", autore:"Andrzej Sapkowski", titolo:"Il sangue degli elfi", genere:"Fantasy", copie: 1,},
-{id:"31", autore:"Andrzej Sapkowski", titolo:"Il tempo della guerra", genere:"Fantasy", copie: 1,},
-{id:"32", autore:"Andrzej Sapkowski", titolo:"Il battesimo del fuoco", genere:"Fantasy", copie: 1,},
-{id:"33", autore:"Andrzej Sapkowski", titolo:"La torre della rondine", genere:"Fantasy", copie: 1,},
-{id:"34", autore:"Andrzej Sapkowski", titolo:"La signora del lago", genere:"Fantasy", copie: 1,},
-{id:"35", autore:"Andrzej Sapkowski", titolo:"La stagione delle tempeste", genere:"Fantasy", copie: 1,},
-{id:"36", autore:"Andrzej Sapkowski", titolo:"Il crocevia dei corvi", genere:"Fantasy", copie: 1,},
-{id:"37", autore:"Angela Chen", titolo:"ACE", genere:"Saggio", copie: 1,},
-{id:"38", autore:"Antoine de Saint Exupery", titolo:"Piccolo Principe", genere:"Narrativa per ragazzi", copie: 19,
-{id:"39", autore:"Antonia Arsaln", titolo:"La masseria delle allodole", genere:"Romanzo storico", copie: 1,},
-{id:"40", autore:"Antonio Alberti", titolo:"Medioevo in Valdera", genere:"Storia", copie: 1,},
-{id:"41", autore:"Antonio Alberti e Monica Baldassarri", titolo:"Monete antiche", genere:"Storia", copie: 1,},
-{id:"42", autore:"Antonio Manzini", titolo:"Le ossa parlano", genere:"Giallo", copie: 1,},
-{id:"43", autore:"Antonio Pellegrini", titolo:"Italian Rhapsody: l’avventura dei Queen in Italia", genere:"Musica", copie: 1,},
-{id:"44", autore:"Arin Murphy-Hiscock", titolo:"The Witch’s Book of Self Care", genere:"Esoterismo", copie: 1,},
-{id:"45", autore:"Arin Murphy-Hiscock", titolo:"The green witch", genere:"Esoterismo", copie: 1,},
-{id:"46", autore:"Ariosto", titolo:"Orlando Furioso I", genere:"Poesia", copie: 1,},
-{id:"47", autore:"Ariosto", titolo:"Orlando Furioso II", genere:"Poesia", copie: 1,},
-{id:"48", autore:"Arthur Conan Doyle", titolo:"Uno studio in rosso", genere:"Giallo", copie: 1,},
-{id:"49", autore:"Arthur Conan Doyle", titolo:"Il mastino dei Baskerville", genere:"Giallo", copie: 1,},
-{id:"50", autore:"Arthur Conan Doyle", titolo:"Le avventure di Sherlock Holmes", genere:"Giallo", copie: 1,},
-{id:"51", autore:"Arthur Conan Doyle", titolo:"La valle della paura", genere:"Giallo", copie: 1,},
-{id:"52", autore:"Arthur Conan Doyle", titolo:"Il segno dei quattro", genere:"Giallo", copie: 1,},
-{id:"53", autore:"Arthur Rimbaud", titolo:"Opere", genere:"Poesia", copie: 1,},
-{id:"54", autore:"Asumiko Nakamura", titolo:"Compagni di classe", genere:"Manga", copie: 8,},
-{id:"55", autore:"Banana Yoshimoto", titolo:"Kitchen", genere:"Narrativa", copie: 1,},
-{id:"56", autore:"Banana Yoshimoto", titolo:"Le strane storie di Fukiage", genere:"Narrativa", copie: 1,},
-{id:"57", autore:"Bianca Pitzorno", titolo:"La sonnambula", genere:"Narrativa per ragazzi", copie: 1,},
-{id:"58", autore:"Bianca Pitzorno", titolo:"Tornatràs", genere:"Narrativa per ragazzi", copie: 1,},
-{id:"59", autore:"Bradbury", titolo:"Bradbury - Fahrenheit 451", genere:"Fantascienza", copie: 1,},
-{id:"60", autore:"Bram Stoker", titolo:"Dracula", genere:"Horror", copie: 1,},
-{id:"61", autore:"Calasso", titolo:"Le nozze di Cadmo e Armonia", genere:"Mitologia", copie: 1,},
-{id:"62", autore:"Carlo Capra", titolo:"Storia moderna", genere:"Storia", copie: 1,},
-{id:"63", autore:"Carlo Goldoni", titolo:"Commedie Scelte", genere:"Teatro", copie: 1,},
-{id:"64", autore:"Cassandra Clare", titolo:"The infernal devices 1,2,3 volume intero", genere:"Fantasy", copie: 1,},
-{id:"65", autore:"Cassandra Clare", titolo:"The mortal instruments da 1 a 3 volume intero", genere:"Fantasy", copie: 1,},
-{id:"66", autore:"Cassandra Clare", titolo:"The mortal instruments da 4 a 6 volume intero", genere:"Fantasy", copie: 1,},
-{id:"67", autore:"Cassandra Clare", titolo:"The Dark artifices 1,2,3 volume intero", genere:"Fantasy", copie: 1,},
-{id:"68", autore:"Cassandra Clare", titolo:"Fantasmi del mercato delle ombre", genere:"Fantasy", copie: 1,},
-{id:"69", autore:"Cassandra Clare", titolo:"Le cronache di Magnus Bane", genere:"Fantasy", copie: 1,},
-{id:"70", autore:"Cassandra Clare", titolo:"La mano scarlatta", genere:"Fantasy", copie: 1,},
-{id:"71", autore:"Cassandra Clare", titolo:"Il libro bianco perduto", genere:"Fantasy", copie: 1,},
-{id:"72", autore:"Cassandra Clare", titolo:"The Last Hours, La catena d’oro", genere:"Fantasy", copie: 1,},
-{id:"73", autore:"Cassandra Clare", titolo:"The Last Hours, La catena di ferro", genere:"Fantasy", copie: 1,},
-{id:"74", autore:"Cassandra Clare", titolo:"The Last Hours, La catena di spine", genere:"Fantasy", copie: 1,},
-{id:"75", autore:"Cassandra Clare", titolo:"Storia di illustri Shadowhunters e abitanti del mondo dei Nascosti", genere:"Fantasy", copie: 1,},
-{id:"76", autore:"Cassandra Clare", titolo:"Come i cuori degli angeli", genere:"Fantasy", copie: 1,},
-{id:"77", autore:"Cassandra Clare", titolo:"I segreti di Blackthorn Hall", genere:"Fantasy", copie: 1,},
-{id:"78", autore:"Cecilie Hollberg", titolo:"Il mio David", genere:"Arte", copie: 1,},
-{id:"79", autore:"Charles Baudelaire", titolo:"I fiori del male", genere:"Poesia", copie: 1,},
-{id:"80", autore:"Charles Dickens", titolo:"Una storia tra due città", genere:"Narrativa", copie: 1,},
-{id:"81", autore:"Charles Dickens", titolo:"Oliver Twist", genere:"Narrativa", copie: 1,},
-{id:"82", autore:"Charles Dickens", titolo:"David Copperfield", genere:"Narrativa", copie: 1,},
-{id:"83", autore:"Charles Dickens", titolo:"Grandi speranze", genere:"Narrativa", copie: 1,},
-{id:"84", autore:"Charles Dickens", titolo:"Il Circolo Pickwick", genere:"Narrativa", copie: 1,},
-{id:"85", autore:"Charles Schulz", titolo:"Magico Snoopy", genere:"Fumetto", copie: 1,},
-{id:"86", autore:"Christopher Paolini", titolo:"Eragorn", genere:"Fantasy", copie: 1,},
-{id:"87", autore:"Christopher Paolini", titolo:"Eldest", genere:"Fantasy", copie: 1,},
-{id:"88", autore:"Christopher Paolini", titolo:"Brisingr", genere:"Fantasy", copie: 1,},
-{id:"89", autore:"Christopher Paolini", titolo:"Inheritance", genere:"Fantasy", copie: 1,},
-{id:"90", autore:"Colin Morgan", titolo:"La ballata di Rohan McCoy", genere:"Narrativa", copie: 1,},
-{id:"91", autore:"Corinne Morel", titolo:"Dizionario dei simboli, miti e credenze", genere:"Esoterismo", copie: 1,},
-{id:"92", autore:"Cornelia Funke", titolo:"Alba d’Inchiostro", genere:"Fantasy", copie: 1,},
-{id:"93", autore:"Cornelia Funke", titolo:"Veleno d’inchiostro", genere:"Fantasy", copie: 1,},
-{id:"94", autore:"Cornelia Funke", titolo:"Cuore d’Inchiostro", genere:"Fantasy", copie: 1,},
-{id:"95", autore:"Cristina Menazza", titolo:"Parent Training nell’autismo", genere:"Psicologia", copie: 1,},
-{id:"96", autore:"CS Lewis", titolo:"Le Cronache di Narnia volume intero", genere:"Fantasy", copie: 1,},
-{id:"97", autore:"CS Pacat", titolo:"Dark Rise", genere:"Fantasy", copie: 1,},
-{id:"98", autore:"CS Pacat", titolo:"Dark Heir", genere:"Fantasy", copie: 1,},
-{id:"99", autore:"CS Pacat", titolo:"Il Principe Prigioniero", genere:"Fantasy", copie: 1,},
-{id:"100", autore:"CS Pacat", titolo:"La Mossa del Principe", genere:"Fantasy", copie: 1,},
-{id:"101", autore:"CS Pacat", titolo:"L’ascesa dei Re", genere:"Fantasy", copie: 1,},
-{id:"102", autore:"Daniel Goleman", titolo:"Intelligenza Emotiva", genere:"Psicologia", copie: 1,},
-{id:"103", autore:"Daniel Keyes", titolo:"Una stanza piena di gente", genere:"Psicologia", copie: 1,},
-{id:"104", autore:"Daniel Pennac", titolo:"Come un romanzo", genere:"Saggio", copie: 1,},
-{id:"105", autore:"Daniel Pennac", titolo:"Diario di scuola", genere:"Saggio", copie: 1,},
-{id:"106", autore:"Dante Alighieri", titolo:"Divina Commedia Illustrata da Go Nagai", genere:"Graphic novel", copie: 1,},
-{id:"107", autore:"Dante Alighieri", titolo:"Divina Commedia", genere:"Poesia", copie: 1,},
-{id:"108", autore:"Dante Alighieri", titolo:"Tutte le opere - mammut", genere:"Opere complete", copie: 1,},
-{id:"109", autore:"Diane Ehrensaft e Michelle Jurkiewicz", titolo:"Il Gender spiegato bene. Una guida all'identità di genere per professionist*, insegnanti e genitori", genere:"Saggio", copie: 1,},
-{id:"110", autore:"Diego Miscioscoia e Daniele Novara", titolo:"Le radici affettive dei conflitti", genere:"Psicologia", copie: 1,},
-{id:"111", autore:"Donatello Tomaiuoli", titolo:"Insegnare le abilità sociali ai bambini con autismo e altri disturbi dello sviluppo", genere:"Psicologia", copie: 1,},
-{id:"112", autore:"Doris Lessing", titolo:"Il quinto figlio", genere:"Narrativa", copie: 1,},
-{id:"113", autore:"Duccio Balestracci", titolo:"La battaglia di Montaperti", genere:"Storia", copie: 1,},
-{id:"114", autore:"Edward Ashton", titolo:"Mickey 7", genere:"Fantascienza", copie: 1,},
-{id:"115", autore:"Elie Wiesel", titolo:"La notte", genere:"Memoir", copie: 1,},
-{id:"116", autore:"Elie Wiesel", titolo:"Il processo di Shamgorod", genere:"Teatro", copie: 1,},
-{id:"117", autore:"Elisa Bertini", titolo:"I diari di Seaport", genere:"Narrativa", copie: 1,},
-{id:"118", autore:"Elisabeth Van Gogh", titolo:"Mio fratello Vincent", genere:"Biografia", copie: 1,},
-{id:"119", autore:"Elisabetta Gnone", titolo:"Fairy Oak, la storia perduta", genere:"Narrativa per ragazzi", copie: 1,},
-{id:"120", autore:"Elsa Morante", titolo:"La storia", genere:"Narrativa", copie: 1,},
-{id:"121", autore:"Elsa Morante", titolo:"L’isola di Arturo", genere:"Narrativa", copie: 1,},
-{id:"122", autore:"Emanuele Mastrangelo", titolo:"Wikipedia", genere:"Saggio", copie: 1,},
-{id:"123", autore:"Emilio Salgari", titolo:"Trilogia di Sandokan", genere:"Avventura", copie: 1,},
-{id:"124", autore:"Emily Bronte", titolo:"Cime tempestose", genere:"Narrativa", copie: 1,},
-{id:"125", autore:"Enrico Menduini", titolo:"Social Network", genere:"Saggio", copie: 1,},
-{id:"126", autore:"Eugenio Montale", titolo:"Le Occasioni", genere:"Poesia", copie: 1,},
-{id:"127", autore:"Euripide", titolo:"Le tragedie", genere:"Teatro", copie: 1,},
-{id:"128", autore:"Eva Cantarella", titolo:"Secondo Natura", genere:"Saggio", copie: 1,},
-{id:"129", autore:"Evangeline Walton", titolo:"I Mabinogion - tetralogia", genere:"Fantasy", copie: 1,},
-{id:"130", autore:"F. Scott Fitzegerald", titolo:"Il grande Gatsby", genere:"Narrativa", copie: 1,},
-{id:"131", autore:"F.Ramorino", titolo:"Mitologia classica", genere:"Mitologia", copie: 1,},
-{id:"132", autore:"Federico Rampini", titolo:"La seconda guerra Fredda", genere:"Saggio", copie: 1,},
-{id:"133", autore:"Federigo Tozzi", titolo:"Federigo Tozzi - Con gli occhi chiusi, ricordi di un impiegato", genere:"Narrativa", copie: 1,},
-{id:"134", autore:"Fedor Dostoevskij", titolo:"L’idiota", genere:"Narrativa", copie: 1,},
-{id:"135", autore:"Fedor Dostoevskij", titolo:"Le notti bianche", genere:"Narrativa", copie: 1,},
-{id:"136", autore:"Fedor Dostoevskij", titolo:"I fratelli Karamazov", genere:"Narrativa", copie: 1,},
-{id:"137", autore:"Fiona Bullivant", titolo:"Autismo al femminile", genere:"Psicologia", copie: 1,},
-{id:"138", autore:"Flavia Caretto", titolo:"Autismo e autonomie personali", genere:"Psicologia", copie: 1,},
-{id:"139", autore:"Francis Bacon", titolo:"La nuova Atlantide", genere:"Filosofia", copie: 1,},
-{id:"140", autore:"Franco Cardini, Marina Montesano", titolo:"Storia medievale", genere:"Storia", copie: 1,},
-{id:"141", autore:"Franco Cavallini", titolo:"Foglie al Vento", genere:"Narrativa", copie: 1,},
-{id:"142", autore:"Frank Zollner", titolo:"Michelangelo, tutte le opere", genere:"Arte", copie: 1,},
-{id:"143", autore:"Franz Kafka", titolo:"Il processo", genere:"Narrativa", copie: 1,},
-{id:"144", autore:"Friedrich Nietzsche", titolo:"L’Anticristo", genere:"Filosofia", copie: 1,},
-{id:"145", autore:"Friedrich Nietzsche", titolo:"Sull’utilità e il danno della storia", genere:"Filosofia", copie: 1,},
-{id:"146", autore:"Friedrich Nietzsche", titolo:"La Gaia Scienza", genere:"Filosofia", copie: 1,},
-{id:"147", autore:"Gasperetti", titolo:"Gasperetti - La società dei giornalisti estinti", genere:"Saggio", copie: 1,},
-{id:"148", autore:"George RR Martin", titolo:"Fuoco e Sangue", genere:"Fantasy", copie: 1,},
-{id:"149", autore:"George RR Martin", titolo:"L’Ascesa del drago", genere:"Fantasy", copie: 1,},
-{id:"150", autore:"George RR Martin", titolo:"Il Mondo del Ghiaccio e del fuoco", genere:"Fantasy", copie: 1,},
-{id:"151", autore:"George RR Martin", titolo:"Il Cavaliere dei sette Regni", genere:"Fantasy", copie: 1,},
-{id:"152", autore:"Giacomo Leopardi", titolo:"I canti", genere:"Poesia", copie: 3,},
-{id:"153", autore:"Giacomo Leopardi", titolo:"Lo Zibaldone di pensieri volumi 1", genere:"Saggio", copie: 1,},
-{id:"154", autore:"Giacomo Leopardi", titolo:"Lo Zibaldone di pensieri volumi 2", genere:"Saggio", copie: 1,},
-{id:"155", autore:"Giacomo Leopardi", titolo:"La vita e le lettere", genere:"Biografia", copie: 1,},
-{id:"156", autore:"Giacomo Vivanti", titolo:"L’apprendimento nell’autismo", genere:"Psicologia", copie: 1,},
-{id:"157", autore:"Gianni Rodari", titolo:"Gianni Rodari - Favole al telefono", genere:"Narrativa per ragazzi", copie: 1,},
-{id:"158", autore:"Gianrico Carofiglio", titolo:"La nuova manomissione delle parole", genere:"Saggio", copie: 1,},
-{id:"159", autore:"Gino Strada", titolo:"Pappagalli verdi", genere:"Memoir", copie: 1,},
-{id:"160", autore:"Giorgio Bassani", titolo:"Bassani - Gli occhiali d’oro", genere:"Narrativa", copie: 1,},
-{id:"161", autore:"Giorgio Bassani", titolo:"Bassani - Il giardino dei Finzi-Contini", genere:"Narrativa", copie: 1,},
-{id:"162", autore:"Giorgio Ieranò", titolo:"Eroi", genere:"Mitologia", copie: 1,},
-{id:"163", autore:"Giorgio Vasari", titolo:"Le vite dei più eccellenti pittori, scultori e architetti", genere:"Arte", copie: 1,},
-{id:"164", autore:"Giovanni Boccaccio", titolo:"Decameron", genere:"Narrativa", copie: 1,},
-{id:"165", autore:"Giovanni Pascoli", titolo:"Tutte le poesie", genere:"Poesia", copie: 1,},
-{id:"166", autore:"Giulio Ciampoltrini", titolo:"Gli etruschi della Valdera", genere:"Storia", copie: 1,},
-{id:"167", autore:"Giuseppe Mercenaro", titolo:"Una sconosciuta moralità", genere:"Saggio", copie: 1,},
-{id:"168", autore:"Haddon", titolo:"Lo strano caso del cane ucciso a mezzanotte", genere:"Narrativa", copie: 1,},
-{id:"169", autore:"Han Kang", titolo:"Atti Umani", genere:"Narrativa", copie: 1,},
-{id:"170", autore:"Hannah Arendt", titolo:"La banalità del male", genere:"Saggio", copie: 1,},
-{id:"171", autore:"Harper Lee", titolo:"Harper Lee - Il buio oltre la siepe", genere:"Narrativa", copie: 1,},
-{id:"172", autore:"Haruichi Furudate", titolo:"Haikyuu", genere:"Manga", copie: 45,},
-{id:"173", autore:"Haruki Murakami", titolo:"After Dark", genere:"Narrativa", copie: 1,},
-{id:"174", autore:"Haruki Murakami", titolo:"Tutti i figli di Dio danzano", genere:"Narrativa", copie: 1,},
-{id:"175", autore:"Haruki Murakami", titolo:"La ragazza dello Sputnik", genere:"Narrativa", copie: 1,},
-{id:"176", autore:"Haruki Murakami", titolo:"L’elefante scomparso", genere:"Narrativa", copie: 1,},
-{id:"177", autore:"Haruki Murakami", titolo:"Norwegian Wood", genere:"Narrativa", copie: 1,},
-{id:"178", autore:"Henri Troyat", titolo:"La vita quotidiana in Russia ai tempi dell’ultimo zar", genere:"Storia", copie: 1,},
-{id:"179", autore:"Herman Hesse", titolo:"Narciso e Boccadoro", genere:"Narrativa", copie: 1,},
-{id:"180", autore:"Hermann Grimm", titolo:"Michelangelo", genere:"Biografia", copie: 1,},
-{id:"181", autore:"Hiromu Harakawa", titolo:"FullMetal Alchemist", genere:"Manga", copie: 28,
-{id:"182", autore:"Hiromu Harakawa", titolo:"FullMetal Alchemist 20th", genere:"Manga", copie: 1,},
-{id:"183", autore:"Hiromu Harakawa", titolo:"FullMetal Alchemist Artbook", genere:"Artbook", copie: 4,},
-{id:"184", autore:"Hiromu Harakawa", titolo:"Hero Tales", genere:"Manga", copie: 5,},
-{id:"185", autore:"Hiromu Harakawa", titolo:"Yomi no Tsugai", genere:"Manga", copie: 11,},
-{id:"186", autore:"Ingo F. Walther", titolo:"Van Gogh", genere:"Arte", copie: 1,},
-{id:"187", autore:"Irene Marchesini, Carlotta Dicataldo", titolo:"Lyndon", genere:"Narrativa", copie: 1,},
-{id:"188", autore:"Irene Nemirovsky", titolo:"Suite francese", genere:"Narrativa", copie: 1,},
-{id:"189", autore:"Italo Calvino", titolo:"Il cavaliere inesistente", genere:"Narrativa", copie: 1,},
-{id:"190", autore:"Italo Calvino", titolo:"Il sentiro dei nidi di ragno", genere:"Narrativa", copie: 1,},
-{id:"191", autore:"Italo Svevo", titolo:"Italo Svevo - La Coscienza di Zeno", genere:"Narrativa", copie: 1,},
-{id:"192", autore:"Jan Heaton", titolo:"Arte e tecnica dell'uncinetto", genere:"Manuale", copie: 1,},
-{id:"193", autore:"Jane Austen", titolo:"Orgoglio e Pregiudizio", genere:"Narrativa", copie: 1,},
-{id:"194", autore:"Jay Kristoff", titolo:"L’impero del vampiro", genere:"Fantasy", copie: 1,},
-{id:"195", autore:"Jay Kristoff", titolo:"L’impero dei dannati", genere:"Fantasy", copie: 1,},
-{id:"196", autore:"Jay Kristoff", titolo:"L'impero dell'alba", genere:"Fantasy", copie: 1,},
-{id:"197", autore:"Jeffrey Eugenides", titolo:"Eugenides - Middle Sex", genere:"Narrativa", copie: 1,},
-{id:"198", autore:"JK Rowling", titolo:"Harry Potter e la pietra filosofale", genere:"Fantasy", copie: 1,},
-{id:"199", autore:"JK Rowling", titolo:"Harry Potter e la camera dei segreti", genere:"Fantasy", copie: 1,},
-{id:"200", autore:"JK Rowling", titolo:"Harry Potter e il prigioniero di Azkaban", genere:"Fantasy", copie: 1,},
-{id:"201", autore:"JK Rowling", titolo:"Harry Potter e il calice di fuoco", genere:"Fantasy", copie: 1,},
-{id:"202", autore:"JK Rowling", titolo:"Harry Potter e l’ordine della fenice", genere:"Fantasy", copie: 1,},
-{id:"203", autore:"JK Rowling", titolo:"Harry Potter e il principe mezzosangue", genere:"Fantasy", copie: 1,},
-{id:"204", autore:"JK Rowling", titolo:"Harry Potter e i doni della morte", genere:"Fantasy", copie: 1,},
-{id:"205", autore:"JK Rowling", titolo:"Harry Potter e la pietra filosofale (vol castello)", genere:"Fantasy", copie: 1,},
-{id:"206", autore:"Jo Nesbo", titolo:"Il pipistrello", genere:"Thriller", copie: 1,},
-{id:"207", autore:"Jo Nesbo", titolo:"Il cacciatore di teste", genere:"Thriller", copie: 1,},
-{id:"208", autore:"Jo Nesbo", titolo:"Luna Rossa", genere:"Thriller", copie: 1,},
-{id:"209", autore:"Jo Nesbo", titolo:"Il pettirosso", genere:"Thriller", copie: 1,},
-{id:"210", autore:"Jo Nesbo", titolo:"Il confessore", genere:"Thriller", copie: 1,},
-{id:"211", autore:"Joe Landsdale", titolo:"Acqua buia", genere:"Thriller", copie: 1,},
-{id:"212", autore:"Joe Landsdale", titolo:"Cielo di Sabbia", genere:"Thriller", copie: 1,},
-{id:"213", autore:"Joe Landsdale", titolo:"La foresta", genere:"Thriller", copie: 1,},
-{id:"214", autore:"Joe Landsdale", titolo:"La sottile linea scura", genere:"Thriller", copie: 1,},
-{id:"215", autore:"Joe Landsdale", titolo:"Echi perduti", genere:"Thriller", copie: 1,},
-{id:"216", autore:"Joe Landsdale", titolo:"Sotto un cielo cremisi", genere:"Thriller", copie: 1,},
-{id:"217", autore:"Joh  Stephens", titolo:"L’atlante di smeraldo", genere:"Fantasy", copie: 1,},
-{id:"218", autore:"Joh  Stephens", titolo:"L’atlante di fuoco", genere:"Fantasy", copie: 1,},
-{id:"219", autore:"Joh  Stephens", titolo:"L'atlante di tenebra", genere:"Fantasy", copie: 1,},
-{id:"220", autore:"John Milton", titolo:"Paradiso Perduto", genere:"Poesia", copie: 1,},
-{id:"221", autore:"Jorge Luis Borges", titolo:"Libro di sogni", genere:"Narrativa", copie: 1,},
-{id:"222", autore:"JRR Tolkien", titolo:"Il libro dei racconti perduti parte I", genere:"Fantasy", copie: 1,},
-{id:"223", autore:"JRR Tolkien", titolo:"Il libro dei racconti perduti parte II", genere:"Fantasy", copie: 1,},
-{id:"224", autore:"JRR Tolkien", titolo:"Il signore degli Anelli volume intero", genere:"Fantasy", copie: 1,},
-{id:"225", autore:"JRR Tolkien", titolo:"Lo Hobbit", genere:"Fantasy", copie: 2,},
-{id:"226", autore:"JRR Tolkien", titolo:"Silmarillion", genere:"Fantasy", copie: 1,},
-{id:"227", autore:"JRR Tolkien", titolo:"La caduta di Gondolin", genere:"Fantasy", copie: 1,},
-{id:"228", autore:"Jun Mochizuki", titolo:"Pandora Hearts", genere:"Manga", copie: 27,},
-{id:"229", autore:"Jun Mochizuki", titolo:"Pandora Hearts Artbook “Odds & Ends”", genere:"Artbook", copie: 1,},
-{id:"230", autore:"Jun Mochizuki", titolo:"Vanitas No Carte", genere:"Manga", copie: 11,},
-{id:"231", autore:"Kaho Nashiki", titolo:"Un'estate con la strega dell'Ovest", genere:"Narrativa", copie: 1,},
-{id:"232", autore:"Kandisky", titolo:"Lo spirituale nell’arte", genere:"Arte", copie: 1,},
-{id:"233", autore:"Karl Marx", titolo:"Il manifesto del partito comunista", genere:"Saggio", copie: 1,},
-{id:"234", autore:"Kass Morgan", titolo:"The 100 - tetralogia", genere:"Fantascienza", copie: 1,},
-{id:"235", autore:"Kate Moss", titolo:"L’ottavo arcano", genere:"Narrativa", copie: 1,},
-{id:"236", autore:"Kentaro Miura", titolo:"Berserk", genere:"Manga", copie: 3,},
-{id:"237", autore:"Kohske", titolo:"Gangsta", genere:"Manga", copie: 8,},
-{id:"238", autore:"Kohske", titolo:"Gangsta Adriano", genere:"Manga", copie: 5,},
-{id:"239", autore:"Le Scouzec", titolo:"La lettura della mano", genere:"Esoterismo", copie: 1,},
-{id:"240", autore:"Leigh Bardugo", titolo:"Tenebre e Ossa", genere:"Fantasy", copie: 1,},
-{id:"241", autore:"Leigh Bardugo", titolo:"Assedio e Tempesta", genere:"Fantasy", copie: 1,},
-{id:"242", autore:"Leigh Bardugo", titolo:"Rovina e Ascesa", genere:"Fantasy", copie: 1,},
-{id:"243", autore:"Leigh Bardugo", titolo:"Sei di corvi", genere:"Fantasy", copie: 1,},
-{id:"244", autore:"Leigh Bardugo", titolo:"Il regno corrotto", genere:"Fantasy", copie: 1,},
-{id:"245", autore:"Leonardo Sciascia", titolo:"Il giorno della civetta", genere:"Narrativa", copie: 1,},
-{id:"246", autore:"Leslie Ann Jones", titolo:"Freddie Mercury I Will Rock You", genere:"Musica", copie: 1,},
-{id:"247", autore:"Lev Tolstoj", titolo:"Anna Karenina", genere:"Narrativa", copie: 1,},
-{id:"248", autore:"Lev Tolstoj", titolo:"La morte di Ivan Il'ič", genere:"Narrativa", copie: 1,},
-{id:"249", autore:"Licofrone", titolo:"Alessandra", genere:"Poesia", copie: 1,},
-{id:"250", autore:"Louis Carroll", titolo:"Le avventure di Alice nel Paese delle Meraviglie", genere:"Narrativa per ragazzi", copie: 1,},
-{id:"251", autore:"Louisa May Alcott", titolo:"Piccole Donne", genere:"Narrativa per ragazzi", copie: 1,},
-{id:"252", autore:"Louisa May Alcott", titolo:"Piccole Donne (vers, La mia piccola biblioteca)", genere:"Narrativa per ragazzi", copie: 1,},
-{id:"253", autore:"Louisa May Alcott", titolo:"Piccole Donne Crescono", genere:"Narrativa per ragazzi", copie: 1,},
-{id:"254", autore:"Louisa May Alcott", titolo:"Piccole Donne (GRAPHIC)", genere:"Graphic novel", copie: 1,},
-{id:"255", autore:"Lucia Impelluso", titolo:"Eroi e dei dell’antichità", genere:"Arte", copie: 1,},
-{id:"256", autore:"Luigi Pirandello", titolo:"Il fu Mattia Pascal", genere:"Narrativa", copie: 1,},
-{id:"257", autore:"Luigi Surdich", titolo:"Il duecento e il trecento", genere:"Critica letteraria", copie: 1,},
-{id:"258", autore:"Luis Royo", titolo:"Dead Moon: Epilogue", genere:"Artbook", copie: 1,},
-{id:"259", autore:"Madeline Miller", titolo:"Circe", genere:"Narrativa", copie: 1,},
-{id:"260", autore:"Madeline Miller", titolo:"La canzone di Achille", genere:"Narrativa", copie: 1,},
-{id:"261", autore:"Madeline Miller", titolo:"Galatea", genere:"Narrativa", copie: 1,},
-{id:"262", autore:"Malba Tahan", titolo:"L’uomo che sapeva contare", genere:"Narrativa", copie: 1,},
-{id:"263", autore:"Marcela Serrano", titolo:"Dieci donne", genere:"Narrativa", copie: 1,},
-{id:"264", autore:"Marguerite Yourcenar", titolo:"Memorie di Adriano", genere:"Romanzo storico", copie: 1,},
-{id:"265", autore:"Mari Ela Panzeca", titolo:"Kore sprofonda negli inferi", genere:"Poesia", copie: 1,},
-{id:"266", autore:"Marianne Eloise", titolo:"Obsessive intrusive magical thinking", genere:"Memoir", copie: 1,},
-{id:"267", autore:"Marica Romolini", titolo:"Commento a la Bufera e altro di Montale", genere:"Critica letteraria", copie: 1,},
-{id:"268", autore:"Mario Fulgoni", titolo:"Manuale di Teoria Musicale vol 1", genere:"Manuale", copie: 1,},
-{id:"269", autore:"Mark Blake", titolo:"Freddie Mercury, A kind of Magic", genere:"Musica", copie: 1,},
-{id:"270", autore:"Marshall B.Rosemberg", titolo:"Le parole sono finestre (oppure muri)", genere:"Psicologia", copie: 1,},
-{id:"271", autore:"Mary Shelley", titolo:"Frankenstein", genere:"Horror", copie: 1,},
-{id:"272", autore:"Masami Kurumada", titolo:"Saint Seiya Lost Canvas", genere:"Manga", copie: 50,},
-{id:"273", autore:"Matilde Battistini", titolo:"Simboli e allegorie", genere:"Arte", copie: 1,},
-{id:"274", autore:"Matteo Strukul", titolo:"I medici, la saga completa 4 volumi", genere:"Romanzo storico", copie: 1,},
-{id:"275", autore:"Matthew Sturgis", titolo:"Oscar", genere:"Biografia", copie: 1,},
-{id:"276", autore:"Maura Angeletti", titolo:"Il vero libro dei tarocchi", genere:"Esoterismo", copie: 1,},
-{id:"277", autore:"Mauro Corsaro, Luigi Gallo", titolo:"Storia greca", genere:"Storia", copie: 1,},
-{id:"278", autore:"McGrath", titolo:"Follia", genere:"Narrativa", copie: 1,},
-{id:"279", autore:"Michael McDowell", titolo:"Katie", genere:"Horror", copie: 1,},
-{id:"280", autore:"Michael McDowell", titolo:"Blackwater, La piena", genere:"Horror", copie: 1,},
-{id:"281", autore:"Michael McDowell", titolo:"Blackwater, La diga", genere:"Horror", copie: 1,},
-{id:"282", autore:"Michael McDowell", titolo:"Blackwater, La casa", genere:"Horror", copie: 1,},
-{id:"283", autore:"Michael McDowell", titolo:"Blackwater, La guerra", genere:"Horror", copie: 1,},
-{id:"284", autore:"Michael McDowell", titolo:"Blackwater, La fortuna", genere:"Horror", copie: 1,},
-{id:"285", autore:"Michael McDowell", titolo:"Blackwater, La pioggia", genere:"Horror", copie: 1,},
-{id:"286", autore:"Michael McDowell", titolo:"Gli aghi d'oro", genere:"Horror", copie: 1,},
-{id:"287", autore:"Michael McDowell", titolo:"Luna Chiara su Babylon", genere:"Horror", copie: 1,},
-{id:"288", autore:"Michael McDowell", titolo:"L'Amuleto", genere:"Horror", copie: 1,},
-{id:"289", autore:"Michel Bussi", titolo:"Codice 612: chi ha ucciso il piccolo principe?", genere:"Giallo", copie: 1,},
-{id:"290", autore:"Michela Murgia", titolo:"Tre ciotole, rituali per un anno di crisi", genere:"Narrativa", copie: 1,},
-{id:"291", autore:"Michelangelo", titolo:"Rime", genere:"Poesia", copie: 1,},
-{id:"292", autore:"Milan Kundera", titolo:"L’insostenibile leggerezza dell’essere", genere:"Narrativa", copie: 1,},
-{id:"293", autore:"Milan Kundera", titolo:"La lentezza", genere:"Narrativa", copie: 1,},
-{id:"294", autore:"Moony Witcher", titolo:"Geno Hastor Venti e il sigillo nero di Madame Crikken", genere:"Narrativa per ragazzi", copie: 1,},
-{id:"295", autore:"Moony Witcher", titolo:"Geno Hastor Venti e la runa bianca del Girifalco d’oro", genere:"Narrativa per ragazzi", copie: 1,},
-{id:"296", autore:"Moony Witcher", titolo:"Geno Hastor Venti e lo specchio rosso della verità", genere:"Narrativa per ragazzi", copie: 1,},
-{id:"297", autore:"Naoko Takeuchi", titolo:"Sailor Moon", genere:"Manga", copie: 2,},
-{id:"298", autore:"Natsuki Kizu", titolo:"Given", genere:"Manga", copie: 10,},
-{id:"299", autore:"Natsuki Kizu", titolo:"Doujinshi IwaOi", genere:"Doujinshi", copie: 3,},
-{id:"300", autore:"Neil Gaiman", titolo:"Miti del Nord", genere:"Mitologia", copie: 1,},
-{id:"301", autore:"Nicola Pesce", titolo:"Il piccolo principe delle tenebre", genere:"Narrativa", copie: 1,},
-{id:"302", autore:"Oliver Sacks", titolo:"L’occhio della mente", genere:"Divulgazione scientifica", copie: 1,},
-{id:"303", autore:"Oliver Sacks", titolo:"Vedere voci", genere:"Divulgazione scientifica", copie: 1,},
-{id:"304", autore:"Oliver Sacks", titolo:"Allucinazioni", genere:"Divulgazione scientifica", copie: 1,},
-{id:"305", autore:"Oliver Sacks", titolo:"L'uomo che scambio sua moglie per un cappello", genere:"Divulgazione scientifica", copie: 1,},
-{id:"306", autore:"Oliver Sacks", titolo:"Emicrania", genere:"Divulgazione scientifica", copie: 1,},
-{id:"307", autore:"Oliver Sacks", titolo:"Musicofilia", genere:"Divulgazione scientifica", copie: 1,},
-{id:"308", autore:"Omero", titolo:"Odissea (GRAPHIC)", genere:"Graphic novel", copie: 1,},
-{id:"309", autore:"Omero", titolo:"Odissea", genere:"Poesia", copie: 3,},
-{id:"310", autore:"Omero", titolo:"Iliade", genere:"Poesia", copie: 2,},
-{id:"311", autore:"Orazio", titolo:"Le satire", genere:"Poesia", copie: 1,},
-{id:"312", autore:"Oscar Wilde", titolo:"Il principe felice", genere:"Narrativa", copie: 1,},
-{id:"313", autore:"Oscar Wilde", titolo:"Aforismi", genere:"Aforismi", copie: 1,},
-{id:"314", autore:"Oscar Wilde", titolo:"Per sempre tuo", genere:"Epistolario", copie: 1,},
-{id:"315", autore:"Oscar Wilde", titolo:"Il prete e l’accolito e altre opere", genere:"Narrativa", copie: 1,},
-{id:"316", autore:"Oscar Wilde", titolo:"Una casa di melograni", genere:"Narrativa", copie: 1,},
-{id:"317", autore:"Oscar Wilde", titolo:"Il fantasma di Canterville", genere:"Narrativa", copie: 1,},
-{id:"318", autore:"Oscar Wilde", titolo:"Salomé", genere:"Teatro", copie: 1,},
-{id:"319", autore:"Oscar Wilde", titolo:"Il critico come artista", genere:"Saggio", copie: 1,},
-{id:"320", autore:"Oscar Wilde", titolo:"De Profundis", genere:"Epistolario", copie: 1,},
-{id:"321", autore:"Oscar Wilde", titolo:"Il ritratto di Dorian Gray", genere:"Narrativa", copie: 1,},
-{id:"322", autore:"Oscar Wilde", titolo:"Vera o i nichilisti", genere:"Teatro", copie: 1,},
-{id:"323", autore:"Oscar Wilde", titolo:"La ballata del carcere di Reading", genere:"Poesia", copie: 2,
-{id:"324", autore:"Oscar Wilde", titolo:"Il delitto di Lord Arthur Savile", genere:"Narrativa", copie: 1,},
-{id:"325", autore:"Oscar Wilde", titolo:"Il ritratto di Mr. W. H.", genere:"Narrativa", copie: 1,},
-{id:"326", autore:"Oscar Wilde", titolo:"Il ventaglio di Lady Windermere e Salomé", genere:"Teatro", copie: 1,},
-{id:"327", autore:"Oscar Wilde", titolo:"Autobiografia di un dandy", genere:"Biografia", copie: 1,},
-{id:"328", autore:"Oscar Wilde", titolo:"L’importanza di chiamarsi Ernesto", genere:"Teatro", copie: 1,},
-{id:"329", autore:"Ovidio", titolo:"Le Metamorfosi", genere:"Poesia", copie: 1,},
-{id:"330", autore:"Paolo Ghezzi", titolo:"La rosa bianca", genere:"Storia", copie: 1,},
-{id:"331", autore:"Paolo Mastrocola", titolo:"L’amore prima di noi", genere:"Narrativa", copie: 1,},
-{id:"332", autore:"Park Ji-Yeon", titolo:"Wolf in the House", genere:"Manhwa", copie: 5,},
-{id:"333", autore:"Pat Patfoort", titolo:"Difendersi senza aggredire", genere:"Saggio", copie: 1,},
-{id:"334", autore:"Pat Patfoort", titolo:"Io voglio, tu non vuoi", genere:"Saggio", copie: 1,},
-{id:"335", autore:"Pat Patfoort", titolo:"Mamma viene a morire da noi domenica", genere:"Saggio", copie: 1,},
-{id:"336", autore:"Patrick Suskind", titolo:"Profumo", genere:"Narrativa", copie: 1,},
-{id:"337", autore:"Paulo Coelho", titolo:"Veronika decide di morire", genere:"Narrativa", copie: 1,},
-{id:"338", autore:"Penelope Bagieu", titolo:"Indomite Vol 2", genere:"Graphic novel", copie: 1,},
-{id:"339", autore:"Petronio", titolo:"Satyricon", genere:"Narrativa", copie: 1,},
-{id:"340", autore:"Phil Sutcliffe", titolo:"QUEEN", genere:"Musica", copie: 1,},
-{id:"341", autore:"Philip Pullman", titolo:"Queste oscure materie la trilogia completa", genere:"Fantasy", copie: 1,},
-{id:"342", autore:"Platone", titolo:"La settima lettera", genere:"Filosofia", copie: 1,},
-{id:"343", autore:"Primo Levi", titolo:"Levi - Il sistema periodico", genere:"Narrativa", copie: 1,},
-{id:"344", autore:"Primo Levi", titolo:"Levi - Se questo è un uomo", genere:"Memoir", copie: 1,},
-{id:"345", autore:"Primo Levi", titolo:"Levi - Sommersi e salvati", genere:"Saggio", copie: 1,},
-{id:"346", autore:"Primo Levi", titolo:"La tregua", genere:"Memoir", copie: 1,},
-{id:"347", autore:"Raffaella Milandri", titolo:"Nativi americani", genere:"Saggio", copie: 1,},
-{id:"348", autore:"Randall Sullivan", titolo:"Michael Jackson", genere:"Biografia", copie: 1,},
-{id:"349", autore:"Renate Ulmer", titolo:"Alfons Mucha", genere:"Arte", copie: 1,},
-{id:"350", autore:"Renato Stella", titolo:"Sociologia dei New Media", genere:"Saggio", copie: 1,},
-{id:"351", autore:"Riccardo Falcinelli", titolo:"Visus", genere:"Design", copie: 1,},
-{id:"352", autore:"Riccardo Falcinelli", titolo:"Critica portatile al visual design. Da Gutenberg ai social network.", genere:"Design", copie: 1,},
-{id:"353", autore:"Riccardo Falcinelli", titolo:"Cromorama", genere:"Design", copie: 1,},
-{id:"354", autore:"Riccardo Falcinelli", titolo:"Figure", genere:"Design", copie: 1,},
-{id:"355", autore:"Rick Riordan", titolo:"Percy Jackson e gli dei dell’Olimpo, Il ladro di fulmini", genere:"Fantasy", copie: 1,},
-{id:"356", autore:"Rick Riordan", titolo:"Percy Jackson e gli dei dell’Olimpo, Il mare dei mostri", genere:"Fantasy", copie: 1,},
-{id:"357", autore:"Rick Riordan", titolo:"Percy Jackson e gli dei dell’Olimpo, La maledizione del titano", genere:"Fantasy", copie: 1,},
-{id:"358", autore:"Rick Riordan", titolo:"Percy Jackson e gli dei dell’Olimpo, La battaglia del labirinto", genere:"Fantasy", copie: 1,},
-{id:"359", autore:"Rick Riordan", titolo:"Percy Jackson e gli dei dell’Olimpo, Lo scontro finale", genere:"Fantasy", copie: 1,},
-{id:"360", autore:"Rick Riordan", titolo:"Percy Jackson e gli dei dell’Olimpo, Il ladro di fulmini (volume baby)", genere:"Fantasy", copie: 1,},
-{id:"361", autore:"Rick Riordan", titolo:"Eroi dell’Olimpo, L’eroe perduto", genere:"Fantasy", copie: 1,},
-{id:"362", autore:"Rick Riordan", titolo:"Eroi dell’Olimpo, Il figlio di Nettuno", genere:"Fantasy", copie: 1,},
-{id:"363", autore:"Rick Riordan", titolo:"Eroi dell’Olimpo, Il marchio di Atena", genere:"Fantasy", copie: 1,},
-{id:"364", autore:"Rick Riordan", titolo:"Eroi dell’Olimpo, La casa di Ade", genere:"Fantasy", copie: 1,},
-{id:"365", autore:"Rick Riordan", titolo:"Eroi dell’Olimpo, Il sangue dell’Olimpo", genere:"Fantasy", copie: 1,},
-{id:"366", autore:"Rick Riordan", titolo:"Sfide di Apollo, L’oracolo nascosto", genere:"Fantasy", copie: 1,},
-{id:"367", autore:"Rick Riordan", titolo:"Sfide di Apollo, La profezia oscura", genere:"Fantasy", copie: 1,},
-{id:"368", autore:"Rick Riordan", titolo:"Sfide di Apollo, Il labirinto di fuoco", genere:"Fantasy", copie: 1,},
-{id:"369", autore:"Rick Riordan", titolo:"Sfide di Apollo, La tomba del tiranno", genere:"Fantasy", copie: 1,},
-{id:"370", autore:"Rick Riordan", titolo:"Sfide di Apollo, La torre di Nerone", genere:"Fantasy", copie: 1,},
-{id:"371", autore:"Rick Riordan", titolo:"Magnus Chase e Gli Dei di Asgard, La spada del guerriero", genere:"Fantasy", copie: 1,},
-{id:"372", autore:"Rick Riordan", titolo:"Magnus Chase e Gli Dei di Asgard, Il martello di Thor", genere:"Fantasy", copie: 1,},
-{id:"373", autore:"Rick Riordan", titolo:"Magnus Chase e Gli Dei di Asgard, La nave degli scomparsi", genere:"Fantasy", copie: 1,},
-{id:"374", autore:"Rick Riordan", titolo:"Kane Chronicles , La piramide rossa", genere:"Fantasy", copie: 1,},
-{id:"375", autore:"Rick Riordan", titolo:"Kane Chronicles , Il trono di fuoco", genere:"Fantasy", copie: 1,},
-{id:"376", autore:"Rick Riordan", titolo:"Kane Chronicles , L’ombra del serpente", genere:"Fantasy", copie: 1,},
-{id:"377", autore:"Rick Riordan", titolo:"Percy Jackson e gli dei greci", genere:"Fantasy", copie: 1,},
-{id:"378", autore:"Rick Riordan", titolo:"Percy Jackson e gli eroi greci", genere:"Fantasy", copie: 1,},
-{id:"379", autore:"Rick Riordan", titolo:"Le storie segrete Magnus Chase", genere:"Fantasy", copie: 1,},
-{id:"380", autore:"Rick Riordan", titolo:"Il campo mezzosangue", genere:"Fantasy", copie: 1,},
-{id:"381", autore:"Rick Riordan", titolo:"Il campo giove", genere:"Fantasy", copie: 1,},
-{id:"382", autore:"Rick Riordan", titolo:"La spada del guerriero", genere:"Fantasy", copie: 1,},
-{id:"383", autore:"Rick Riordan", titolo:"Il libro segreto", genere:"Fantasy", copie: 1,},
-{id:"384", autore:"Rick Riordan", titolo:"Eroi dell’olimpo, i racconti perduti", genere:"Fantasy", copie: 1,},
-{id:"385", autore:"Rick Riordan", titolo:"Luce e tenebra", genere:"Fantasy", copie: 3,},
-{id:"386", autore:"Rick Riordan", titolo:"La Corte dei Mostri", genere:"Fantasy", copie: 1,},
-{id:"387", autore:"Rick Riordan", titolo:"Il calice degli Dei", genere:"Fantasy", copie: 1,},
-{id:"388", autore:"Rick Riordan", titolo:"Il furore della Dea", genere:"Fantasy", copie: 1,},
-{id:"389", autore:"RL Stevenson", titolo:"L’isola del tesoro", genere:"Avventura", copie: 1,},
-{id:"390", autore:"RL Stevenson", titolo:"Lo strano caso del Dottor Jekyll e Mr Hyde", genere:"Horror", copie: 1,},
-{id:"391", autore:"Sakae Esuno", titolo:"Mirai Nikki", genere:"Manga", copie: 14,},
-{id:"392", autore:"Samuel Spano", titolo:"Nine Stones 1,2", genere:"Narrativa", copie: 2,},
-{id:"393", autore:"Sandro Veronesi", titolo:"Non dirlo: il vangelo di Marco", genere:"Saggio", copie: 1,},
-{id:"394", autore:"Saxena And Zimmerman", titolo:"Basic witches", genere:"Esoterismo", copie: 1,},
-{id:"395", autore:"Schneider", titolo:"Heike riprende a respirare", genere:"Memoir", copie: 1,},
-{id:"396", autore:"Schneider", titolo:"Il rogo di Berlino", genere:"Memoir", copie: 1,},
-{id:"397", autore:"Schneider", titolo:"Lasciami andare, madre", genere:"Memoir", copie: 1,},
-{id:"398", autore:"Sebastian Schutze", titolo:"Caravaggio", genere:"Arte", copie: 1,},
-{id:"399", autore:"Sergio Risaliti", titolo:"Maratona Michelangelo", genere:"Arte", copie: 1,},
-{id:"400", autore:"Sergio Splendore", titolo:"Giornalismo Ibrido", genere:"Saggio", copie: 1,},
-{id:"401", autore:"Simon Scarrow", titolo:"Il Gladiatore, il figlio di Spartaco", genere:"Romanzo storico", copie: 1,},
-{id:"402", autore:"Snorri Sturluson", titolo:"Edda", genere:"Mitologia", copie: 1,},
-{id:"403", autore:"Stefano Benni", titolo:"La compagnia dei Celestini", genere:"Narrativa", copie: 1,},
-{id:"404", autore:"Stefano Benni", titolo:"Di tutte le ricchezze", genere:"Narrativa", copie: 1,},
-{id:"405", autore:"Stefano Benni", titolo:"Giura", genere:"Narrativa", copie: 1,},
-{id:"406", autore:"Stephanie Meyer", titolo:"Twilight", genere:"Fantasy", copie: 1,},
-{id:"407", autore:"Stephanie Meyer", titolo:"New Moon", genere:"Fantasy", copie: 1,},
-{id:"408", autore:"Stephanie Meyer", titolo:"Eclipse", genere:"Fantasy", copie: 1,},
-{id:"409", autore:"Stephanie Meyer", titolo:"Breaking Dawn", genere:"Fantasy", copie: 1,},
-{id:"410", autore:"Stephen King", titolo:"Cuori in Atlantide", genere:"Narrativa", copie: 1,},
-{id:"411", autore:"Susan Smith", titolo:"150 bordi all'uncinetto", genere:"Manuale", copie: 1,},
-{id:"412", autore:"Suzanne Collins", titolo:"Hunger Games (versione baby 1,2,3)", genere:"Distopia", copie: 1,},
-{id:"413", autore:"Suzanne Collins", titolo:"Hunger Games", genere:"Distopia", copie: 1,},
-{id:"414", autore:"Suzanne Collins", titolo:"La ragazza di fuoco", genere:"Distopia", copie: 1,},
-{id:"415", autore:"Suzanne Collins", titolo:"Il canto della rivolta", genere:"Distopia", copie: 1,},
-{id:"416", autore:"Suzanne Collins", titolo:"L'alba della mietitura", genere:"Distopia", copie: 1,},
-{id:"417", autore:"Suzanne Collins", titolo:"La ballata dell'usignolo e del serpente", genere:"Distopia", copie: 1,},
-{id:"418", autore:"Teresa Radice, Stefano Turconi", titolo:"Il porto proibito", genere:"Graphic novel", copie: 1,},
-{id:"419", autore:"Terry Pratchett e Neil Gaiman", titolo:"Good Omens", genere:"Fantasy", copie: 1,},
-{id:"420", autore:"Theodoros Papakostas", titolo:"Omero in ascensone", genere:"Divulgazione", copie: 1,},
-{id:"421", autore:"Thomas Eliot", titolo:"La terra desolata", genere:"Poesia", copie: 1,},
-{id:"422", autore:"Thomas Malory", titolo:"Thomas Malory - Storia di Re Artù e i suoi cavalieri", genere:"Narrativa", copie: 1,},
-{id:"423", autore:"Tomani di Lampedua", titolo:"Il gattopardo", genere:"Romanzo storico", copie: 1,},
-{id:"424", autore:"Tomas de Torquemada", titolo:"La mascella di Caino", genere:"Enigmistica", copie: 1,},
-{id:"425", autore:"Toshikazu Kwaguchi", titolo:"Basta un caffè per essere felici", genere:"Narrativa", copie: 1,},
-{id:"426", autore:"Tracy Chevalier", titolo:"La ragazza con l’orecchino di perla", genere:"Romanzo storico", copie: 1,},
-{id:"427", autore:"Ueda Akinari", titolo:"Racconti di pioggia e di luna", genere:"Narrativa", copie: 1,},
-{id:"428", autore:"Umberto Eco", titolo:"Il nome della rosa illustrato vol 1", genere:"Romanzo storico", copie: 1,},
-{id:"429", autore:"Umberto Eco", titolo:"Il nome della rosa illustrato vol 2", genere:"Romanzo storico", copie: 1,},
-{id:"430", autore:"Ursula K. Le Guin", titolo:"La saga di Terramare", genere:"Fantasy", copie: 1,},
-{id:"431", autore:"Val Emmich", titolo:"Caro Evan Hansen", genere:"Young Adult", copie: 1,},
-{id:"432", autore:"Valentina Meloni", titolo:"Valentina Meloni - Il destino ha la sua puntualità", genere:"Narrativa", copie: 1,},
-{id:"433", autore:"Valerio Evangelisti", titolo:"Trilogia dei Pirati", genere:"Avventura", copie: 1,},
-{id:"434", autore:"Vercors", titolo:"Le Armi della notte", genere:"Narrativa", copie: 1,},
-{id:"435", autore:"Victor Hugo", titolo:"Notre Dame de Paris", genere:"Narrativa", copie: 1,},
-{id:"436", autore:"Vincet Van Gogh", titolo:"Lettere a Theo", genere:"Epistolario", copie: 1,},
-{id:"437", autore:"Virgilio", titolo:"Eneide", genere:"Poesia", copie: 3,},
-{id:"438", autore:"Virginia Woolf", titolo:"Mrs. Dalloway", genere:"Narrativa", copie: 1,},
-{id:"439", autore:"Voltaire", titolo:"Candido", genere:"Narrativa", copie: 1,},
-{id:"440", autore:"Vyvyan Holland", titolo:"Essere figlio di Oscar Wilde", genere:"Biografia", copie: 1,},
-{id:"441", autore:"Wilhelm Arnold", titolo:"Dizionario di Psicologia", genere:"Psicologia", copie: 1,},
-{id:"442", autore:"William Beckford", titolo:"Vathek", genere:"Horror", copie: 1,},
-{id:"443", autore:"William Shakespeare", titolo:"Il mercante di Venezia", genere:"Teatro", copie: 1,},
-{id:"444", autore:"William Shakespeare", titolo:"Sogno d'una notte di mezza estate", genere:"Teatro", copie: 1,},
-{id:"445", autore:"William Shakespeare", titolo:"Enrico IV", genere:"Teatro", copie: 1,},
-{id:"446", autore:"William Shakespeare", titolo:"Tutte le opere -VOLUMI FABBRI EDITORI 2003", genere:"Teatro", copie: 33,},
-{id:"447", autore:"Yoshida Shuici", titolo:"Appartamento 401", genere:"Narrativa", copie: 1,},
-{id:"448", autore:"Zecharia Sitchin", titolo:"Gli dei dalle lacrime d’oro", genere:"Esoterismo", copie: 1,},
-{id:"449", autore:"Zecharia Sitchin", titolo:"Il codice del cosmo", genere:"Esoterismo", copie: 1,},
-{id:"450", autore:"Zecharia Sitchin", titolo:"Il pianeta degli dei", genere:"Esoterismo", copie: 1,},
-{id:"451", autore:"Zeffiro Ciuffoletti", titolo:"Breve storia sociale della comunicazione", genere:"Saggio", copie: 1,},
-{id:"452", autore:"haey1", titolo:"All my cards are here", genere:"Fanfiction", copie: 2,},
-{id:"453", autore:"MsKingBean89", titolo:"All the young dudes 1", genere:"Fanfiction", copie: 1,},
-{id:"454", autore:"MsKingBean89", titolo:"All the young dudes 2", genere:"Fanfiction", copie: 1,},
-{id:"455", autore:"MsKingBean89", titolo:"All the young dudes 3", genere:"Fanfiction", copie: 1,},
-{id:"456", autore:"Mastellaro", titolo:"Il libro delle citazioni latine e greche", genere:"Saggio", copie: 1,},
-{id:"457", autore:"", titolo:"Lirici Greci", genere:"Poesia", copie: 1,},
-{id:"458", autore:"", titolo:"Astronomia: un’introduzione all’universo delle stelle", genere:"Divulgazione scientifica", copie: 1,},
-{id:"459", autore:"", titolo:"I capolavori dell’arte: Van Gogh girasoli", genere:"Arte", copie: 1,},
-{id:"460", autore:"", titolo:"Alessandro Magno - i protagonisti della storia", genere:"Storia", copie: 1,},
-{id:"461", autore:"", titolo:"Augusto - i protagonisti della storia", genere:"Storia", copie: 1,},
-{id:"462", autore:"", titolo:"Grandi miti Greci - Apollo", genere:"Mitologia", copie: 1,},
-{id:"463", autore:"", titolo:"La bella e la bestia, edizione Ippocampo", genere:"Fiaba", copie: 1,},
-{id:"464", autore:"", titolo:"C’era una svolta, 18 favole con un finale diverso", genere:"Fiaba", copie: 1,},
-{id:"465", autore:"", titolo:"Castlevania Artbook", genere:"Artbook", copie: 1,},
-{id:"466", autore:"", titolo:"Batman volume 1", genere:"Fumetto", copie: 1,},
-{id:"467", autore:"Lightning Strikes", titolo:"Sheith Artbook", genere:"Artbook", copie: 3,},
-{id:"468", autore:"Lightning Strikes", titolo:"Stucky Artbook", genere:"Artbook", copie: 1,},
-{id:"469", autore:"Vèna e Xelessia", titolo:"Mismatch", genere:"Fumetto", copie: 2,},
-{id:"470", autore:"Vèna e Xelessia", titolo:"Shades of us Artbook", genere:"Artbook", copie: 1,},
-{id:"471", autore:"Yuto Tsukuda, Shun Saeki, Eiichirō Oda", titolo:"Sanji Food Wars", genere:"Manga", copie: 1,},
-{id:"472", autore:"", titolo:"The vikings runes (fotocopiato)", genere:"Esoterismo", copie: 1,},
-{id:"473", autore:"Diego Meldi", titolo:"Tarocchi, Il manuale completo", genere:"Esoterismo", copie: 1,},
-{id:"474", autore:"", titolo:"Dizionario illustrato di mitologia greco e romana", genere:"Mitologia", copie: 1,},
-{id:"475", autore:"", titolo:"Bibbia", genere:"Religione", copie: 1,},
-{id:"476", autore:"", titolo:"DDR Museum guida - il libro dell'esposizione", genere:"Storia", copie: 1,},
+            {id: "1", autore: "A.Summers", titolo: "La fine degli zar", genere: "Storia", copie: 1, },
+            {id: "2", autore: "Aa. Vv. Pomo di Venerə", titolo: "Cose del Gender. Testimonianze LGBTQIAP+", genere: "Saggio", copie: 1, },
+            {id: "3", autore: "Adriano Fabris", titolo: "L’etica del giornalismo negli attuali scenari comunicativi", genere: "Filosofia", copie: 1, },
+            {id: "4", autore: "Adriano Fabris", titolo: "Etica delle nuove tecnologie", genere: "Filosofia", copie: 1, },
+            {id: "5", autore: "Agota Kristof", titolo: "Trilogia Città di K", genere: "Narrativa", copie: 1, },
+            {id: "6", autore: "Alan Bennett", titolo: "La sovrana lettrice", genere: "Narrativa", copie: 1, },
+            {id: "7", autore: "Alberto Casadei", titolo: "Il Novecento", genere: "Critica letteraria", copie: 1, },
+            {id: "8", autore: "Aldo Palazzeschi", titolo: "Il codice di Perelà", genere: "Narrativa", copie: 1, },
+            {id: "9", autore: "Alessandro Baricco", titolo: "Novecento", genere: "Narrativa", copie: 1, },
+            {id: "10", autore: "Alessandro Baricco", titolo: "Oceano Mare", genere: "Narrativa", copie: 1, },
+            {id: "11", autore: "Alessandro Baricco", titolo: "L’Iliade", genere: "Mitologia", copie: 1, },
+            {id: "12", autore: "Alessandro Baricco", titolo: "City", genere: "Narrativa", copie: 1, },
+            {id: "13", autore: "Alessandro Baricco", titolo: "Castelli di Rabbia", genere: "Narrativa", copie: 1, },
+            {id: "14", autore: "Alessandro Baricco", titolo: "Seta", genere: "Narrativa", copie: 1, },
+            {id: "15", autore: "Alessandro Baricco", titolo: "Tre volte all’alba", genere: "Narrativa", copie: 1, },
+            {id: "16", autore: "Alessandro Baricco", titolo: "La sposa giovane", genere: "Narrativa", copie: 1, },
+            {id: "17", autore: "Alessandro Baricco", titolo: "Abel", genere: "Narrativa", copie: 1, },
+            {id: "18", autore: "Alessandro Baricco", titolo: "Senza Sangue", genere: "Narrativa", copie: 1, },
+            {id: "19", autore: "Alessandro D'Avenia", titolo: "L’arte di essere fragili", genere: "Saggio", copie: 1, },
+            {id: "20", autore: "Alexandre Dumas", titolo: "Il conte di Montecristo", genere: "Romanzo storico", copie: 1, },
+            {id: "21", autore: "Alexandre Dumas", titolo: "I tre moschettieri", genere: "Romanzo storico", copie: 1, },
+            {id: "22", autore: "Alexandre Dumas", titolo: "Vent’anni dopo", genere: "Romanzo storico", copie: 1, },
+            {id: "23", autore: "Alexandre Dumas", titolo: "Il Visconte Bragellone", genere: "Romanzo storico", copie: 1, },
+            {id: "24", autore: "Alexandre Dumas", titolo: "I Medici", genere: "Romanzo storico", copie: 1, },
+            {id: "25", autore: "Alfons Mucha", titolo: "Catalogo mostra", genere: "Arte", copie: 1, },
+            {id: "26", autore: "Alice Oseman", titolo: "Heartstopper", genere: "Graphic novel", copie: 4, },
+            {id: "27", autore: "Anaïs Flogny", titolo: "Rive lontane", genere: "Narrativa", copie: 1, },
+            {id: "28", autore: "Andrzej Sapkowski", titolo: "Il guardiano degli innocenti", genere: "Fantasy", copie: 1, },
+            {id: "29", autore: "Andrzej Sapkowski", titolo: "La spada del destino", genere: "Fantasy", copie: 1, },
+            {id: "30", autore: "Andrzej Sapkowski", titolo: "Il sangue degli elfi", genere: "Fantasy", copie: 1, },
+            {id: "31", autore: "Andrzej Sapkowski", titolo: "Il tempo della guerra", genere: "Fantasy", copie: 1, },
+            {id: "32", autore: "Andrzej Sapkowski", titolo: "Il battesimo del fuoco", genere: "Fantasy", copie: 1, },
+            {id: "33", autore: "Andrzej Sapkowski", titolo: "La torre della rondine", genere: "Fantasy", copie: 1, },
+            {id: "34", autore: "Andrzej Sapkowski", titolo: "La signora del lago", genere: "Fantasy", copie: 1, },
+            {id: "35", autore: "Andrzej Sapkowski", titolo: "La stagione delle tempeste", genere: "Fantasy", copie: 1, },
+            {id: "36", autore: "Andrzej Sapkowski", titolo: "Il crocevia dei corvi", genere: "Fantasy", copie: 1, },
+            {id: "37", autore: "Angela Chen", titolo: "ACE", genere: "Saggio", copie: 1, },
+            {id: "38", autore: "Antoine de Saint Exupery", titolo: "Piccolo Principe", genere: "Narrativa per ragazzi", copie: 19,},
+            {id: "39", autore: "Antonia Arsaln", titolo: "La masseria delle allodole", genere: "Romanzo storico", copie: 1, },
+            {id: "40", autore: "Antonio Alberti", titolo: "Medioevo in Valdera", genere: "Storia", copie: 1, },
+            {id: "41", autore: "Antonio Alberti e Monica Baldassarri", titolo: "Monete antiche", genere: "Storia", copie: 1, },
+            {id: "42", autore: "Antonio Manzini", titolo: "Le ossa parlano", genere: "Giallo", copie: 1, },
+            {id: "43", autore: "Antonio Pellegrini", titolo: "Italian Rhapsody: l’avventura dei Queen in Italia", genere: "Musica", copie: 1, },
+            {id: "44", autore: "Arin Murphy-Hiscock", titolo: "The Witch’s Book of Self Care", genere: "Esoterismo", copie: 1, },
+            {id: "45", autore: "Arin Murphy-Hiscock", titolo: "The green witch", genere: "Esoterismo", copie: 1, },
+            {id: "46", autore: "Ariosto", titolo: "Orlando Furioso I", genere: "Poesia", copie: 1, },
+            {id: "47", autore: "Ariosto", titolo: "Orlando Furioso II", genere: "Poesia", copie: 1, },
+            {id: "48", autore: "Arthur Conan Doyle", titolo: "Uno studio in rosso", genere: "Giallo", copie: 1, },
+            {id: "49", autore: "Arthur Conan Doyle", titolo: "Il mastino dei Baskerville", genere: "Giallo", copie: 1, },
+            {id: "50", autore: "Arthur Conan Doyle", titolo: "Le avventure di Sherlock Holmes", genere: "Giallo", copie: 1, },
+            {id: "51", autore: "Arthur Conan Doyle", titolo: "La valle della paura", genere: "Giallo", copie: 1, },
+            {id: "52", autore: "Arthur Conan Doyle", titolo: "Il segno dei quattro", genere: "Giallo", copie: 1, },
+            {id: "53", autore: "Arthur Rimbaud", titolo: "Opere", genere: "Poesia", copie: 1, },
+            {id: "54", autore: "Asumiko Nakamura", titolo: "Compagni di classe", genere: "Manga", copie: 8, },
+            {id: "55", autore: "Banana Yoshimoto", titolo: "Kitchen", genere: "Narrativa", copie: 1, },
+            {id: "56", autore: "Banana Yoshimoto", titolo: "Le strane storie di Fukiage", genere: "Narrativa", copie: 1, },
+            {id: "57", autore: "Bianca Pitzorno", titolo: "La sonnambula", genere: "Narrativa per ragazzi", copie: 1, },
+            {id: "58", autore: "Bianca Pitzorno", titolo: "Tornatràs", genere: "Narrativa per ragazzi", copie: 1, },
+            {id: "59", autore: "Bradbury", titolo: "Bradbury - Fahrenheit 451", genere: "Fantascienza", copie: 1, },
+            {id: "60", autore: "Bram Stoker", titolo: "Dracula", genere: "Horror", copie: 1, },
+            {id: "61", autore: "Calasso", titolo: "Le nozze di Cadmo e Armonia", genere: "Mitologia", copie: 1, },
+            {id: "62", autore: "Carlo Capra", titolo: "Storia moderna", genere: "Storia", copie: 1, },
+            {id: "63", autore: "Carlo Goldoni", titolo: "Commedie Scelte", genere: "Teatro", copie: 1, },
+            {id: "64", autore: "Cassandra Clare", titolo: "The infernal devices 1,2,3 volume intero", genere: "Fantasy", copie: 1, },
+            {id: "65", autore: "Cassandra Clare", titolo: "The mortal instruments da 1 a 3 volume intero", genere: "Fantasy", copie: 1, },
+            {id: "66", autore: "Cassandra Clare", titolo: "The mortal instruments da 4 a 6 volume intero", genere: "Fantasy", copie: 1, },
+            {id: "67", autore: "Cassandra Clare", titolo: "The Dark artifices 1,2,3 volume intero", genere: "Fantasy", copie: 1, },
+            {id: "68", autore: "Cassandra Clare", titolo: "Fantasmi del mercato delle ombre", genere: "Fantasy", copie: 1, },
+            {id: "69", autore: "Cassandra Clare", titolo: "Le cronache di Magnus Bane", genere: "Fantasy", copie: 1, },
+            {id: "70", autore: "Cassandra Clare", titolo: "La mano scarlatta", genere: "Fantasy", copie: 1, },
+            {id: "71", autore: "Cassandra Clare", titolo: "Il libro bianco perduto", genere: "Fantasy", copie: 1, },
+            {id: "72", autore: "Cassandra Clare", titolo: "The Last Hours, La catena d’oro", genere: "Fantasy", copie: 1, },
+            {id: "73", autore: "Cassandra Clare", titolo: "The Last Hours, La catena di ferro", genere: "Fantasy", copie: 1, },
+            {id: "74", autore: "Cassandra Clare", titolo: "The Last Hours, La catena di spine", genere: "Fantasy", copie: 1, },
+            {id: "75", autore: "Cassandra Clare", titolo: "Storia di illustri Shadowhunters e abitanti del mondo dei Nascosti", genere: "Fantasy", copie: 1, },
+            {id: "76", autore: "Cassandra Clare", titolo: "Come i cuori degli angeli", genere: "Fantasy", copie: 1, },
+            {id: "77", autore: "Cassandra Clare", titolo: "I segreti di Blackthorn Hall", genere: "Fantasy", copie: 1, },
+            {id: "78", autore: "Cecilie Hollberg", titolo: "Il mio David", genere: "Arte", copie: 1, },
+            {id: "79", autore: "Charles Baudelaire", titolo: "I fiori del male", genere: "Poesia", copie: 1, },
+            {id: "80", autore: "Charles Dickens", titolo: "Una storia tra due città", genere: "Narrativa", copie: 1, },
+            {id: "81", autore: "Charles Dickens", titolo: "Oliver Twist", genere: "Narrativa", copie: 1, },
+            {id: "82", autore: "Charles Dickens", titolo: "David Copperfield", genere: "Narrativa", copie: 1, },
+            {id: "83", autore: "Charles Dickens", titolo: "Grandi speranze", genere: "Narrativa", copie: 1, },
+            {id: "84", autore: "Charles Dickens", titolo: "Il Circolo Pickwick", genere: "Narrativa", copie: 1, },
+            {id: "85", autore: "Charles Schulz", titolo: "Magico Snoopy", genere: "Fumetto", copie: 1, },
+            {id: "86", autore: "Christopher Paolini", titolo: "Eragorn", genere: "Fantasy", copie: 1, },
+            {id: "87", autore: "Christopher Paolini", titolo: "Eldest", genere: "Fantasy", copie: 1, },
+            {id: "88", autore: "Christopher Paolini", titolo: "Brisingr", genere: "Fantasy", copie: 1, },
+            {id: "89", autore: "Christopher Paolini", titolo: "Inheritance", genere: "Fantasy", copie: 1, },
+            {id: "90", autore: "Colin Morgan", titolo: "La ballata di Rohan McCoy", genere: "Narrativa", copie: 1, },
+            {id: "91", autore: "Corinne Morel", titolo: "Dizionario dei simboli, miti e credenze", genere: "Esoterismo", copie: 1, },
+            {id: "92", autore: "Cornelia Funke", titolo: "Alba d’Inchiostro", genere: "Fantasy", copie: 1, },
+            {id: "93", autore: "Cornelia Funke", titolo: "Veleno d’inchiostro", genere: "Fantasy", copie: 1, },
+            {id: "94", autore: "Cornelia Funke", titolo: "Cuore d’Inchiostro", genere: "Fantasy", copie: 1, },
+            {id: "95", autore: "Cristina Menazza", titolo: "Parent Training nell’autismo", genere: "Psicologia", copie: 1, },
+            {id: "96", autore: "CS Lewis", titolo: "Le Cronache di Narnia volume intero", genere: "Fantasy", copie: 1, },
+            {id: "97", autore: "CS Pacat", titolo: "Dark Rise", genere: "Fantasy", copie: 1, },
+            {id: "98", autore: "CS Pacat", titolo: "Dark Heir", genere: "Fantasy", copie: 1, },
+            {id: "99", autore: "CS Pacat", titolo: "Il Principe Prigioniero", genere: "Fantasy", copie: 1, },
+            {id: "100", autore: "CS Pacat", titolo: "La Mossa del Principe", genere: "Fantasy", copie: 1, },
+            {id: "101", autore: "CS Pacat", titolo: "L’ascesa dei Re", genere: "Fantasy", copie: 1, },
+            {id: "102", autore: "Daniel Goleman", titolo: "Intelligenza Emotiva", genere: "Psicologia", copie: 1, },
+            {id: "103", autore: "Daniel Keyes", titolo: "Una stanza piena di gente", genere: "Psicologia", copie: 1, },
+            {id: "104", autore: "Daniel Pennac", titolo: "Come un romanzo", genere: "Saggio", copie: 1, },
+            {id: "105", autore: "Daniel Pennac", titolo: "Diario di scuola", genere: "Saggio", copie: 1, },
+            {id: "106", autore: "Dante Alighieri", titolo: "Divina Commedia Illustrata da Go Nagai", genere: "Graphic novel", copie: 1, },
+            {id: "107", autore: "Dante Alighieri", titolo: "Divina Commedia", genere: "Poesia", copie: 1, },
+            {id: "108", autore: "Dante Alighieri", titolo: "Tutte le opere - mammut", genere: "Opere complete", copie: 1, },
+            {id: "109", autore: "Diane Ehrensaft e Michelle Jurkiewicz", titolo: "Il Gender spiegato bene. Una guida all'identità di genere per professionist*, insegnanti e genitori", genere: "Saggio", copie: 1, },
+            {id: "110", autore: "Diego Miscioscoia e Daniele Novara", titolo: "Le radici affettive dei conflitti", genere: "Psicologia", copie: 1, },
+            {id: "111", autore: "Donatello Tomaiuoli", titolo: "Insegnare le abilità sociali ai bambini con autismo e altri disturbi dello sviluppo", genere: "Psicologia", copie: 1, },
+            {id: "112", autore: "Doris Lessing", titolo: "Il quinto figlio", genere: "Narrativa", copie: 1, },
+            {id: "113", autore: "Duccio Balestracci", titolo: "La battaglia di Montaperti", genere: "Storia", copie: 1, },
+            {id: "114", autore: "Edward Ashton", titolo: "Mickey 7", genere: "Fantascienza", copie: 1, },
+            {id: "115", autore: "Elie Wiesel", titolo: "La notte", genere: "Memoir", copie: 1, },
+            {id: "116", autore: "Elie Wiesel", titolo: "Il processo di Shamgorod", genere: "Teatro", copie: 1, },
+            {id: "117", autore: "Elisa Bertini", titolo: "I diari di Seaport", genere: "Narrativa", copie: 1, },
+            {id: "118", autore: "Elisabeth Van Gogh", titolo: "Mio fratello Vincent", genere: "Biografia", copie: 1, },
+            {id: "119", autore: "Elisabetta Gnone", titolo: "Fairy Oak, la storia perduta", genere: "Narrativa per ragazzi", copie: 1, },
+            {id: "120", autore: "Elsa Morante", titolo: "La storia", genere: "Narrativa", copie: 1, },
+            {id: "121", autore: "Elsa Morante", titolo: "L’isola di Arturo", genere: "Narrativa", copie: 1, },
+            {id: "122", autore: "Emanuele Mastrangelo", titolo: "Wikipedia", genere: "Saggio", copie: 1, },
+            {id: "123", autore: "Emilio Salgari", titolo: "Trilogia di Sandokan", genere: "Avventura", copie: 1, },
+            {id: "124", autore: "Emily Bronte", titolo: "Cime tempestose", genere: "Narrativa", copie: 1, },
+            {id: "125", autore: "Enrico Menduini", titolo: "Social Network", genere: "Saggio", copie: 1, },
+            {id: "126", autore: "Eugenio Montale", titolo: "Le Occasioni", genere: "Poesia", copie: 1, },
+            {id: "127", autore: "Euripide", titolo: "Le tragedie", genere: "Teatro", copie: 1, },
+            {id: "128", autore: "Eva Cantarella", titolo: "Secondo Natura", genere: "Saggio", copie: 1, },
+            {id: "129", autore: "Evangeline Walton", titolo: "I Mabinogion - tetralogia", genere: "Fantasy", copie: 1, },
+            {id: "130", autore: "F. Scott Fitzegerald", titolo: "Il grande Gatsby", genere: "Narrativa", copie: 1, },
+            {id: "131", autore: "F.Ramorino", titolo: "Mitologia classica", genere: "Mitologia", copie: 1, },
+            {id: "132", autore: "Federico Rampini", titolo: "La seconda guerra Fredda", genere: "Saggio", copie: 1, },
+            {id: "133", autore: "Federigo Tozzi", titolo: "Federigo Tozzi - Con gli occhi chiusi, ricordi di un impiegato", genere: "Narrativa", copie: 1, },
+            {id: "134", autore: "Fedor Dostoevskij", titolo: "L’idiota", genere: "Narrativa", copie: 1, },
+            {id: "135", autore: "Fedor Dostoevskij", titolo: "Le notti bianche", genere: "Narrativa", copie: 1, },
+            {id: "136", autore: "Fedor Dostoevskij", titolo: "I fratelli Karamazov", genere: "Narrativa", copie: 1, },
+            {id: "137", autore: "Fiona Bullivant", titolo: "Autismo al femminile", genere: "Psicologia", copie: 1, },
+            {id: "138", autore: "Flavia Caretto", titolo: "Autismo e autonomie personali", genere: "Psicologia", copie: 1, },
+            {id: "139", autore: "Francis Bacon", titolo: "La nuova Atlantide", genere: "Filosofia", copie: 1, },
+            {id: "140", autore: "Franco Cardini, Marina Montesano", titolo: "Storia medievale", genere: "Storia", copie: 1, },
+            {id: "141", autore: "Franco Cavallini", titolo: "Foglie al Vento", genere: "Narrativa", copie: 1, },
+            {id: "142", autore: "Frank Zollner", titolo: "Michelangelo, tutte le opere", genere: "Arte", copie: 1, },
+            {id: "143", autore: "Franz Kafka", titolo: "Il processo", genere: "Narrativa", copie: 1, },
+            {id: "144", autore: "Friedrich Nietzsche", titolo: "L’Anticristo", genere: "Filosofia", copie: 1, },
+            {id: "145", autore: "Friedrich Nietzsche", titolo: "Sull’utilità e il danno della storia", genere: "Filosofia", copie: 1, },
+            {id: "146", autore: "Friedrich Nietzsche", titolo: "La Gaia Scienza", genere: "Filosofia", copie: 1, },
+            {id: "147", autore: "Gasperetti", titolo: "Gasperetti - La società dei giornalisti estinti", genere: "Saggio", copie: 1, },
+            {id: "148", autore: "George RR Martin", titolo: "Fuoco e Sangue", genere: "Fantasy", copie: 1, },
+            {id: "149", autore: "George RR Martin", titolo: "L’Ascesa del drago", genere: "Fantasy", copie: 1, },
+            {id: "150", autore: "George RR Martin", titolo: "Il Mondo del Ghiaccio e del fuoco", genere: "Fantasy", copie: 1, },
+            {id: "151", autore: "George RR Martin", titolo: "Il Cavaliere dei sette Regni", genere: "Fantasy", copie: 1, },
+            {id: "152", autore: "Giacomo Leopardi", titolo: "I canti", genere: "Poesia", copie: 3, },
+            {id: "153", autore: "Giacomo Leopardi", titolo: "Lo Zibaldone di pensieri volumi 1", genere: "Saggio", copie: 1, },
+            {id: "154", autore: "Giacomo Leopardi", titolo: "Lo Zibaldone di pensieri volumi 2", genere: "Saggio", copie: 1, },
+            {id: "155", autore: "Giacomo Leopardi", titolo: "La vita e le lettere", genere: "Biografia", copie: 1, },
+            {id: "156", autore: "Giacomo Vivanti", titolo: "L’apprendimento nell’autismo", genere: "Psicologia", copie: 1, },
+            {id: "157", autore: "Gianni Rodari", titolo: "Gianni Rodari - Favole al telefono", genere: "Narrativa per ragazzi", copie: 1, },
+            {id: "158", autore: "Gianrico Carofiglio", titolo: "La nuova manomissione delle parole", genere: "Saggio", copie: 1, },
+            {id: "159", autore: "Gino Strada", titolo: "Pappagalli verdi", genere: "Memoir", copie: 1, },
+            {id: "160", autore: "Giorgio Bassani", titolo: "Bassani - Gli occhiali d’oro", genere: "Narrativa", copie: 1, },
+            {id: "161", autore: "Giorgio Bassani", titolo: "Bassani - Il giardino dei Finzi-Contini", genere: "Narrativa", copie: 1, },
+            {id: "162", autore: "Giorgio Ieranò", titolo: "Eroi", genere: "Mitologia", copie: 1, },
+            {id: "163", autore: "Giorgio Vasari", titolo: "Le vite dei più eccellenti pittori, scultori e architetti", genere: "Arte", copie: 1, },
+            {id: "164", autore: "Giovanni Boccaccio", titolo: "Decameron", genere: "Narrativa", copie: 1, },
+            {id: "165", autore: "Giovanni Pascoli", titolo: "Tutte le poesie", genere: "Poesia", copie: 1, },
+            {id: "166", autore: "Giulio Ciampoltrini", titolo: "Gli etruschi della Valdera", genere: "Storia", copie: 1, },
+            {id: "167", autore: "Giuseppe Mercenaro", titolo: "Una sconosciuta moralità", genere: "Saggio", copie: 1, },
+            {id: "168", autore: "Haddon", titolo: "Lo strano caso del cane ucciso a mezzanotte", genere: "Narrativa", copie: 1, },
+            {id: "169", autore: "Han Kang", titolo: "Atti Umani", genere: "Narrativa", copie: 1, },
+            {id: "170", autore: "Hannah Arendt", titolo: "La banalità del male", genere: "Saggio", copie: 1, },
+            {id: "171", autore: "Harper Lee", titolo: "Harper Lee - Il buio oltre la siepe", genere: "Narrativa", copie: 1, },
+            {id: "172", autore: "Haruichi Furudate", titolo: "Haikyuu", genere: "Manga", copie: 45, },
+            {id: "173", autore: "Haruki Murakami", titolo: "After Dark", genere: "Narrativa", copie: 1, },
+            {id: "174", autore: "Haruki Murakami", titolo: "Tutti i figli di Dio danzano", genere: "Narrativa", copie: 1, },
+            {id: "175", autore: "Haruki Murakami", titolo: "La ragazza dello Sputnik", genere: "Narrativa", copie: 1, },
+            {id: "176", autore: "Haruki Murakami", titolo: "L’elefante scomparso", genere: "Narrativa", copie: 1, },
+            {id: "177", autore: "Haruki Murakami", titolo: "Norwegian Wood", genere: "Narrativa", copie: 1, },
+            {id: "178", autore: "Henri Troyat", titolo: "La vita quotidiana in Russia ai tempi dell’ultimo zar", genere: "Storia", copie: 1, },
+            {id: "179", autore: "Herman Hesse", titolo: "Narciso e Boccadoro", genere: "Narrativa", copie: 1, },
+            {id: "180", autore: "Hermann Grimm", titolo: "Michelangelo", genere: "Biografia", copie: 1, },
+            {id: "181", autore: "Hiromu Harakawa", titolo: "FullMetal Alchemist", genere: "Manga", copie: 28,},
+            {id: "182", autore: "Hiromu Harakawa", titolo: "FullMetal Alchemist 20th", genere: "Manga", copie: 1, },
+            {id: "183", autore: "Hiromu Harakawa", titolo: "FullMetal Alchemist Artbook", genere: "Artbook", copie: 4, },
+            {id: "184", autore: "Hiromu Harakawa", titolo: "Hero Tales", genere: "Manga", copie: 5, },
+            {id: "185", autore: "Hiromu Harakawa", titolo: "Yomi no Tsugai", genere: "Manga", copie: 11, },
+            {id: "186", autore: "Ingo F. Walther", titolo: "Van Gogh", genere: "Arte", copie: 1, },
+            {id: "187", autore: "Irene Marchesini, Carlotta Dicataldo", titolo: "Lyndon", genere: "Narrativa", copie: 1, },
+            {id: "188", autore: "Irene Nemirovsky", titolo: "Suite francese", genere: "Narrativa", copie: 1, },
+            {id: "189", autore: "Italo Calvino", titolo: "Il cavaliere inesistente", genere: "Narrativa", copie: 1, },
+            {id: "190", autore: "Italo Calvino", titolo: "Il sentiro dei nidi di ragno", genere: "Narrativa", copie: 1, },
+            {id: "191", autore: "Italo Svevo", titolo: "Italo Svevo - La Coscienza di Zeno", genere: "Narrativa", copie: 1, },
+            {id: "192", autore: "Jan Heaton", titolo: "Arte e tecnica dell'uncinetto", genere: "Manuale", copie: 1, },
+            {id: "193", autore: "Jane Austen", titolo: "Orgoglio e Pregiudizio", genere: "Narrativa", copie: 1, },
+            {id: "194", autore: "Jay Kristoff", titolo: "L’impero del vampiro", genere: "Fantasy", copie: 1, },
+            {id: "195", autore: "Jay Kristoff", titolo: "L’impero dei dannati", genere: "Fantasy", copie: 1, },
+            {id: "196", autore: "Jay Kristoff", titolo: "L'impero dell'alba", genere: "Fantasy", copie: 1, },
+            {id: "197", autore: "Jeffrey Eugenides", titolo: "Eugenides - Middle Sex", genere: "Narrativa", copie: 1, },
+            {id: "198", autore: "JK Rowling", titolo: "Harry Potter e la pietra filosofale", genere: "Fantasy", copie: 1, },
+            {id: "199", autore: "JK Rowling", titolo: "Harry Potter e la camera dei segreti", genere: "Fantasy", copie: 1, },
+            {id: "200", autore: "JK Rowling", titolo: "Harry Potter e il prigioniero di Azkaban", genere: "Fantasy", copie: 1, },
+            {id: "201", autore: "JK Rowling", titolo: "Harry Potter e il calice di fuoco", genere: "Fantasy", copie: 1, },
+            {id: "202", autore: "JK Rowling", titolo: "Harry Potter e l’ordine della fenice", genere: "Fantasy", copie: 1, },
+            {id: "203", autore: "JK Rowling", titolo: "Harry Potter e il principe mezzosangue", genere: "Fantasy", copie: 1, },
+            {id: "204", autore: "JK Rowling", titolo: "Harry Potter e i doni della morte", genere: "Fantasy", copie: 1, },
+            {id: "205", autore: "JK Rowling", titolo: "Harry Potter e la pietra filosofale (vol castello)", genere: "Fantasy", copie: 1, },
+            {id: "206", autore: "Jo Nesbo", titolo: "Il pipistrello", genere: "Thriller", copie: 1, },
+            {id: "207", autore: "Jo Nesbo", titolo: "Il cacciatore di teste", genere: "Thriller", copie: 1, },
+            {id: "208", autore: "Jo Nesbo", titolo: "Luna Rossa", genere: "Thriller", copie: 1, },
+            {id: "209", autore: "Jo Nesbo", titolo: "Il pettirosso", genere: "Thriller", copie: 1, },
+            {id: "210", autore: "Jo Nesbo", titolo: "Il confessore", genere: "Thriller", copie: 1, },
+            {id: "211", autore: "Joe Landsdale", titolo: "Acqua buia", genere: "Thriller", copie: 1, },
+            {id: "212", autore: "Joe Landsdale", titolo: "Cielo di Sabbia", genere: "Thriller", copie: 1, },
+            {id: "213", autore: "Joe Landsdale", titolo: "La foresta", genere: "Thriller", copie: 1, },
+            {id: "214", autore: "Joe Landsdale", titolo: "La sottile linea scura", genere: "Thriller", copie: 1, },
+            {id: "215", autore: "Joe Landsdale", titolo: "Echi perduti", genere: "Thriller", copie: 1, },
+            {id: "216", autore: "Joe Landsdale", titolo: "Sotto un cielo cremisi", genere: "Thriller", copie: 1, },
+            {id: "217", autore: "Joh  Stephens", titolo: "L’atlante di smeraldo", genere: "Fantasy", copie: 1, },
+            {id: "218", autore: "Joh  Stephens", titolo: "L’atlante di fuoco", genere: "Fantasy", copie: 1, },
+            {id: "219", autore: "Joh  Stephens", titolo: "L'atlante di tenebra", genere: "Fantasy", copie: 1, },
+            {id: "220", autore: "John Milton", titolo: "Paradiso Perduto", genere: "Poesia", copie: 1, },
+            {id: "221", autore: "Jorge Luis Borges", titolo: "Libro di sogni", genere: "Narrativa", copie: 1, },
+            {id: "222", autore: "JRR Tolkien", titolo: "Il libro dei racconti perduti parte I", genere: "Fantasy", copie: 1, },
+            {id: "223", autore: "JRR Tolkien", titolo: "Il libro dei racconti perduti parte II", genere: "Fantasy", copie: 1, },
+            {id: "224", autore: "JRR Tolkien", titolo: "Il signore degli Anelli volume intero", genere: "Fantasy", copie: 1, },
+            {id: "225", autore: "JRR Tolkien", titolo: "Lo Hobbit", genere: "Fantasy", copie: 2, },
+            {id: "226", autore: "JRR Tolkien", titolo: "Silmarillion", genere: "Fantasy", copie: 1, },
+            {id: "227", autore: "JRR Tolkien", titolo: "La caduta di Gondolin", genere: "Fantasy", copie: 1, },
+            {id: "228", autore: "Jun Mochizuki", titolo: "Pandora Hearts", genere: "Manga", copie: 27, },
+            {id: "229", autore: "Jun Mochizuki", titolo: "Pandora Hearts Artbook “Odds & Ends”", genere: "Artbook", copie: 1, },
+            {id: "230", autore: "Jun Mochizuki", titolo: "Vanitas No Carte", genere: "Manga", copie: 11, },
+            {id: "231", autore: "Kaho Nashiki", titolo: "Un'estate con la strega dell'Ovest", genere: "Narrativa", copie: 1, },
+            {id: "232", autore: "Kandisky", titolo: "Lo spirituale nell’arte", genere: "Arte", copie: 1, },
+            {id: "233", autore: "Karl Marx", titolo: "Il manifesto del partito comunista", genere: "Saggio", copie: 1, },
+            {id: "234", autore: "Kass Morgan", titolo: "The 100 - tetralogia", genere: "Fantascienza", copie: 1, },
+            {id: "235", autore: "Kate Moss", titolo: "L’ottavo arcano", genere: "Narrativa", copie: 1, },
+            {id: "236", autore: "Kentaro Miura", titolo: "Berserk", genere: "Manga", copie: 3, },
+            {id: "237", autore: "Kohske", titolo: "Gangsta", genere: "Manga", copie: 8, },
+            {id: "238", autore: "Kohske", titolo: "Gangsta Adriano", genere: "Manga", copie: 5, },
+            {id: "239", autore: "Le Scouzec", titolo: "La lettura della mano", genere: "Esoterismo", copie: 1, },
+            {id: "240", autore: "Leigh Bardugo", titolo: "Tenebre e Ossa", genere: "Fantasy", copie: 1, },
+            {id: "241", autore: "Leigh Bardugo", titolo: "Assedio e Tempesta", genere: "Fantasy", copie: 1, },
+            {id: "242", autore: "Leigh Bardugo", titolo: "Rovina e Ascesa", genere: "Fantasy", copie: 1, },
+            {id: "243", autore: "Leigh Bardugo", titolo: "Sei di corvi", genere: "Fantasy", copie: 1, },
+            {id: "244", autore: "Leigh Bardugo", titolo: "Il regno corrotto", genere: "Fantasy", copie: 1, },
+            {id: "245", autore: "Leonardo Sciascia", titolo: "Il giorno della civetta", genere: "Narrativa", copie: 1, },
+            {id: "246", autore: "Leslie Ann Jones", titolo: "Freddie Mercury I Will Rock You", genere: "Musica", copie: 1, },
+            {id: "247", autore: "Lev Tolstoj", titolo: "Anna Karenina", genere: "Narrativa", copie: 1, },
+            {id: "248", autore: "Lev Tolstoj", titolo: "La morte di Ivan Il'ič", genere: "Narrativa", copie: 1, },
+            {id: "249", autore: "Licofrone", titolo: "Alessandra", genere: "Poesia", copie: 1, },
+            {id: "250", autore: "Louis Carroll", titolo: "Le avventure di Alice nel Paese delle Meraviglie", genere: "Narrativa per ragazzi", copie: 1, },
+            {id: "251", autore: "Louisa May Alcott", titolo: "Piccole Donne", genere: "Narrativa per ragazzi", copie: 1, },
+            {id: "252", autore: "Louisa May Alcott", titolo: "Piccole Donne (vers, La mia piccola biblioteca)", genere: "Narrativa per ragazzi", copie: 1, },
+            {id: "253", autore: "Louisa May Alcott", titolo: "Piccole Donne Crescono", genere: "Narrativa per ragazzi", copie: 1, },
+            {id: "254", autore: "Louisa May Alcott", titolo: "Piccole Donne (GRAPHIC)", genere: "Graphic novel", copie: 1, },
+            {id: "255", autore: "Lucia Impelluso", titolo: "Eroi e dei dell’antichità", genere: "Arte", copie: 1, },
+            {id: "256", autore: "Luigi Pirandello", titolo: "Il fu Mattia Pascal", genere: "Narrativa", copie: 1, },
+            {id: "257", autore: "Luigi Surdich", titolo: "Il duecento e il trecento", genere: "Critica letteraria", copie: 1, },
+            {id: "258", autore: "Luis Royo", titolo: "Dead Moon: Epilogue", genere: "Artbook", copie: 1, },
+            {id: "259", autore: "Madeline Miller", titolo: "Circe", genere: "Narrativa", copie: 1, },
+            {id: "260", autore: "Madeline Miller", titolo: "La canzone di Achille", genere: "Narrativa", copie: 1, },
+            {id: "261", autore: "Madeline Miller", titolo: "Galatea", genere: "Narrativa", copie: 1, },
+            {id: "262", autore: "Malba Tahan", titolo: "L’uomo che sapeva contare", genere: "Narrativa", copie: 1, },
+            {id: "263", autore: "Marcela Serrano", titolo: "Dieci donne", genere: "Narrativa", copie: 1, },
+            {id: "264", autore: "Marguerite Yourcenar", titolo: "Memorie di Adriano", genere: "Romanzo storico", copie: 1, },
+            {id: "265", autore: "Mari Ela Panzeca", titolo: "Kore sprofonda negli inferi", genere: "Poesia", copie: 1, },
+            {id: "266", autore: "Marianne Eloise", titolo: "Obsessive intrusive magical thinking", genere: "Memoir", copie: 1, },
+            {id: "267", autore: "Marica Romolini", titolo: "Commento a la Bufera e altro di Montale", genere: "Critica letteraria", copie: 1, },
+            {id: "268", autore: "Mario Fulgoni", titolo: "Manuale di Teoria Musicale vol 1", genere: "Manuale", copie: 1, },
+            {id: "269", autore: "Mark Blake", titolo: "Freddie Mercury, A kind of Magic", genere: "Musica", copie: 1, },
+            {id: "270", autore: "Marshall B.Rosemberg", titolo: "Le parole sono finestre (oppure muri)", genere: "Psicologia", copie: 1, },
+            {id: "271", autore: "Mary Shelley", titolo: "Frankenstein", genere: "Horror", copie: 1, },
+            {id: "272", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas", genere: "Manga", copie: 50, },
+            {id: "273", autore: "Matilde Battistini", titolo: "Simboli e allegorie", genere: "Arte", copie: 1, },
+            {id: "274", autore: "Matteo Strukul", titolo: "I medici, la saga completa 4 volumi", genere: "Romanzo storico", copie: 1, },
+            {id: "275", autore: "Matthew Sturgis", titolo: "Oscar", genere: "Biografia", copie: 1, },
+            {id: "276", autore: "Maura Angeletti", titolo: "Il vero libro dei tarocchi", genere: "Esoterismo", copie: 1, },
+            {id: "277", autore: "Mauro Corsaro, Luigi Gallo", titolo: "Storia greca", genere: "Storia", copie: 1, },
+            {id: "278", autore: "McGrath", titolo: "Follia", genere: "Narrativa", copie: 1, },
+            {id: "279", autore: "Michael McDowell", titolo: "Katie", genere: "Horror", copie: 1, },
+            {id: "280", autore: "Michael McDowell", titolo: "Blackwater, La piena", genere: "Horror", copie: 1, },
+            {id: "281", autore: "Michael McDowell", titolo: "Blackwater, La diga", genere: "Horror", copie: 1, },
+            {id: "282", autore: "Michael McDowell", titolo: "Blackwater, La casa", genere: "Horror", copie: 1, },
+            {id: "283", autore: "Michael McDowell", titolo: "Blackwater, La guerra", genere: "Horror", copie: 1, },
+            {id: "284", autore: "Michael McDowell", titolo: "Blackwater, La fortuna", genere: "Horror", copie: 1, },
+            {id: "285", autore: "Michael McDowell", titolo: "Blackwater, La pioggia", genere: "Horror", copie: 1, },
+            {id: "286", autore: "Michael McDowell", titolo: "Gli aghi d'oro", genere: "Horror", copie: 1, },
+            {id: "287", autore: "Michael McDowell", titolo: "Luna Chiara su Babylon", genere: "Horror", copie: 1, },
+            {id: "288", autore: "Michael McDowell", titolo: "L'Amuleto", genere: "Horror", copie: 1, },
+            {id: "289", autore: "Michel Bussi", titolo: "Codice 612: chi ha ucciso il piccolo principe?", genere: "Giallo", copie: 1, },
+            {id: "290", autore: "Michela Murgia", titolo: "Tre ciotole, rituali per un anno di crisi", genere: "Narrativa", copie: 1, },
+            {id: "291", autore: "Michelangelo", titolo: "Rime", genere: "Poesia", copie: 1, },
+            {id: "292", autore: "Milan Kundera", titolo: "L’insostenibile leggerezza dell’essere", genere: "Narrativa", copie: 1, },
+            {id: "293", autore: "Milan Kundera", titolo: "La lentezza", genere: "Narrativa", copie: 1, },
+            {id: "294", autore: "Moony Witcher", titolo: "Geno Hastor Venti e il sigillo nero di Madame Crikken", genere: "Narrativa per ragazzi", copie: 1, },
+            {id: "295", autore: "Moony Witcher", titolo: "Geno Hastor Venti e la runa bianca del Girifalco d’oro", genere: "Narrativa per ragazzi", copie: 1, },
+            {id: "296", autore: "Moony Witcher", titolo: "Geno Hastor Venti e lo specchio rosso della verità", genere: "Narrativa per ragazzi", copie: 1, },
+            {id: "297", autore: "Naoko Takeuchi", titolo: "Sailor Moon", genere: "Manga", copie: 2, },
+            {id: "298", autore: "Natsuki Kizu", titolo: "Given", genere: "Manga", copie: 10, },
+            {id: "299", autore: "Natsuki Kizu", titolo: "Doujinshi IwaOi", genere: "Doujinshi", copie: 3, },
+            {id: "300", autore: "Neil Gaiman", titolo: "Miti del Nord", genere: "Mitologia", copie: 1, },
+            {id: "301", autore: "Nicola Pesce", titolo: "Il piccolo principe delle tenebre", genere: "Narrativa", copie: 1, },
+            {id: "302", autore: "Oliver Sacks", titolo: "L’occhio della mente", genere: "Divulgazione scientifica", copie: 1, },
+            {id: "303", autore: "Oliver Sacks", titolo: "Vedere voci", genere: "Divulgazione scientifica", copie: 1, },
+            {id: "304", autore: "Oliver Sacks", titolo: "Allucinazioni", genere: "Divulgazione scientifica", copie: 1, },
+            {id: "305", autore: "Oliver Sacks", titolo: "L'uomo che scambio sua moglie per un cappello", genere: "Divulgazione scientifica", copie: 1, },
+            {id: "306", autore: "Oliver Sacks", titolo: "Emicrania", genere: "Divulgazione scientifica", copie: 1, },
+            {id: "307", autore: "Oliver Sacks", titolo: "Musicofilia", genere: "Divulgazione scientifica", copie: 1, },
+            {id: "308", autore: "Omero", titolo: "Odissea (GRAPHIC)", genere: "Graphic novel", copie: 1, },
+            {id: "309", autore: "Omero", titolo: "Odissea", genere: "Poesia", copie: 3, },
+            {id: "310", autore: "Omero", titolo: "Iliade", genere: "Poesia", copie: 2, },
+            {id: "311", autore: "Orazio", titolo: "Le satire", genere: "Poesia", copie: 1, },
+            {id: "312", autore: "Oscar Wilde", titolo: "Il principe felice", genere: "Narrativa", copie: 1, },
+            {id: "313", autore: "Oscar Wilde", titolo: "Aforismi", genere: "Aforismi", copie: 1, },
+            {id: "314", autore: "Oscar Wilde", titolo: "Per sempre tuo", genere: "Epistolario", copie: 1, },
+            {id: "315", autore: "Oscar Wilde", titolo: "Il prete e l’accolito e altre opere", genere: "Narrativa", copie: 1, },
+            {id: "316", autore: "Oscar Wilde", titolo: "Una casa di melograni", genere: "Narrativa", copie: 1, },
+            {id: "317", autore: "Oscar Wilde", titolo: "Il fantasma di Canterville", genere: "Narrativa", copie: 1, },
+            {id: "318", autore: "Oscar Wilde", titolo: "Salomé", genere: "Teatro", copie: 1, },
+            {id: "319", autore: "Oscar Wilde", titolo: "Il critico come artista", genere: "Saggio", copie: 1, },
+            {id: "320", autore: "Oscar Wilde", titolo: "De Profundis", genere: "Epistolario", copie: 1, },
+            {id: "321", autore: "Oscar Wilde", titolo: "Il ritratto di Dorian Gray", genere: "Narrativa", copie: 1, },
+            {id: "322", autore: "Oscar Wilde", titolo: "Vera o i nichilisti", genere: "Teatro", copie: 1, },
+            {id: "323", autore: "Oscar Wilde", titolo: "La ballata del carcere di Reading", genere: "Poesia", copie: 2,},
+            {id: "324", autore: "Oscar Wilde", titolo: "Il delitto di Lord Arthur Savile", genere: "Narrativa", copie: 1, },
+            {id: "325", autore: "Oscar Wilde", titolo: "Il ritratto di Mr. W. H.", genere: "Narrativa", copie: 1, },
+            {id: "326", autore: "Oscar Wilde", titolo: "Il ventaglio di Lady Windermere e Salomé", genere: "Teatro", copie: 1, },
+            {id: "327", autore: "Oscar Wilde", titolo: "Autobiografia di un dandy", genere: "Biografia", copie: 1, },
+            {id: "328", autore: "Oscar Wilde", titolo: "L’importanza di chiamarsi Ernesto", genere: "Teatro", copie: 1, },
+            {id: "329", autore: "Ovidio", titolo: "Le Metamorfosi", genere: "Poesia", copie: 1, },
+            {id: "330", autore: "Paolo Ghezzi", titolo: "La rosa bianca", genere: "Storia", copie: 1, },
+            {id: "331", autore: "Paolo Mastrocola", titolo: "L’amore prima di noi", genere: "Narrativa", copie: 1, },
+            {id: "332", autore: "Park Ji-Yeon", titolo: "Wolf in the House", genere: "Manhwa", copie: 5, },
+            {id: "333", autore: "Pat Patfoort", titolo: "Difendersi senza aggredire", genere: "Saggio", copie: 1, },
+            {id: "334", autore: "Pat Patfoort", titolo: "Io voglio, tu non vuoi", genere: "Saggio", copie: 1, },
+            {id: "335", autore: "Pat Patfoort", titolo: "Mamma viene a morire da noi domenica", genere: "Saggio", copie: 1, },
+            {id: "336", autore: "Patrick Suskind", titolo: "Profumo", genere: "Narrativa", copie: 1, },
+            {id: "337", autore: "Paulo Coelho", titolo: "Veronika decide di morire", genere: "Narrativa", copie: 1, },
+            {id: "338", autore: "Penelope Bagieu", titolo: "Indomite Vol 2", genere: "Graphic novel", copie: 1, },
+            {id: "339", autore: "Petronio", titolo: "Satyricon", genere: "Narrativa", copie: 1, },
+            {id: "340", autore: "Phil Sutcliffe", titolo: "QUEEN", genere: "Musica", copie: 1, },
+            {id: "341", autore: "Philip Pullman", titolo: "Queste oscure materie la trilogia completa", genere: "Fantasy", copie: 1, },
+            {id: "342", autore: "Platone", titolo: "La settima lettera", genere: "Filosofia", copie: 1, },
+            {id: "343", autore: "Primo Levi", titolo: "Levi - Il sistema periodico", genere: "Narrativa", copie: 1, },
+            {id: "344", autore: "Primo Levi", titolo: "Levi - Se questo è un uomo", genere: "Memoir", copie: 1, },
+            {id: "345", autore: "Primo Levi", titolo: "Levi - Sommersi e salvati", genere: "Saggio", copie: 1, },
+            {id: "346", autore: "Primo Levi", titolo: "La tregua", genere: "Memoir", copie: 1, },
+            {id: "347", autore: "Raffaella Milandri", titolo: "Nativi americani", genere: "Saggio", copie: 1, },
+            {id: "348", autore: "Randall Sullivan", titolo: "Michael Jackson", genere: "Biografia", copie: 1, },
+            {id: "349", autore: "Renate Ulmer", titolo: "Alfons Mucha", genere: "Arte", copie: 1, },
+            {id: "350", autore: "Renato Stella", titolo: "Sociologia dei New Media", genere: "Saggio", copie: 1, },
+            {id: "351", autore: "Riccardo Falcinelli", titolo: "Visus", genere: "Design", copie: 1, },
+            {id: "352", autore: "Riccardo Falcinelli", titolo: "Critica portatile al visual design. Da Gutenberg ai social network.", genere: "Design", copie: 1, },
+            {id: "353", autore: "Riccardo Falcinelli", titolo: "Cromorama", genere: "Design", copie: 1, },
+            {id: "354", autore: "Riccardo Falcinelli", titolo: "Figure", genere: "Design", copie: 1, },
+            {id: "355", autore: "Rick Riordan", titolo: "Percy Jackson e gli dei dell’Olimpo, Il ladro di fulmini", genere: "Fantasy", copie: 1, },
+            {id: "356", autore: "Rick Riordan", titolo: "Percy Jackson e gli dei dell’Olimpo, Il mare dei mostri", genere: "Fantasy", copie: 1, },
+            {id: "357", autore: "Rick Riordan", titolo: "Percy Jackson e gli dei dell’Olimpo, La maledizione del titano", genere: "Fantasy", copie: 1, },
+            {id: "358", autore: "Rick Riordan", titolo: "Percy Jackson e gli dei dell’Olimpo, La battaglia del labirinto", genere: "Fantasy", copie: 1, },
+            {id: "359", autore: "Rick Riordan", titolo: "Percy Jackson e gli dei dell’Olimpo, Lo scontro finale", genere: "Fantasy", copie: 1, },
+            {id: "360", autore: "Rick Riordan", titolo: "Percy Jackson e gli dei dell’Olimpo, Il ladro di fulmini (volume baby)", genere: "Fantasy", copie: 1, },
+            {id: "361", autore: "Rick Riordan", titolo: "Eroi dell’Olimpo, L’eroe perduto", genere: "Fantasy", copie: 1, },
+            {id: "362", autore: "Rick Riordan", titolo: "Eroi dell’Olimpo, Il figlio di Nettuno", genere: "Fantasy", copie: 1, },
+            {id: "363", autore: "Rick Riordan", titolo: "Eroi dell’Olimpo, Il marchio di Atena", genere: "Fantasy", copie: 1, },
+            {id: "364", autore: "Rick Riordan", titolo: "Eroi dell’Olimpo, La casa di Ade", genere: "Fantasy", copie: 1, },
+            {id: "365", autore: "Rick Riordan", titolo: "Eroi dell’Olimpo, Il sangue dell’Olimpo", genere: "Fantasy", copie: 1, },
+            {id: "366", autore: "Rick Riordan", titolo: "Sfide di Apollo, L’oracolo nascosto", genere: "Fantasy", copie: 1, },
+            {id: "367", autore: "Rick Riordan", titolo: "Sfide di Apollo, La profezia oscura", genere: "Fantasy", copie: 1, },
+            {id: "368", autore: "Rick Riordan", titolo: "Sfide di Apollo, Il labirinto di fuoco", genere: "Fantasy", copie: 1, },
+            {id: "369", autore: "Rick Riordan", titolo: "Sfide di Apollo, La tomba del tiranno", genere: "Fantasy", copie: 1, },
+            {id: "370", autore: "Rick Riordan", titolo: "Sfide di Apollo, La torre di Nerone", genere: "Fantasy", copie: 1, },
+            {id: "371", autore: "Rick Riordan", titolo: "Magnus Chase e Gli Dei di Asgard, La spada del guerriero", genere: "Fantasy", copie: 1, },
+            {id: "372", autore: "Rick Riordan", titolo: "Magnus Chase e Gli Dei di Asgard, Il martello di Thor", genere: "Fantasy", copie: 1, },
+            {id: "373", autore: "Rick Riordan", titolo: "Magnus Chase e Gli Dei di Asgard, La nave degli scomparsi", genere: "Fantasy", copie: 1, },
+            {id: "374", autore: "Rick Riordan", titolo: "Kane Chronicles , La piramide rossa", genere: "Fantasy", copie: 1, },
+            {id: "375", autore: "Rick Riordan", titolo: "Kane Chronicles , Il trono di fuoco", genere: "Fantasy", copie: 1, },
+            {id: "376", autore: "Rick Riordan", titolo: "Kane Chronicles , L’ombra del serpente", genere: "Fantasy", copie: 1, },
+            {id: "377", autore: "Rick Riordan", titolo: "Percy Jackson e gli dei greci", genere: "Fantasy", copie: 1, },
+            {id: "378", autore: "Rick Riordan", titolo: "Percy Jackson e gli eroi greci", genere: "Fantasy", copie: 1, },
+            {id: "379", autore: "Rick Riordan", titolo: "Le storie segrete Magnus Chase", genere: "Fantasy", copie: 1, },
+            {id: "380", autore: "Rick Riordan", titolo: "Il campo mezzosangue", genere: "Fantasy", copie: 1, },
+            {id: "381", autore: "Rick Riordan", titolo: "Il campo giove", genere: "Fantasy", copie: 1, },
+            {id: "382", autore: "Rick Riordan", titolo: "La spada del guerriero", genere: "Fantasy", copie: 1, },
+            {id: "383", autore: "Rick Riordan", titolo: "Il libro segreto", genere: "Fantasy", copie: 1, },
+            {id: "384", autore: "Rick Riordan", titolo: "Eroi dell’olimpo, i racconti perduti", genere: "Fantasy", copie: 1, },
+            {id: "385", autore: "Rick Riordan", titolo: "Luce e tenebra", genere: "Fantasy", copie: 3, },
+            {id: "386", autore: "Rick Riordan", titolo: "La Corte dei Mostri", genere: "Fantasy", copie: 1, },
+            {id: "387", autore: "Rick Riordan", titolo: "Il calice degli Dei", genere: "Fantasy", copie: 1, },
+            {id: "388", autore: "Rick Riordan", titolo: "Il furore della Dea", genere: "Fantasy", copie: 1, },
+            {id: "389", autore: "RL Stevenson", titolo: "L’isola del tesoro", genere: "Avventura", copie: 1, },
+            {id: "390", autore: "RL Stevenson", titolo: "Lo strano caso del Dottor Jekyll e Mr Hyde", genere: "Horror", copie: 1, },
+            {id: "391", autore: "Sakae Esuno", titolo: "Mirai Nikki", genere: "Manga", copie: 14, },
+            {id: "392", autore: "Samuel Spano", titolo: "Nine Stones 1,2", genere: "Narrativa", copie: 2, },
+            {id: "393", autore: "Sandro Veronesi", titolo: "Non dirlo: il vangelo di Marco", genere: "Saggio", copie: 1, },
+            {id: "394", autore: "Saxena And Zimmerman", titolo: "Basic witches", genere: "Esoterismo", copie: 1, },
+            {id: "395", autore: "Schneider", titolo: "Heike riprende a respirare", genere: "Memoir", copie: 1, },
+            {id: "396", autore: "Schneider", titolo: "Il rogo di Berlino", genere: "Memoir", copie: 1, },
+            {id: "397", autore: "Schneider", titolo: "Lasciami andare, madre", genere: "Memoir", copie: 1, },
+            {id: "398", autore: "Sebastian Schutze", titolo: "Caravaggio", genere: "Arte", copie: 1, },
+            {id: "399", autore: "Sergio Risaliti", titolo: "Maratona Michelangelo", genere: "Arte", copie: 1, },
+            {id: "400", autore: "Sergio Splendore", titolo: "Giornalismo Ibrido", genere: "Saggio", copie: 1, },
+            {id: "401", autore: "Simon Scarrow", titolo: "Il Gladiatore, il figlio di Spartaco", genere: "Romanzo storico", copie: 1, },
+            {id: "402", autore: "Snorri Sturluson", titolo: "Edda", genere: "Mitologia", copie: 1, },
+            {id: "403", autore: "Stefano Benni", titolo: "La compagnia dei Celestini", genere: "Narrativa", copie: 1, },
+            {id: "404", autore: "Stefano Benni", titolo: "Di tutte le ricchezze", genere: "Narrativa", copie: 1, },
+            {id: "405", autore: "Stefano Benni", titolo: "Giura", genere: "Narrativa", copie: 1, },
+            {id: "406", autore: "Stephanie Meyer", titolo: "Twilight", genere: "Fantasy", copie: 1, },
+            {id: "407", autore: "Stephanie Meyer", titolo: "New Moon", genere: "Fantasy", copie: 1, },
+            {id: "408", autore: "Stephanie Meyer", titolo: "Eclipse", genere: "Fantasy", copie: 1, },
+            {id: "409", autore: "Stephanie Meyer", titolo: "Breaking Dawn", genere: "Fantasy", copie: 1, },
+            {id: "410", autore: "Stephen King", titolo: "Cuori in Atlantide", genere: "Narrativa", copie: 1, },
+            {id: "411", autore: "Susan Smith", titolo: "150 bordi all'uncinetto", genere: "Manuale", copie: 1, },
+            {id: "412", autore: "Suzanne Collins", titolo: "Hunger Games (versione baby 1,2,3)", genere: "Distopia", copie: 1, },
+            {id: "413", autore: "Suzanne Collins", titolo: "Hunger Games", genere: "Distopia", copie: 1, },
+            {id: "414", autore: "Suzanne Collins", titolo: "La ragazza di fuoco", genere: "Distopia", copie: 1, },
+            {id: "415", autore: "Suzanne Collins", titolo: "Il canto della rivolta", genere: "Distopia", copie: 1, },
+            {id: "416", autore: "Suzanne Collins", titolo: "L'alba della mietitura", genere: "Distopia", copie: 1, },
+            {id: "417", autore: "Suzanne Collins", titolo: "La ballata dell'usignolo e del serpente", genere: "Distopia", copie: 1, },
+            {id: "418", autore: "Teresa Radice, Stefano Turconi", titolo: "Il porto proibito", genere: "Graphic novel", copie: 1, },
+            {id: "419", autore: "Terry Pratchett e Neil Gaiman", titolo: "Good Omens", genere: "Fantasy", copie: 1, },
+            {id: "420", autore: "Theodoros Papakostas", titolo: "Omero in ascensone", genere: "Divulgazione", copie: 1, },
+            {id: "421", autore: "Thomas Eliot", titolo: "La terra desolata", genere: "Poesia", copie: 1, },
+            {id: "422", autore: "Thomas Malory", titolo: "Thomas Malory - Storia di Re Artù e i suoi cavalieri", genere: "Narrativa", copie: 1, },
+            {id: "423", autore: "Tomani di Lampedua", titolo: "Il gattopardo", genere: "Romanzo storico", copie: 1, },
+            {id: "424", autore: "Tomas de Torquemada", titolo: "La mascella di Caino", genere: "Enigmistica", copie: 1, },
+            {id: "425", autore: "Toshikazu Kwaguchi", titolo: "Basta un caffè per essere felici", genere: "Narrativa", copie: 1, },
+            {id: "426", autore: "Tracy Chevalier", titolo: "La ragazza con l’orecchino di perla", genere: "Romanzo storico", copie: 1, },
+            {id: "427", autore: "Ueda Akinari", titolo: "Racconti di pioggia e di luna", genere: "Narrativa", copie: 1, },
+            {id: "428", autore: "Umberto Eco", titolo: "Il nome della rosa illustrato vol 1", genere: "Romanzo storico", copie: 1, },
+            {id: "429", autore: "Umberto Eco", titolo: "Il nome della rosa illustrato vol 2", genere: "Romanzo storico", copie: 1, },
+            {id: "430", autore: "Ursula K. Le Guin", titolo: "La saga di Terramare", genere: "Fantasy", copie: 1, },
+            {id: "431", autore: "Val Emmich", titolo: "Caro Evan Hansen", genere: "Young Adult", copie: 1, },
+            {id: "432", autore: "Valentina Meloni", titolo: "Valentina Meloni - Il destino ha la sua puntualità", genere: "Narrativa", copie: 1, },
+            {id: "433", autore: "Valerio Evangelisti", titolo: "Trilogia dei Pirati", genere: "Avventura", copie: 1, },
+            {id: "434", autore: "Vercors", titolo: "Le Armi della notte", genere: "Narrativa", copie: 1, },
+            {id: "435", autore: "Victor Hugo", titolo: "Notre Dame de Paris", genere: "Narrativa", copie: 1, },
+            {id: "436", autore: "Vincet Van Gogh", titolo: "Lettere a Theo", genere: "Epistolario", copie: 1, },
+            {id: "437", autore: "Virgilio", titolo: "Eneide", genere: "Poesia", copie: 3, },
+            {id: "438", autore: "Virginia Woolf", titolo: "Mrs. Dalloway", genere: "Narrativa", copie: 1, },
+            {id: "439", autore: "Voltaire", titolo: "Candido", genere: "Narrativa", copie: 1, },
+            {id: "440", autore: "Vyvyan Holland", titolo: "Essere figlio di Oscar Wilde", genere: "Biografia", copie: 1, },
+            {id: "441", autore: "Wilhelm Arnold", titolo: "Dizionario di Psicologia", genere: "Psicologia", copie: 1, },
+            {id: "442", autore: "William Beckford", titolo: "Vathek", genere: "Horror", copie: 1, },
+            {id: "443", autore: "William Shakespeare", titolo: "Il mercante di Venezia", genere: "Teatro", copie: 1, },
+            {id: "444", autore: "William Shakespeare", titolo: "Sogno d'una notte di mezza estate", genere: "Teatro", copie: 1, },
+            {id: "445", autore: "William Shakespeare", titolo: "Enrico IV", genere: "Teatro", copie: 1, },
+            {id: "446", autore: "William Shakespeare", titolo: "Tutte le opere -VOLUMI FABBRI EDITORI 2003", genere: "Teatro", copie: 33, },
+            {id: "447", autore: "Yoshida Shuici", titolo: "Appartamento 401", genere: "Narrativa", copie: 1, },
+            {id: "448", autore: "Zecharia Sitchin", titolo: "Gli dei dalle lacrime d’oro", genere: "Esoterismo", copie: 1, },
+            {id: "449", autore: "Zecharia Sitchin", titolo: "Il codice del cosmo", genere: "Esoterismo", copie: 1, },
+            {id: "450", autore: "Zecharia Sitchin", titolo: "Il pianeta degli dei", genere: "Esoterismo", copie: 1, },
+            {id: "451", autore: "Zeffiro Ciuffoletti", titolo: "Breve storia sociale della comunicazione", genere: "Saggio", copie: 1, },
+            {id: "452", autore: "haey1", titolo: "All my cards are here", genere: "Fanfiction", copie: 2, },
+            {id: "453", autore: "MsKingBean89", titolo: "All the young dudes 1", genere: "Fanfiction", copie: 1, },
+            {id: "454", autore: "MsKingBean89", titolo: "All the young dudes 2", genere: "Fanfiction", copie: 1, },
+            {id: "455", autore: "MsKingBean89", titolo: "All the young dudes 3", genere: "Fanfiction", copie: 1, },
+            {id: "456", autore: "Mastellaro", titolo: "Il libro delle citazioni latine e greche", genere: "Saggio", copie: 1, },
+            {id: "457", autore: "", titolo: "Lirici Greci", genere: "Poesia", copie: 1, },
+            {id: "458", autore: "", titolo: "Astronomia: un’introduzione all’universo delle stelle", genere: "Divulgazione scientifica", copie: 1, },
+            {id: "459", autore: "", titolo: "I capolavori dell’arte: Van Gogh girasoli", genere: "Arte", copie: 1, },
+            {id: "460", autore: "", titolo: "Alessandro Magno - i protagonisti della storia", genere: "Storia", copie: 1, },
+            {id: "461", autore: "", titolo: "Augusto - i protagonisti della storia", genere: "Storia", copie: 1, },
+            {id: "462", autore: "", titolo: "Grandi miti Greci - Apollo", genere: "Mitologia", copie: 1, },
+            {id: "463", autore: "", titolo: "La bella e la bestia, edizione Ippocampo", genere: "Fiaba", copie: 1, },
+            {id: "464", autore: "", titolo: "C’era una svolta, 18 favole con un finale diverso", genere: "Fiaba", copie: 1, },
+            {id: "465", autore: "", titolo: "Castlevania Artbook", genere: "Artbook", copie: 1, },
+            {id: "466", autore: "", titolo: "Batman volume 1", genere: "Fumetto", copie: 1, },
+            {id: "467", autore: "Lightning Strikes", titolo: "Sheith Artbook", genere: "Artbook", copie: 3, },
+            {id: "468", autore: "Lightning Strikes", titolo: "Stucky Artbook", genere: "Artbook", copie: 1, },
+            {id: "469", autore: "Vèna e Xelessia", titolo: "Mismatch", genere: "Fumetto", copie: 2, },
+            {id: "470", autore: "Vèna e Xelessia", titolo: "Shades of us Artbook", genere: "Artbook", copie: 1, },
+            {id: "471", autore: "Yuto Tsukuda, Shun Saeki, Eiichirō Oda", titolo: "Sanji Food Wars", genere: "Manga", copie: 1, },
+            {id: "472", autore: "", titolo: "The vikings runes (fotocopiato)", genere: "Esoterismo", copie: 1, },
+            {id: "473", autore: "Diego Meldi", titolo: "Tarocchi, Il manuale completo", genere: "Esoterismo", copie: 1, },
+            {id: "474", autore: "", titolo: "Dizionario illustrato di mitologia greco e romana", genere: "Mitologia", copie: 1, },
+            {id: "475", autore: "", titolo: "Bibbia", genere: "Religione", copie: 1, },
+            {id: "476", autore: "", titolo: "DDR Museum guida - il libro dell'esposizione", genere: "Storia", copie: 1, },
         ];
 
         let libri = JSON.parse(localStorage.getItem('libreria_calda_v9_1'));
@@ -1228,10 +1306,10 @@
             container.style.display = 'block';
             if (!html5QrCode) html5QrCode = new Html5Qrcode("reader");
             html5QrCode.start(
-                { facingMode: "environment" }, 
-                { fps: 10, qrbox: { width: 250, height: 100 } },
-                (decodedText) => { chiudiScanner(); cercaLibroAutomatico(decodedText); },
-                () => {}
+                {facingMode: "environment"},
+                {fps: 10, qrbox: {width: 250, height: 100}},
+                (decodedText) => {chiudiScanner(); cercaLibroAutomatico(decodedText);},
+                () => { }
             ).catch(err => alert("Errore fotocamera: " + err));
         }
 
@@ -1264,7 +1342,7 @@
             if (termine) alert("Funzione di ricerca attiva per: " + termine);
         }
 
-        bookForm.addEventListener('submit', function(e) {
+        bookForm.addEventListener('submit', function (e) {
             e.preventDefault();
             const idEdit = document.getElementById('editId').value;
             const nuovoLibro = {
@@ -1308,18 +1386,18 @@
             document.getElementById('genere').value = libro.genere || 'Romanzi';
             document.getElementById('copie').value = libro.copie || 1;
             document.getElementById('lettoDa').value = libro.lettoDa || 'Nessuno';
-            
+
             document.getElementById('formTitle').textContent = "Modifica Libro";
             document.getElementById('submitBtn').textContent = "Aggiorna Libro";
             document.getElementById('scanner-section').style.display = 'none';
             document.getElementById('cancelEditBtn').style.display = 'block';
             formCard.style.display = 'block';
-            formCard.scrollIntoView({ behavior: 'smooth' });
+            formCard.scrollIntoView({behavior: 'smooth'});
         }
 
         function renderLibrary() {
             const searchVal = searchInput.value.toLowerCase();
-            
+
             const filtrati = libri.filter(l => {
                 const matchSearch = l.titolo.toLowerCase().includes(searchVal) || l.autore.toLowerCase().includes(searchVal);
                 const matchGenre = !selectedGenre || l.genere === selectedGenre;
@@ -1334,7 +1412,7 @@
             // Aggiorna lista autori nella sidebar
             const autoriUnici = [...new Set(libri.map(l => l.autore))].sort();
             authorPillsBar.innerHTML = `<button class="filter-pill ${selectedAuthor === '' ? 'active' : ''}" onclick="setAuthorFilter('')"><span>Tutti gli autori</span></button>`;
-            
+
             autoriUnici.forEach(autore => {
                 const count = libri.filter(l => l.autore === autore).length;
                 authorPillsBar.innerHTML += `<button class="filter-pill ${selectedAuthor === autore ? 'active' : ''}" onclick="setAuthorFilter('${autore.replace(/'/g, "\\'")}')"><span>${autore}</span><span class="author-badge">${count}</span></button>`;
@@ -1347,12 +1425,12 @@
 
             // Raggruppa per autore
             const autoriFiltrati = [...new Set(filtrati.map(l => l.autore))].sort();
-            
+
             let html = '';
             autoriFiltrati.forEach(autore => {
                 const libriAutore = filtrati.filter(l => l.autore === autore);
                 const isAuthorActive = selectedAuthor === autore || autoriFiltrati.length === 1;
-                
+
                 html += `
                     <div class="author-item ${isAuthorActive ? 'active' : ''}">
                         <div class="author-header" onclick="this.parentElement.classList.toggle('active')">
@@ -1368,9 +1446,9 @@
                 libriAutore.forEach(libro => {
                     let statusClass = 'nessuno';
                     let statusText = 'Non letto';
-                    if (libro.lettoDa === 'Clo') { statusClass = 'clo'; statusText = 'Letto da Clo'; }
-                    else if (libro.lettoDa === 'Maki') { statusClass = 'maki'; statusText = 'Letto da Maki'; }
-                    else if (libro.lettoDa === 'Entrambi') { statusClass = 'entrambi'; statusText = 'Letto da Entrambi'; }
+                    if (libro.lettoDa === 'Clo') {statusClass = 'clo'; statusText = 'Letto da Clo';}
+                    else if (libro.lettoDa === 'Maki') {statusClass = 'maki'; statusText = 'Letto da Maki';}
+                    else if (libro.lettoDa === 'Entrambi') {statusClass = 'entrambi'; statusText = 'Letto da Entrambi';}
 
                     html += `
                         <div class="book-card">
