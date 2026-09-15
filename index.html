@@ -640,35 +640,11 @@
                         <span>▾</span>
                     </div>
                     <div class="filter-content" id="readerPillsBar">
-                        <button class="filter-pill active" onclick="setReaderFilter('')"><span>Tutti</span></button>
-                        <button class="filter-pill" onclick="setReaderFilter('Clo')"><span>Clo</span></button>
-                        <button class="filter-pill" onclick="setReaderFilter('Maki')"><span>Maki</span></button>
-                        <button class="filter-pill" onclick="setReaderFilter('Entrambi')"><span>Entrambi</span></button>
-                        <button class="filter-pill" onclick="setReaderFilter('Nessuno')"><span>Non letto</span></button>
-                    </div>
-                </div>
-
-                <div class="filter-section" id="filterGenre">
-                    <div class="filter-header"
-                        onclick="document.getElementById('filterGenre').classList.toggle('active')">
-                        <span>🏷️ Genere</span>
-                        <span>▾</span>
-                    </div>
-                    <div class="filter-content" id="genrePillsBar">
-                        <button class="filter-pill active" onclick="setGenreFilter('')"><span>Tutti i
-                                generi</span></button>
-                        <button class="filter-pill" onclick="setGenreFilter('Romanzi')"><span>Romanzi</span></button>
-                        <button class="filter-pill"
-                            onclick="setGenreFilter('Manga&Artbook')"><span>Manga&Artbook</span></button>
-                        <button class="filter-pill" onclick="setGenreFilter('Graphic Novel')"><span>Graphic
-                                Novel</span></button>
-                        <button class="filter-pill"
-                            onclick="setGenreFilter('Fanfiction')"><span>Fanfiction</span></button>
-                        <button class="filter-pill" onclick="setGenreFilter('Libri di Studio')"><span>Libri di
-                                Studio</span></button>
-                        <button class="filter-pill" onclick="setGenreFilter('Libri di musica')"><span>Libri di
-                                musica</span></button>
-                        <button class="filter-pill" onclick="setGenreFilter('Poesia')"><span>Poesia</span></button>
+                        <button class="filter-pill active" data-value="" onclick="setReaderFilter('')"><span>Tutti</span></button>
+                        <button class="filter-pill" data-value="Clo" onclick="setReaderFilter('Clo')"><span>Clo</span></button>
+                        <button class="filter-pill" data-value="Maki" onclick="setReaderFilter('Maki')"><span>Maki</span></button>
+                        <button class="filter-pill" data-value="Entrambi" onclick="setReaderFilter('Entrambi')"><span>Entrambi</span></button>
+                        <button class="filter-pill" data-value="Nessuno" onclick="setReaderFilter('Nessuno')"><span>Non letto</span></button>
                     </div>
                 </div>
 
@@ -721,16 +697,10 @@
                             </div>
                             <div class="form-group">
                                 <label for="genere">Genere</label>
-                                <select id="genere">
-                                    <option value="Romanzi">Romanzi</option>
-                                    <option value="Manga&Artbook">Manga&Artbook</option>
-                                    <option value="Graphic Novel">Graphic Novel</option>
-                                    <option value="Fanfiction">Fanfiction</option>
-                                    <option value="Libri di Studio">Libri di Studio</option>
-                                    <option value="Libri di musica">Libri di musica</option>
-                                    <option value="Poesia">Poesia</option>
-                                    <option value="Altro">Altro</option>
-                                </select>
+                                <!-- Le opzioni vengono popolate dinamicamente dai generi già usati nella libreria -->
+                                <select id="genere"></select>
+                                <input type="text" id="genereAltro" placeholder="Nuovo genere..."
+                                    style="display:none; margin-top:6px;">
                             </div>
                             <div class="form-group">
                                 <label for="copie">Copie</label>
@@ -1249,7 +1219,6 @@
             localStorage.setItem('libreria_calda_v9_1', JSON.stringify(libri));
         }
 
-        let selectedGenre = "";
         let selectedReader = "";
         let selectedAuthor = "";
         let html5QrCode = null;
@@ -1260,6 +1229,8 @@
         const searchInput = document.getElementById('searchInput');
         const statsBar = document.getElementById('statsBar');
         const authorPillsBar = document.getElementById('authorPillsBar');
+        const genereSelect = document.getElementById('genere');
+        const genereAltroInput = document.getElementById('genereAltro');
 
         function toggleForm() {
             if (formCard.style.display === 'block' && document.getElementById('editId').value === '') {
@@ -1278,20 +1249,55 @@
             document.getElementById('submitBtn').textContent = "Salva Libro";
             document.getElementById('scanner-section').style.display = 'block';
             document.getElementById('cancelEditBtn').style.display = 'none';
+            popolaSelectGenere();
+            genereAltroInput.style.display = 'none';
+            genereAltroInput.value = '';
         }
 
-        function setGenreFilter(genre) {
-            selectedGenre = genre;
-            document.querySelectorAll('#genrePillsBar .filter-pill').forEach(btn => {
-                btn.classList.toggle('active', btn.textContent.includes(genre) || (genre === '' && btn.textContent.includes('Tutti')));
-            });
-            renderLibrary();
+        // Ricava l'elenco ordinato dei generi realmente presenti nei libri
+        function getGeneriUnici() {
+            return [...new Set(libri.map(l => (l.genere || 'Altro').trim()).filter(g => g))].sort((a, b) => a.localeCompare(b, 'it'));
         }
+
+        // Popola il menu a tendina "Genere" nel form con i generi realmente usati + opzione "Altro"
+        function popolaSelectGenere(selezionato) {
+            const generi = getGeneriUnici();
+            genereSelect.innerHTML = '';
+            generi.forEach(g => {
+                const opt = document.createElement('option');
+                opt.value = g;
+                opt.textContent = g;
+                genereSelect.appendChild(opt);
+            });
+            const optAltro = document.createElement('option');
+            optAltro.value = '__altro__';
+            optAltro.textContent = '➕ Nuovo genere...';
+            genereSelect.appendChild(optAltro);
+
+            if (selezionato && generi.includes(selezionato)) {
+                genereSelect.value = selezionato;
+            } else if (selezionato) {
+                // genere personalizzato non ancora presente nella lista
+                genereSelect.value = '__altro__';
+                genereAltroInput.style.display = 'block';
+                genereAltroInput.value = selezionato;
+            }
+        }
+
+        genereSelect.addEventListener('change', function () {
+            if (genereSelect.value === '__altro__') {
+                genereAltroInput.style.display = 'block';
+                genereAltroInput.focus();
+            } else {
+                genereAltroInput.style.display = 'none';
+                genereAltroInput.value = '';
+            }
+        });
 
         function setReaderFilter(reader) {
             selectedReader = reader;
             document.querySelectorAll('#readerPillsBar .filter-pill').forEach(btn => {
-                btn.classList.toggle('active', btn.textContent.includes(reader) || (reader === '' && btn.textContent.includes('Tutti')));
+                btn.classList.toggle('active', btn.dataset.value === reader);
             });
             renderLibrary();
         }
@@ -1345,12 +1351,18 @@
         bookForm.addEventListener('submit', function (e) {
             e.preventDefault();
             const idEdit = document.getElementById('editId').value;
+
+            let genereScelto = genereSelect.value;
+            if (genereScelto === '__altro__') {
+                genereScelto = genereAltroInput.value.trim() || 'Altro';
+            }
+
             const nuovoLibro = {
                 id: idEdit ? idEdit : Date.now().toString(),
                 titolo: document.getElementById('titolo').value,
                 autore: document.getElementById('autore').value,
                 isbn: document.getElementById('isbn').value,
-                genere: document.getElementById('genere').value,
+                genere: genereScelto,
                 copie: parseInt(document.getElementById('copie').value) || 1,
                 lettoDa: document.getElementById('lettoDa').value
             };
@@ -1383,7 +1395,7 @@
             document.getElementById('titolo').value = libro.titolo;
             document.getElementById('autore').value = libro.autore;
             document.getElementById('isbn').value = libro.isbn || '';
-            document.getElementById('genere').value = libro.genere || 'Romanzi';
+            popolaSelectGenere(libro.genere || 'Altro');
             document.getElementById('copie').value = libro.copie || 1;
             document.getElementById('lettoDa').value = libro.lettoDa || 'Nessuno';
 
@@ -1400,10 +1412,9 @@
 
             const filtrati = libri.filter(l => {
                 const matchSearch = l.titolo.toLowerCase().includes(searchVal) || l.autore.toLowerCase().includes(searchVal);
-                const matchGenre = !selectedGenre || l.genere === selectedGenre;
                 const matchReader = !selectedReader || (l.lettoDa || 'Nessuno') === selectedReader;
                 const matchAuthor = !selectedAuthor || l.autore === selectedAuthor;
-                return matchSearch && matchGenre && matchReader && matchAuthor;
+                return matchSearch && matchReader && matchAuthor;
             });
 
             // Statistiche
@@ -1429,7 +1440,7 @@
             let html = '';
             autoriFiltrati.forEach(autore => {
                 const libriAutore = filtrati.filter(l => l.autore === autore);
-                const isAuthorActive = selectedAuthor === autore || autoriFiltrati.length === 1;
+                const isAuthorActive = (selectedAuthor !== "" && selectedAuthor === autore) || autoriFiltrati.length === 1;
 
                 html += `
                     <div class="author-item ${isAuthorActive ? 'active' : ''}">
@@ -1455,7 +1466,7 @@
                             <div class="book-info">
                                 <h4>${libro.titolo}</h4>
                                 <div class="book-tags">
-                                    <span class="genre-tag">${libro.genere || 'Romanzi'}</span>
+                                    <span class="genre-tag">${libro.genere || 'Altro'}</span>
                                     <span class="read-status ${statusClass}">${statusText}</span>
                                     ${libro.copie > 1 ? `<span class="genre-tag">Copie: ${libro.copie}</span>` : ''}
                                 </div>
@@ -1478,6 +1489,7 @@
         }
 
         // Avvio iniziale
+        popolaSelectGenere();
         renderLibrary();
     </script>
 </body>
