@@ -481,14 +481,6 @@
             align-items: center;
         }
 
-        .genre-tag {
-            background: #f1f5f9;
-            color: var(--text-light);
-            padding: 1px 6px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-        }
-
         .read-status {
             padding: 1px 6px;
             border-radius: 4px;
@@ -668,10 +660,8 @@
 
                     <div id="scanner-section">
                         <div class="scanner-actions">
-                            <button type="button" class="btn-scanner" onclick="avviaScanner()">📷 Scansiona
-                                ISBN</button>
-                            <button type="button" class="btn-manual-search" onclick="cercaPerTitoloWeb()">🔍 Cerca sul
-                                Web</button>
+                            <button type="button" class="btn-scanner" onclick="avviaScanner()">📷 Scansiona ISBN</button>
+                            <button type="button" class="btn-manual-search" onclick="cercaPerTitoloWeb()">🔍 Cerca sul Web</button>
                         </div>
                         <div id="reader-container">
                             <div id="reader"></div>
@@ -680,7 +670,7 @@
                         </div>
                     </div>
 
-                    <form id="bookForm">
+                    <form id="bookForm" onsubmit="saveBook(event)">
                         <input type="hidden" id="editId" value="">
                         <div class="form-grid">
                             <div class="form-group full">
@@ -727,59 +717,59 @@
 
     <!-- SCRIPT LOGICO -->
     <script>
-        const defaultBooks = [
+        let books = [
                         {id: "1", autore: "A.Summers", titolo: "La fine degli zar", copie: 1, },
                         {id: "2", autore: "Aa. Vv. Pomo di Venerə", titolo: "Cose del Gender. Testimonianze LGBTQIAP+", copie: 1, },
-                        {id: "3", autore: "Adriano Fabris", titolo: "L’etica del giornalismo negli attuali scenari comunicativi", copie: 1, lettoDa:"Clo", },
-                        {id: "4", autore: "Adriano Fabris", titolo: "Etica delle nuove tecnologie", copie: 1, lettoDa:"Clo",},
-                        {id: "5", autore: "Agota Kristof", titolo: "Trilogia Città di K", copie: 1,lettoDa:"Clo",},
-                        {id: "6", autore: "Alan Bennett", titolo: "La sovrana lettrice", copie: 1,lettoDa:"Clo", },
-                        {id: "7", autore: "Alberto Casadei", titolo: "Il Novecento", copie: 1,lettoDa:"Clo", },
-                        {id: "8", autore: "Aldo Palazzeschi", titolo: "Il codice di Perelà", copie: 1,lettoDa:"Clo", },
-                        {id: "9", autore: "Alessandro Baricco", titolo: "Novecento", copie: 1,lettoDa:"Clo", },
-                        {id: "10", autore: "Alessandro Baricco", titolo: "Oceano Mare", copie: 1,lettoDa:"Entrambi", },
-                        {id: "11", autore: "Alessandro Baricco", titolo: "L’Iliade", copie: 1,lettoDa:"Entrambi", },
+                        {id: "3", autore: "Adriano Fabris", titolo: "L’etica del giornalismo negli attuali scenari comunicativi", copie: 1, lettoDa: "Clo", },
+                        {id: "4", autore: "Adriano Fabris", titolo: "Etica delle nuove tecnologie", copie: 1, lettoDa: "Clo", },
+                        {id: "5", autore: "Agota Kristof", titolo: "Trilogia Città di K", copie: 1, lettoDa: "Clo", },
+                        {id: "6", autore: "Alan Bennett", titolo: "La sovrana lettrice", copie: 1, lettoDa: "Clo", },
+                        {id: "7", autore: "Alberto Casadei", titolo: "Il Novecento", copie: 1, lettoDa: "Clo", },
+                        {id: "8", autore: "Aldo Palazzeschi", titolo: "Il codice di Perelà", copie: 1, lettoDa: "Clo", },
+                        {id: "9", autore: "Alessandro Baricco", titolo: "Novecento", copie: 1, lettoDa: "Clo", },
+                        {id: "10", autore: "Alessandro Baricco", titolo: "Oceano Mare", copie: 1, lettoDa: "Entrambi", },
+                        {id: "11", autore: "Alessandro Baricco", titolo: "L’Iliade", copie: 1, lettoDa: "Entrambi", },
                         {id: "12", autore: "Alessandro Baricco", titolo: "City", copie: 1, },
                         {id: "13", autore: "Alessandro Baricco", titolo: "Castelli di Rabbia", copie: 1, },
-                        {id: "14", autore: "Alessandro Baricco", titolo: "Seta", copie: 1,lettoDa:"Entrambi", },
-                        {id: "15", autore: "Alessandro Baricco", titolo: "Tre volte all’alba", copie: 1,lettoDa:"Entrambi", },
-                        {id: "16", autore: "Alessandro Baricco", titolo: "La sposa giovane", copie: 1,lettoDa:"Entrambi", },
+                        {id: "14", autore: "Alessandro Baricco", titolo: "Seta", copie: 1, lettoDa: "Entrambi", },
+                        {id: "15", autore: "Alessandro Baricco", titolo: "Tre volte all’alba", copie: 1, lettoDa: "Entrambi", },
+                        {id: "16", autore: "Alessandro Baricco", titolo: "La sposa giovane", copie: 1, lettoDa: "Entrambi", },
                         {id: "17", autore: "Alessandro Baricco", titolo: "Abel", copie: 1, },
-                        {id: "18", autore: "Alessandro Baricco", titolo: "Senza Sangue", copie: 1,lettoDa:"Clo", },
-                        {id: "19", autore: "Alessandro D'Avenia", titolo: "L’arte di essere fragili", copie: 1,lettoDa:"Entrambi", },
-                        {id: "20", autore: "Alexandre Dumas", titolo: "Il conte di Montecristo", copie: 1, lettoDa:"Entrambi",},
-                        {id: "21", autore: "Alexandre Dumas", titolo: "I tre moschettieri", copie: 1,lettoDa:"Entrambi", },
-                        {id: "22", autore: "Alexandre Dumas", titolo: "Vent’anni dopo", copie: 1,lettoDa:"Clo", },
+                        {id: "18", autore: "Alessandro Baricco", titolo: "Senza Sangue", copie: 1, lettoDa: "Clo", },
+                        {id: "19", autore: "Alessandro D'Avenia", titolo: "L’arte di essere fragili", copie: 1, lettoDa: "Entrambi", },
+                        {id: "20", autore: "Alexandre Dumas", titolo: "Il conte di Montecristo", copie: 1, lettoDa: "Entrambi", },
+                        {id: "21", autore: "Alexandre Dumas", titolo: "I tre moschettieri", copie: 1, lettoDa: "Entrambi", },
+                        {id: "22", autore: "Alexandre Dumas", titolo: "Vent’anni dopo", copie: 1, lettoDa: "Clo", },
                         {id: "23", autore: "Alexandre Dumas", titolo: "Il Visconte Bragellone", copie: 1, },
                         {id: "24", autore: "Alexandre Dumas", titolo: "I Medici", copie: 1, },
-                        {id: "25", autore: "Alfons Mucha", titolo: "Catalogo mostra", copie: 1,lettoDa:"Entrambi", },
-                        {id: "26", autore: "Alice Oseman", titolo: "Heartstopper", copie: 4,lettoDa:"Entrambi", },
-                        {id: "27", autore: "Anaïs Flogny", titolo: "Rive lontane", copie: 1,lettoDa:"Clo", },
-                        {id: "28", autore: "Andrzej Sapkowski", titolo: "Il guardiano degli innocenti", copie: 1,lettoDa:"Clo", },
-                        {id: "29", autore: "Andrzej Sapkowski", titolo: "La spada del destino", copie: 1,lettoDa:"Clo", },
-                        {id: "30", autore: "Andrzej Sapkowski", titolo: "Il sangue degli elfi", copie: 1, lettoDa:"Clo",},
-                        {id: "31", autore: "Andrzej Sapkowski", titolo: "Il tempo della guerra", copie: 1,lettoDa:"Clo", },
-                        {id: "32", autore: "Andrzej Sapkowski", titolo: "Il battesimo del fuoco", copie: 1,lettoDa:"Clo", },
-                        {id: "33", autore: "Andrzej Sapkowski", titolo: "La torre della rondine", copie: 1,lettoDa:"Clo", },
-                        {id: "34", autore: "Andrzej Sapkowski", titolo: "La signora del lago", copie: 1,lettoDa:"Clo", },
-                        {id: "35", autore: "Andrzej Sapkowski", titolo: "La stagione delle tempeste", copie: 1,lettoDa:"Clo", },
+                        {id: "25", autore: "Alfons Mucha", titolo: "Catalogo mostra", copie: 1, lettoDa: "Entrambi", },
+                        {id: "26", autore: "Alice Oseman", titolo: "Heartstopper", copie: 4, lettoDa: "Entrambi", },
+                        {id: "27", autore: "Anaïs Flogny", titolo: "Rive lontane", copie: 1, lettoDa: "Clo", },
+                        {id: "28", autore: "Andrzej Sapkowski", titolo: "Il guardiano degli innocenti", copie: 1, lettoDa: "Clo", },
+                        {id: "29", autore: "Andrzej Sapkowski", titolo: "La spada del destino", copie: 1, lettoDa: "Clo", },
+                        {id: "30", autore: "Andrzej Sapkowski", titolo: "Il sangue degli elfi", copie: 1, lettoDa: "Clo", },
+                        {id: "31", autore: "Andrzej Sapkowski", titolo: "Il tempo della guerra", copie: 1, lettoDa: "Clo", },
+                        {id: "32", autore: "Andrzej Sapkowski", titolo: "Il battesimo del fuoco", copie: 1, lettoDa: "Clo", },
+                        {id: "33", autore: "Andrzej Sapkowski", titolo: "La torre della rondine", copie: 1, lettoDa: "Clo", },
+                        {id: "34", autore: "Andrzej Sapkowski", titolo: "La signora del lago", copie: 1, lettoDa: "Clo", },
+                        {id: "35", autore: "Andrzej Sapkowski", titolo: "La stagione delle tempeste", copie: 1, lettoDa: "Clo", },
                         {id: "36", autore: "Andrzej Sapkowski", titolo: "Il crocevia dei corvi", copie: 1, },
-                        {id: "37", autore: "Angela Chen", titolo: "ACE", copie: 1,lettoDa:"Clo", },
-                        {id: "38", autore: "Antoine de Saint Exupery", titolo: "Piccolo Principe", copie: 19,lettoDa:"Entrambi",},
-                        {id: "39", autore: "Antonia Arsaln", titolo: "La masseria delle allodole", copie: 1, lettoDa:"Entrambi",},
+                        {id: "37", autore: "Angela Chen", titolo: "ACE", copie: 1, lettoDa: "Clo", },
+                        {id: "38", autore: "Antoine de Saint Exupery", titolo: "Piccolo Principe", copie: 19, lettoDa: "Entrambi", },
+                        {id: "39", autore: "Antonia Arsaln", titolo: "La masseria delle allodole", copie: 1, lettoDa: "Entrambi", },
                         {id: "40", autore: "Antonio Alberti", titolo: "Medioevo in Valdera", copie: 1, },
                         {id: "41", autore: "Antonio Alberti e Monica Baldassarri", titolo: "Monete antiche", copie: 1, },
-                        {id: "42", autore: "Antonio Manzini", titolo: "Le ossa parlano", copie: 1, lettoDa:"Clo",},
-                        {id: "43", autore: "Antonio Pellegrini", titolo: "Italian Rhapsody: l’avventura dei Queen in Italia", copie: 1,lettoDa:"Clo", },
-                        {id: "44", autore: "Arin Murphy-Hiscock", titolo: "The Witch’s Book of Self Care", copie: 1,lettoDa:"Clo", },
-                        {id: "45", autore: "Arin Murphy-Hiscock", titolo: "The green witch", copie: 1,lettoDa:"Clo", },
-                        {id: "46", autore: "Ariosto", titolo: "Orlando Furioso I", copie: 1,lettoDa:"Clo", },
-                        {id: "47", autore: "Ariosto", titolo: "Orlando Furioso II", copie: 1,lettoDa:"Clo", },
-                        {id: "48", autore: "Arthur Conan Doyle", titolo: "Uno studio in rosso", copie: 1,lettoDa:"Clo", },
-                        {id: "49", autore: "Arthur Conan Doyle", titolo: "Il mastino dei Baskerville", copie: 1,lettoDa:"Clo", },
-                        {id: "50", autore: "Arthur Conan Doyle", titolo: "Le avventure di Sherlock Holmes", copie: 1,lettoDa:"Clo", },
+                        {id: "42", autore: "Antonio Manzini", titolo: "Le ossa parlano", copie: 1, lettoDa: "Clo", },
+                        {id: "43", autore: "Antonio Pellegrini", titolo: "Italian Rhapsody: l’avventura dei Queen in Italia", copie: 1, lettoDa: "Clo", },
+                        {id: "44", autore: "Arin Murphy-Hiscock", titolo: "The Witch’s Book of Self Care", copie: 1, lettoDa: "Clo", },
+                        {id: "45", autore: "Arin Murphy-Hiscock", titolo: "The green witch", copie: 1, lettoDa: "Clo", },
+                        {id: "46", autore: "Ariosto", titolo: "Orlando Furioso I", copie: 1, lettoDa: "Clo", },
+                        {id: "47", autore: "Ariosto", titolo: "Orlando Furioso II", copie: 1, lettoDa: "Clo", },
+                        {id: "48", autore: "Arthur Conan Doyle", titolo: "Uno studio in rosso", copie: 1, lettoDa: "Clo", },
+                        {id: "49", autore: "Arthur Conan Doyle", titolo: "Il mastino dei Baskerville", copie: 1, lettoDa: "Clo", },
+                        {id: "50", autore: "Arthur Conan Doyle", titolo: "Le avventure di Sherlock Holmes", copie: 1, lettoDa: "Clo", },
                         {id: "51", autore: "Arthur Conan Doyle", titolo: "La valle della paura", copie: 1, },
-                        {id: "52", autore: "Arthur Conan Doyle", titolo: "Il segno dei quattro", copie: 1,lettoDa:"Clo", },
+                        {id: "52", autore: "Arthur Conan Doyle", titolo: "Il segno dei quattro", copie: 1, lettoDa: "Clo", },
                         {id: "53", autore: "Arthur Rimbaud", titolo: "Opere", copie: 1, },
                         {id: "54", autore: "Asumiko Nakamura", titolo: "Compagni di classe", copie: 1},
                         {id: "55", autore: "Asumiko Nakamura", titolo: "Il calore del bianco (Sotsugyousei - Winter)", copie: 1},
@@ -789,101 +779,101 @@
                         {id: "59", autore: "Asumiko Nakamura", titolo: "O.B. 2", copie: 1},
                         {id: "60", autore: "Asumiko Nakamura", titolo: "Blanc 1", copie: 1},
                         {id: "61", autore: "Asumiko Nakamura", titolo: "Blanc 2", copie: 1},
-                        {id: "62", autore: "Banana Yoshimoto", titolo: "Kitchen", copie: 1,lettoDa:"Clo", },
+                        {id: "62", autore: "Banana Yoshimoto", titolo: "Kitchen", copie: 1, lettoDa: "Clo", },
                         {id: "63", autore: "Banana Yoshimoto", titolo: "Le strane storie di Fukiage", copie: 1, },
                         {id: "64", autore: "Bianca Pitzorno", titolo: "La sonnambula", copie: 1, },
                         {id: "65", autore: "Bianca Pitzorno", titolo: "Tornatràs", copie: 1, },
-                        {id: "66", autore: "Bradbury", titolo: "Fahrenheit 451", copie: 1,lettoDa:"Clo", },
-                        {id: "67", autore: "Bram Stoker", titolo: "Dracula", copie: 1,lettoDa:"Clo", },
+                        {id: "66", autore: "Bradbury", titolo: "Fahrenheit 451", copie: 1, lettoDa: "Clo", },
+                        {id: "67", autore: "Bram Stoker", titolo: "Dracula", copie: 1, lettoDa: "Clo", },
                         {id: "68", autore: "Calasso", titolo: "Le nozze di Cadmo e Armonia", copie: 1, },
-                        {id: "69", autore: "Carlo Capra", titolo: "Storia moderna", copie: 1,lettoDa:"Clo", },
+                        {id: "69", autore: "Carlo Capra", titolo: "Storia moderna", copie: 1, lettoDa: "Clo", },
                         {id: "70", autore: "Carlo Goldoni", titolo: "Commedie Scelte", copie: 1, },
-                        {id: "71", autore: "Cassandra Clare", titolo: "The infernal devices 1,2,3 volume intero", copie: 1,lettoDa:"Entrambi", },
-                        {id: "72", autore: "Cassandra Clare", titolo: "The mortal instruments da 1 a 3 volume intero", copie: 1,lettoDa:"Entrambi", },
-                        {id: "73", autore: "Cassandra Clare", titolo: "The mortal instruments da 4 a 6 volume intero", copie: 1,lettoDa:"Entrambi", },
-                        {id: "74", autore: "Cassandra Clare", titolo: "The Dark artifices 1,2,3 volume intero", copie: 1,lettoDa:"Entrambi", },
-                        {id: "75", autore: "Cassandra Clare", titolo: "Fantasmi del mercato delle ombre", copie: 1,lettoDa:"Entrambi", },
-                        {id: "76", autore: "Cassandra Clare", titolo: "Le cronache di Magnus Bane", copie: 1,lettoDa:"Entrambi", },
-                        {id: "77", autore: "Cassandra Clare", titolo: "La mano scarlatta", copie: 1, lettoDa:"Entrambi",},
-                        {id: "78", autore: "Cassandra Clare", titolo: "Il libro bianco perduto", copie: 1, lettoDa:"Entrambi",},
-                        {id: "79", autore: "Cassandra Clare", titolo: "The Last Hours, La catena d’oro", copie: 1,lettoDa:"Entrambi", },
-                        {id: "80", autore: "Cassandra Clare", titolo: "The Last Hours, La catena di ferro", copie: 1,lettoDa:"Entrambi", },
-                        {id: "81", autore: "Cassandra Clare", titolo: "The Last Hours, La catena di spine", copie: 1,lettoDa:"Entrambi", },
-                        {id: "82", autore: "Cassandra Clare", titolo: "Storia di illustri Shadowhunters e abitanti del mondo dei Nascosti", copie: 1, lettoDa:"Entrambi",},
-                        {id: "83", autore: "Cassandra Clare", titolo: "Come i cuori degli angeli", copie: 1,lettoDa:"Entrambi", },
-                        {id: "84", autore: "Cassandra Clare", titolo: "I segreti di Blackthorn Hall", copie: 1,lettoDa:"Entrambi", },
+                        {id: "71", autore: "Cassandra Clare", titolo: "The infernal devices 1,2,3 volume intero", copie: 1, lettoDa: "Entrambi", },
+                        {id: "72", autore: "Cassandra Clare", titolo: "The mortal instruments da 1 a 3 volume intero", copie: 1, lettoDa: "Entrambi", },
+                        {id: "73", autore: "Cassandra Clare", titolo: "The mortal instruments da 4 a 6 volume intero", copie: 1, lettoDa: "Entrambi", },
+                        {id: "74", autore: "Cassandra Clare", titolo: "The Dark artifices 1,2,3 volume intero", copie: 1, lettoDa: "Entrambi", },
+                        {id: "75", autore: "Cassandra Clare", titolo: "Fantasmi del mercato delle ombre", copie: 1, lettoDa: "Entrambi", },
+                        {id: "76", autore: "Cassandra Clare", titolo: "Le cronache di Magnus Bane", copie: 1, lettoDa: "Entrambi", },
+                        {id: "77", autore: "Cassandra Clare", titolo: "La mano scarlatta", copie: 1, lettoDa: "Entrambi", },
+                        {id: "78", autore: "Cassandra Clare", titolo: "Il libro bianco perduto", copie: 1, lettoDa: "Entrambi", },
+                        {id: "79", autore: "Cassandra Clare", titolo: "The Last Hours, La catena d’oro", copie: 1, lettoDa: "Entrambi", },
+                        {id: "80", autore: "Cassandra Clare", titolo: "The Last Hours, La catena di ferro", copie: 1, lettoDa: "Entrambi", },
+                        {id: "81", autore: "Cassandra Clare", titolo: "The Last Hours, La catena di spine", copie: 1, lettoDa: "Entrambi", },
+                        {id: "82", autore: "Cassandra Clare", titolo: "Storia di illustri Shadowhunters e abitanti del mondo dei Nascosti", copie: 1, lettoDa: "Entrambi", },
+                        {id: "83", autore: "Cassandra Clare", titolo: "Come i cuori degli angeli", copie: 1, lettoDa: "Entrambi", },
+                        {id: "84", autore: "Cassandra Clare", titolo: "I segreti di Blackthorn Hall", copie: 1, lettoDa: "Entrambi", },
                         {id: "85", autore: "Cecilie Hollberg", titolo: "Il mio David", copie: 1, },
                         {id: "86", autore: "Charles Baudelaire", titolo: "I fiori del male", copie: 1, },
-                        {id: "87", autore: "Charles Dickens", titolo: "Una storia tra due città", copie: 1,lettoDa:"Maki", },
-                        {id: "88", autore: "Charles Dickens", titolo: "Oliver Twist", copie: 1, lettoDa:"Clo",},
-                        {id: "89", autore: "Charles Dickens", titolo: "David Copperfield", copie: 1,lettoDa:"Clo", },
-                        {id: "90", autore: "Charles Dickens", titolo: "Grandi speranze", copie: 1,lettoDa:"Clo", },
+                        {id: "87", autore: "Charles Dickens", titolo: "Una storia tra due città", copie: 1, lettoDa: "Maki", },
+                        {id: "88", autore: "Charles Dickens", titolo: "Oliver Twist", copie: 1, lettoDa: "Clo", },
+                        {id: "89", autore: "Charles Dickens", titolo: "David Copperfield", copie: 1, lettoDa: "Clo", },
+                        {id: "90", autore: "Charles Dickens", titolo: "Grandi speranze", copie: 1, lettoDa: "Clo", },
                         {id: "91", autore: "Charles Dickens", titolo: "Il Circolo Pickwick", copie: 1, },
-                        {id: "92", autore: "Charles Schulz", titolo: "Magico Snoopy", copie: 1,lettoDa:"Clo", },
-                        {id: "93", autore: "Christopher Paolini", titolo: "Eragorn", copie: 1,lettoDa:"Clo", },
-                        {id: "94", autore: "Christopher Paolini", titolo: "Eldest", copie: 1,lettoDa:"Clo", },
-                        {id: "95", autore: "Christopher Paolini", titolo: "Brisingr", copie: 1, lettoDa:"Clo",},
-                        {id: "96", autore: "Christopher Paolini", titolo: "Inheritance", copie: 1,lettoDa:"Clo", },
+                        {id: "92", autore: "Charles Schulz", titolo: "Magico Snoopy", copie: 1, lettoDa: "Clo", },
+                        {id: "93", autore: "Christopher Paolini", titolo: "Eragorn", copie: 1, lettoDa: "Clo", },
+                        {id: "94", autore: "Christopher Paolini", titolo: "Eldest", copie: 1, lettoDa: "Clo", },
+                        {id: "95", autore: "Christopher Paolini", titolo: "Brisingr", copie: 1, lettoDa: "Clo", },
+                        {id: "96", autore: "Christopher Paolini", titolo: "Inheritance", copie: 1, lettoDa: "Clo", },
                         {id: "97", autore: "Colin Morgan", titolo: "La ballata di Rohan McCoy", copie: 1, },
                         {id: "98", autore: "Corinne Morel", titolo: "Dizionario dei simboli, miti e credenze", copie: 1, },
-                        {id: "99", autore: "Cornelia Funke", titolo: "Alba d’Inchiostro", copie: 1, lettoDa:"Clo",},
-                        {id: "100", autore: "Cornelia Funke", titolo: "Veleno d’inchiostro", copie: 1, lettoDa:"Clo",},
-                        {id: "101", autore: "Cornelia Funke", titolo: "Cuore d’Inchiostro", copie: 1,lettoDa:"Clo", },
+                        {id: "99", autore: "Cornelia Funke", titolo: "Alba d’Inchiostro", copie: 1, lettoDa: "Clo", },
+                        {id: "100", autore: "Cornelia Funke", titolo: "Veleno d’inchiostro", copie: 1, lettoDa: "Clo", },
+                        {id: "101", autore: "Cornelia Funke", titolo: "Cuore d’Inchiostro", copie: 1, lettoDa: "Clo", },
                         {id: "102", autore: "Cristina Menazza", titolo: "Parent Training nell’autismo", copie: 1, },
                         {id: "103", autore: "CS Lewis", titolo: "Le Cronache di Narnia volume intero", copie: 1, },
-                        {id: "104", autore: "CS Pacat", titolo: "Dark Rise", copie: 1, lettoDa:"Entrambi",},
-                        {id: "105", autore: "CS Pacat", titolo: "Dark Heir", copie: 1,lettoDa:"Entrambi", },
-                        {id: "106", autore: "CS Pacat", titolo: "Il Principe Prigioniero", copie: 1, lettoDa:"Entrambi",},
-                        {id: "107", autore: "CS Pacat", titolo: "La Mossa del Principe", copie: 1,lettoDa:"Entrambi", },
-                        {id: "108", autore: "CS Pacat", titolo: "L’ascesa dei Re", copie: 1, lettoDa:"Entrambi",},
+                        {id: "104", autore: "CS Pacat", titolo: "Dark Rise", copie: 1, lettoDa: "Entrambi", },
+                        {id: "105", autore: "CS Pacat", titolo: "Dark Heir", copie: 1, lettoDa: "Entrambi", },
+                        {id: "106", autore: "CS Pacat", titolo: "Il Principe Prigioniero", copie: 1, lettoDa: "Entrambi", },
+                        {id: "107", autore: "CS Pacat", titolo: "La Mossa del Principe", copie: 1, lettoDa: "Entrambi", },
+                        {id: "108", autore: "CS Pacat", titolo: "L’ascesa dei Re", copie: 1, lettoDa: "Entrambi", },
                         {id: "109", autore: "Daniel Goleman", titolo: "Intelligenza Emotiva", copie: 1, },
-                        {id: "110", autore: "Daniel Keyes", titolo: "Una stanza piena di gente", copie: 1, lettoDa:"Clo", },
+                        {id: "110", autore: "Daniel Keyes", titolo: "Una stanza piena di gente", copie: 1, lettoDa: "Clo", },
                         {id: "111", autore: "Daniel Pennac", titolo: "Come un romanzo", copie: 1, },
                         {id: "112", autore: "Daniel Pennac", titolo: "Diario di scuola", copie: 1, },
-                        {id: "113", autore: "Dante Alighieri", titolo: "Divina Commedia Illustrata da Go Nagai", copie: 1,lettoDa:"Clo", },
-                        {id: "114", autore: "Dante Alighieri", titolo: "Divina Commedia", copie: 1,lettoDa:"Entrambi",  },
-                        {id: "115", autore: "Dante Alighieri", titolo: "Tutte le opere - mammut", copie: 1, lettoDa:"Entrambi", },
+                        {id: "113", autore: "Dante Alighieri", titolo: "Divina Commedia Illustrata da Go Nagai", copie: 1, lettoDa: "Clo", },
+                        {id: "114", autore: "Dante Alighieri", titolo: "Divina Commedia", copie: 1, lettoDa: "Entrambi",  },
+                        {id: "115", autore: "Dante Alighieri", titolo: "Tutte le opere - mammut", copie: 1, lettoDa: "Entrambi", },
                         {id: "116", autore: "Diane Ehrensaft e Michelle Jurkiewicz", titolo: "Il Gender spiegato bene. Una guida all'identità di genere per professionist*, insegnanti e genitori", copie: 1, },
                         {id: "117", autore: "Diego Miscioscoia e Daniele Novara", titolo: "Le radici affettive dei conflitti", copie: 1, },
                         {id: "118", autore: "Donatello Tomaiuoli", titolo: "Insegnare le abilità sociali ai bambini con autismo e altri disturbi dello sviluppo", copie: 1, },
-                        {id: "119", autore: "Doris Lessing", titolo: "Il quinto figlio", copie: 1,lettoDa:"Clo",  },
-                        {id: "120", autore: "Duccio Balestracci", titolo: "La battaglia di Montaperti", copie: 1,lettoDa:"Clo",  },
-                        {id: "121", autore: "Edward Ashton", titolo: "Mickey 7", copie: 1,lettoDa:"Clo",  },
-                        {id: "122", autore: "Elie Wiesel", titolo: "La notte", copie: 1, lettoDa:"Clo", },
+                        {id: "119", autore: "Doris Lessing", titolo: "Il quinto figlio", copie: 1, lettoDa: "Clo",  },
+                        {id: "120", autore: "Duccio Balestracci", titolo: "La battaglia di Montaperti", copie: 1, lettoDa: "Clo",  },
+                        {id: "121", autore: "Edward Ashton", titolo: "Mickey 7", copie: 1, lettoDa: "Clo",  },
+                        {id: "122", autore: "Elie Wiesel", titolo: "La notte", copie: 1, lettoDa: "Clo", },
                         {id: "123", autore: "Elie Wiesel", titolo: "Il processo di Shamgorod", copie: 1, },
                         {id: "124", autore: "Elisa Bertini", titolo: "I diari di Seaport", copie: 1, },
-                        {id: "125", autore: "Elisabeth Van Gogh", titolo: "Mio fratello Vincent", copie: 1,lettoDa:"Clo",  },
+                        {id: "125", autore: "Elisabeth Van Gogh", titolo: "Mio fratello Vincent", copie: 1, lettoDa: "Clo",  },
                         {id: "126", autore: "Elisabetta Gnone", titolo: "Fairy Oak, la storia perduta", copie: 1, },
                         {id: "127", autore: "Elsa Morante", titolo: "La storia", copie: 1, },
-                        {id: "128", autore: "Elsa Morante", titolo: "L’isola di Arturo", copie: 1,lettoDa:"Entrambi",  },
-                        {id: "129", autore: "Emanuele Mastrangelo", titolo: "Wikipedia", copie: 1,lettoDa:"Clo",  },
+                        {id: "128", autore: "Elsa Morante", titolo: "L’isola di Arturo", copie: 1, lettoDa: "Entrambi",  },
+                        {id: "129", autore: "Emanuele Mastrangelo", titolo: "Wikipedia", copie: 1, lettoDa: "Clo",  },
                         {id: "130", autore: "Emilio Salgari", titolo: "Trilogia di Sandokan", copie: 1, },
-                        {id: "131", autore: "Emily Bronte", titolo: "Cime tempestose", copie: 1, lettoDa:"Entrambi",  },
-                        {id: "132", autore: "Enrico Menduini", titolo: "Social Network", copie: 1, lettoDa:"Clo", },
-                        {id: "133", autore: "Eugenio Montale", titolo: "Le Occasioni", copie: 1, lettoDa:"Clo", },
+                        {id: "131", autore: "Emily Bronte", titolo: "Cime tempestose", copie: 1, lettoDa: "Entrambi",  },
+                        {id: "132", autore: "Enrico Menduini", titolo: "Social Network", copie: 1, lettoDa: "Clo", },
+                        {id: "133", autore: "Eugenio Montale", titolo: "Le Occasioni", copie: 1, lettoDa: "Clo", },
                         {id: "134", autore: "Euripide", titolo: "Le tragedie", copie: 1, },
-                        {id: "135", autore: "Eva Cantarella", titolo: "Secondo Natura", copie: 1,lettoDa:"Clo",  },
+                        {id: "135", autore: "Eva Cantarella", titolo: "Secondo Natura", copie: 1, lettoDa: "Clo",  },
                         {id: "136", autore: "Evangeline Walton", titolo: "I Mabinogion - tetralogia", copie: 1, },
-                        {id: "137", autore: "F. Scott Fitzegerald", titolo: "Il grande Gatsby", copie: 1,lettoDa:"Entrambi",  },
+                        {id: "137", autore: "F. Scott Fitzegerald", titolo: "Il grande Gatsby", copie: 1, lettoDa: "Entrambi",  },
                         {id: "138", autore: "F.Ramorino", titolo: "Mitologia classica", copie: 1, },
                         {id: "139", autore: "Federico Rampini", titolo: "La seconda guerra Fredda", copie: 1, },
-                        {id: "140", autore: "Federigo Tozzi", titolo: "Con gli occhi chiusi, ricordi di un impiegato", copie: 1,lettoDa:"Clo",  },
-                        {id: "141", autore: "Fedor Dostoevskij", titolo: "L’idiota", copie: 1,lettoDa:"Clo",  },
-                        {id: "142", autore: "Fedor Dostoevskij", titolo: "Le notti bianche", copie: 1, lettoDa:"Clo", },
+                        {id: "140", autore: "Federigo Tozzi", titolo: "Con gli occhi chiusi, ricordi di un impiegato", copie: 1, lettoDa: "Clo",  },
+                        {id: "141", autore: "Fedor Dostoevskij", titolo: "L’idiota", copie: 1, lettoDa: "Clo",  },
+                        {id: "142", autore: "Fedor Dostoevskij", titolo: "Le notti bianche", copie: 1, lettoDa: "Clo", },
                         {id: "143", autore: "Fedor Dostoevskij", titolo: "I fratelli Karamazov", copie: 1, },
                         {id: "144", autore: "Fiona Bullivant", titolo: "Autismo al femminile", copie: 1, },
                         {id: "145", autore: "Flavia Caretto", titolo: "Autismo e autonomie personali", copie: 1, },
                         {id: "146", autore: "Francis Bacon", titolo: "La nuova Atlantide", copie: 1, },
                         {id: "147", autore: "Franco Cardini, Marina Montesano", titolo: "Storia medievale", copie: 1, },
-                        {id: "148", autore: "Franco Cavallini", titolo: "Foglie al Vento", copie: 1,lettoDa:"Maki",  },
+                        {id: "148", autore: "Franco Cavallini", titolo: "Foglie al Vento", copie: 1, lettoDa: "Maki",  },
                         {id: "149", autore: "Frank Zollner", titolo: "Michelangelo, tutte le opere", copie: 1, },
-                        {id: "150", autore: "Franz Kafka", titolo: "Il processo", copie: 1,lettoDa:"Maki",  },
+                        {id: "150", autore: "Franz Kafka", titolo: "Il processo", copie: 1, lettoDa: "Maki",  },
                         {id: "151", autore: "Friedrich Nietzsche", titolo: "L’Anticristo", copie: 1, },
                         {id: "152", autore: "Friedrich Nietzsche", titolo: "Sull’utilità e il danno della storia", copie: 1, },
                         {id: "153", autore: "Friedrich Nietzsche", titolo: "La Gaia Scienza", copie: 1, },
-                        {id: "154", autore: "Gasperetti", titolo: "La società dei giornalisti estinti", copie: 1, lettoDa:"Clo",  },
-                        {id: "155", autore: "George RR Martin", titolo: "Fuoco e Sangue", copie: 1,lettoDa:"Entrambi",  },
-                        {id: "156", autore: "George RR Martin", titolo: "L’Ascesa del drago", copie: 1,lettoDa:"Entrambi",  },
+                        {id: "154", autore: "Gasperetti", titolo: "La società dei giornalisti estinti", copie: 1, lettoDa: "Clo",  },
+                        {id: "155", autore: "George RR Martin", titolo: "Fuoco e Sangue", copie: 1, lettoDa: "Entrambi",  },
+                        {id: "156", autore: "George RR Martin", titolo: "L’Ascesa del drago", copie: 1, lettoDa: "Entrambi",  },
                         {id: "157", autore: "George RR Martin", titolo: "Il Mondo del Ghiaccio e del fuoco", copie: 1, },
                         {id: "158", autore: "George RR Martin", titolo: "Il Cavaliere dei sette Regni", copie: 1, },
                         {id: "159", autore: "Giacomo Leopardi", titolo: "I canti", copie: 3, },
@@ -891,109 +881,109 @@
                         {id: "161", autore: "Giacomo Leopardi", titolo: "Lo Zibaldone di pensieri volumi 2", copie: 1, },
                         {id: "162", autore: "Giacomo Leopardi", titolo: "La vita e le lettere", copie: 1, },
                         {id: "163", autore: "Giacomo Vivanti", titolo: "L’apprendimento nell’autismo", copie: 1, },
-                        {id: "164", autore: "Gianni Rodari", titolo: "Favole al telefono", copie: 1, lettoDa:"Clo", },
+                        {id: "164", autore: "Gianni Rodari", titolo: "Favole al telefono", copie: 1, lettoDa: "Clo", },
                         {id: "165", autore: "Gianrico Carofiglio", titolo: "La nuova manomissione delle parole", copie: 1, },
-                        {id: "166", autore: "Gino Strada", titolo: "Pappagalli verdi", copie: 1,lettoDa:"Clo",  },
-                        {id: "167", autore: "Giorgio Bassani", titolo: "Gli occhiali d’oro", copie: 1, lettoDa:"Clo", },
-                        {id: "168", autore: "Giorgio Bassani", titolo: "Il giardino dei Finzi-Contini", copie: 1, lettoDa:"Clo", },
+                        {id: "166", autore: "Gino Strada", titolo: "Pappagalli verdi", copie: 1, lettoDa: "Clo",  },
+                        {id: "167", autore: "Giorgio Bassani", titolo: "Gli occhiali d’oro", copie: 1, lettoDa: "Clo", },
+                        {id: "168", autore: "Giorgio Bassani", titolo: "Il giardino dei Finzi-Contini", copie: 1, lettoDa: "Clo", },
                         {id: "169", autore: "Giorgio Ieranò", titolo: "Eroi", copie: 1, },
                         {id: "170", autore: "Giorgio Vasari", titolo: "Le vite dei più eccellenti pittori, scultori e architetti", copie: 1, },
-                        {id: "171", autore: "Giovanni Boccaccio", titolo: "Decameron", copie: 1,lettoDa:"Entrambi",  },
+                        {id: "171", autore: "Giovanni Boccaccio", titolo: "Decameron", copie: 1, lettoDa: "Entrambi",  },
                         {id: "172", autore: "Giovanni Pascoli", titolo: "Tutte le poesie", copie: 1, },
                         {id: "173", autore: "Giulio Ciampoltrini", titolo: "Gli etruschi della Valdera", copie: 1, },
                         {id: "174", autore: "Giuseppe Mercenaro", titolo: "Una sconosciuta moralità", copie: 1, },
-                        {id: "175", autore: "Haddon", titolo: "Lo strano caso del cane ucciso a mezzanotte", copie: 1,lettoDa:"Clo",  },
-                        {id: "176", autore: "Han Kang", titolo: "Atti Umani", copie: 1, lettoDa:"Clo", },
-                        {id: "177", autore: "Hannah Arendt", titolo: "La banalità del male", copie: 1, lettoDa:"Clo", },
-                        {id: "178", autore: "Harper Lee", titolo: "Il buio oltre la siepe", copie: 1, lettoDa:"Entrambi", },
-                        {id: "179", autore: "Haruichi Furudate", titolo: "Haikyuu 1", copie: 1, lettoDa:"Clo", },
-                        {id: "180", autore: "Haruichi Furudate", titolo: "Haikyuu 2", copie: 1, lettoDa: "Clo"},
-                        {id: "181", autore: "Haruichi Furudate", titolo: "Haikyuu 3", copie: 1, lettoDa: "Clo"},
-                        {id: "182", autore: "Haruichi Furudate", titolo: "Haikyuu 4", copie: 1, lettoDa: "Clo"},
-                        {id: "183", autore: "Haruichi Furudate", titolo: "Haikyuu 5", copie: 1, lettoDa: "Clo"},
-                        {id: "184", autore: "Haruichi Furudate", titolo: "Haikyuu 6", copie: 1, lettoDa: "Clo"},
-                        {id: "185", autore: "Haruichi Furudate", titolo: "Haikyuu 7", copie: 1, lettoDa: "Clo"},
-                        {id: "186", autore: "Haruichi Furudate", titolo: "Haikyuu 8", copie: 1, lettoDa: "Clo"},
-                        {id: "187", autore: "Haruichi Furudate", titolo: "Haikyuu 9", copie: 1, lettoDa: "Clo"},
-                        {id: "188", autore: "Haruichi Furudate", titolo: "Haikyuu 10", copie: 1, lettoDa: "Clo"},
-                        {id: "189", autore: "Haruichi Furudate", titolo: "Haikyuu 11", copie: 1, lettoDa: "Clo"},
-                        {id: "190", autore: "Haruichi Furudate", titolo: "Haikyuu 12", copie: 1, lettoDa: "Clo"},
-                        {id: "191", autore: "Haruichi Furudate", titolo: "Haikyuu 13", copie: 1, lettoDa: "Clo"},
-                        {id: "192", autore: "Haruichi Furudate", titolo: "Haikyuu 14", copie: 1, lettoDa: "Clo"},
-                        {id: "193", autore: "Haruichi Furudate", titolo: "Haikyuu 15", copie: 1, lettoDa: "Clo"},
-                        {id: "194", autore: "Haruichi Furudate", titolo: "Haikyuu 16", copie: 1, lettoDa: "Clo"},
-                        {id: "195", autore: "Haruichi Furudate", titolo: "Haikyuu 17", copie: 1, lettoDa: "Clo"},
-                        {id: "196", autore: "Haruichi Furudate", titolo: "Haikyuu 18", copie: 1, lettoDa: "Clo"},
-                        {id: "197", autore: "Haruichi Furudate", titolo: "Haikyuu 19", copie: 1, lettoDa: "Clo"},
-                        {id: "198", autore: "Haruichi Furudate", titolo: "Haikyuu 20", copie: 1, lettoDa: "Clo"},
-                        {id: "199", autore: "Haruichi Furudate", titolo: "Haikyuu 21", copie: 1, lettoDa: "Clo"},
-                        {id: "200", autore: "Haruichi Furudate", titolo: "Haikyuu 22", copie: 1, lettoDa: "Clo"},
-                        {id: "201", autore: "Haruichi Furudate", titolo: "Haikyuu 23", copie: 1, lettoDa: "Clo"},
-                        {id: "202", autore: "Haruichi Furudate", titolo: "Haikyuu 24", copie: 1, lettoDa: "Clo"},
-                        {id: "203", autore: "Haruichi Furudate", titolo: "Haikyuu 25", copie: 1, lettoDa: "Clo"},
-                        {id: "204", autore: "Haruichi Furudate", titolo: "Haikyuu 26", copie: 1, lettoDa: "Clo"},
-                        {id: "205", autore: "Haruichi Furudate", titolo: "Haikyuu 27", copie: 1, lettoDa: "Clo"},
-                        {id: "206", autore: "Haruichi Furudate", titolo: "Haikyuu 28", copie: 1, lettoDa: "Clo"},
-                        {id: "207", autore: "Haruichi Furudate", titolo: "Haikyuu 29", copie: 1, lettoDa: "Clo"},
-                        {id: "208", autore: "Haruichi Furudate", titolo: "Haikyuu 30", copie: 1, lettoDa: "Clo"},
-                        {id: "209", autore: "Haruichi Furudate", titolo: "Haikyuu 31", copie: 1, lettoDa: "Clo"},
-                        {id: "210", autore: "Haruichi Furudate", titolo: "Haikyuu 32", copie: 1, lettoDa: "Clo"},
-                        {id: "211", autore: "Haruichi Furudate", titolo: "Haikyuu 33", copie: 1, lettoDa: "Clo"},
-                        {id: "212", autore: "Haruichi Furudate", titolo: "Haikyuu 34", copie: 1, lettoDa: "Clo"},
-                        {id: "213", autore: "Haruichi Furudate", titolo: "Haikyuu 35", copie: 1, lettoDa: "Clo"},
-                        {id: "214", autore: "Haruichi Furudate", titolo: "Haikyuu 36", copie: 1, lettoDa: "Clo"},
-                        {id: "215", autore: "Haruichi Furudate", titolo: "Haikyuu 37", copie: 1, lettoDa: "Clo"},
-                        {id: "216", autore: "Haruichi Furudate", titolo: "Haikyuu 38", copie: 1, lettoDa: "Clo"},
-                        {id: "217", autore: "Haruichi Furudate", titolo: "Haikyuu 39", copie: 1, lettoDa: "Clo"},
-                        {id: "218", autore: "Haruichi Furudate", titolo: "Haikyuu 40", copie: 1, lettoDa: "Clo"},
-                        {id: "219", autore: "Haruichi Furudate", titolo: "Haikyuu 41", copie: 1, lettoDa: "Clo"},
-                        {id: "220", autore: "Haruichi Furudate", titolo: "Haikyuu 42", copie: 1, lettoDa: "Clo"},
-                        {id: "221", autore: "Haruichi Furudate", titolo: "Haikyuu 43", copie: 1, lettoDa: "Clo"},
-                        {id: "222", autore: "Haruichi Furudate", titolo: "Haikyuu 44", copie: 1, lettoDa: "Clo"},
-                        {id: "223", autore: "Haruichi Furudate", titolo: "Haikyuu 45", copie: 1, lettoDa: "Clo"},
-                        {id: "224", autore: "Haruki Murakami", titolo: "After Dark", copie: 1,lettoDa:"Entrambi",  },
-                        {id: "225", autore: "Haruki Murakami", titolo: "Tutti i figli di Dio danzano", copie: 1,lettoDa:"Entrambi",  },
-                        {id: "226", autore: "Haruki Murakami", titolo: "La ragazza dello Sputnik", copie: 1,lettoDa:"Entrambi",  },
+                        {id: "175", autore: "Haddon", titolo: "Lo strano caso del cane ucciso a mezzanotte", copie: 1, lettoDa: "Clo",  },
+                        {id: "176", autore: "Han Kang", titolo: "Atti Umani", copie: 1, lettoDa: "Clo", },
+                        {id: "177", autore: "Hannah Arendt", titolo: "La banalità del male", copie: 1, lettoDa: "Clo", },
+                        {id: "178", autore: "Harper Lee", titolo: "Il buio oltre la siepe", copie: 1, lettoDa: "Entrambi", },
+                        {id: "179", autore: "Haruichi Furudate", titolo: "Haikyuu 1", copie: 1, lettoDa: "Clo", },
+                        {id: "180", autore: "Haruichi Furudate", titolo: "Haikyuu 2", copie: 1, lettoDa: "Clo", },
+                        {id: "181", autore: "Haruichi Furudate", titolo: "Haikyuu 3", copie: 1, lettoDa: "Clo", },
+                        {id: "182", autore: "Haruichi Furudate", titolo: "Haikyuu 4", copie: 1, lettoDa: "Clo", },
+                        {id: "183", autore: "Haruichi Furudate", titolo: "Haikyuu 5", copie: 1, lettoDa: "Clo", },
+                        {id: "184", autore: "Haruichi Furudate", titolo: "Haikyuu 6", copie: 1, lettoDa: "Clo", },
+                        {id: "185", autore: "Haruichi Furudate", titolo: "Haikyuu 7", copie: 1, lettoDa: "Clo", },
+                        {id: "186", autore: "Haruichi Furudate", titolo: "Haikyuu 8", copie: 1, lettoDa: "Clo", },
+                        {id: "187", autore: "Haruichi Furudate", titolo: "Haikyuu 9", copie: 1, lettoDa: "Clo", },
+                        {id: "188", autore: "Haruichi Furudate", titolo: "Haikyuu 10", copie: 1, lettoDa: "Clo", },
+                        {id: "189", autore: "Haruichi Furudate", titolo: "Haikyuu 11", copie: 1, lettoDa: "Clo", },
+                        {id: "190", autore: "Haruichi Furudate", titolo: "Haikyuu 12", copie: 1, lettoDa: "Clo", },
+                        {id: "191", autore: "Haruichi Furudate", titolo: "Haikyuu 13", copie: 1, lettoDa: "Clo", },
+                        {id: "192", autore: "Haruichi Furudate", titolo: "Haikyuu 14", copie: 1, lettoDa: "Clo", },
+                        {id: "193", autore: "Haruichi Furudate", titolo: "Haikyuu 15", copie: 1, lettoDa: "Clo", },
+                        {id: "194", autore: "Haruichi Furudate", titolo: "Haikyuu 16", copie: 1, lettoDa: "Clo", },
+                        {id: "195", autore: "Haruichi Furudate", titolo: "Haikyuu 17", copie: 1, lettoDa: "Clo", },
+                        {id: "196", autore: "Haruichi Furudate", titolo: "Haikyuu 18", copie: 1, lettoDa: "Clo", },
+                        {id: "197", autore: "Haruichi Furudate", titolo: "Haikyuu 19", copie: 1, lettoDa: "Clo", },
+                        {id: "198", autore: "Haruichi Furudate", titolo: "Haikyuu 20", copie: 1, lettoDa: "Clo", },
+                        {id: "199", autore: "Haruichi Furudate", titolo: "Haikyuu 21", copie: 1, lettoDa: "Clo", },
+                        {id: "200", autore: "Haruichi Furudate", titolo: "Haikyuu 22", copie: 1, lettoDa: "Clo", },
+                        {id: "201", autore: "Haruichi Furudate", titolo: "Haikyuu 23", copie: 1, lettoDa: "Clo", },
+                        {id: "202", autore: "Haruichi Furudate", titolo: "Haikyuu 24", copie: 1, lettoDa: "Clo", },
+                        {id: "203", autore: "Haruichi Furudate", titolo: "Haikyuu 25", copie: 1, lettoDa: "Clo", },
+                        {id: "204", autore: "Haruichi Furudate", titolo: "Haikyuu 26", copie: 1, lettoDa: "Clo", },
+                        {id: "205", autore: "Haruichi Furudate", titolo: "Haikyuu 27", copie: 1, lettoDa: "Clo", },
+                        {id: "206", autore: "Haruichi Furudate", titolo: "Haikyuu 28", copie: 1, lettoDa: "Clo", },
+                        {id: "207", autore: "Haruichi Furudate", titolo: "Haikyuu 29", copie: 1, lettoDa: "Clo", },
+                        {id: "208", autore: "Haruichi Furudate", titolo: "Haikyuu 30", copie: 1, lettoDa: "Clo", },
+                        {id: "209", autore: "Haruichi Furudate", titolo: "Haikyuu 31", copie: 1, lettoDa: "Clo", },
+                        {id: "210", autore: "Haruichi Furudate", titolo: "Haikyuu 32", copie: 1, lettoDa: "Clo", },
+                        {id: "211", autore: "Haruichi Furudate", titolo: "Haikyuu 33", copie: 1, lettoDa: "Clo", },
+                        {id: "212", autore: "Haruichi Furudate", titolo: "Haikyuu 34", copie: 1, lettoDa: "Clo", },
+                        {id: "213", autore: "Haruichi Furudate", titolo: "Haikyuu 35", copie: 1, lettoDa: "Clo", },
+                        {id: "214", autore: "Haruichi Furudate", titolo: "Haikyuu 36", copie: 1, lettoDa: "Clo", },
+                        {id: "215", autore: "Haruichi Furudate", titolo: "Haikyuu 37", copie: 1, lettoDa: "Clo", },
+                        {id: "216", autore: "Haruichi Furudate", titolo: "Haikyuu 38", copie: 1, lettoDa: "Clo", },
+                        {id: "217", autore: "Haruichi Furudate", titolo: "Haikyuu 39", copie: 1, lettoDa: "Clo", },
+                        {id: "218", autore: "Haruichi Furudate", titolo: "Haikyuu 40", copie: 1, lettoDa: "Clo", },
+                        {id: "219", autore: "Haruichi Furudate", titolo: "Haikyuu 41", copie: 1, lettoDa: "Clo", },
+                        {id: "220", autore: "Haruichi Furudate", titolo: "Haikyuu 42", copie: 1, lettoDa: "Clo", },
+                        {id: "221", autore: "Haruichi Furudate", titolo: "Haikyuu 43", copie: 1, lettoDa: "Clo", },
+                        {id: "222", autore: "Haruichi Furudate", titolo: "Haikyuu 44", copie: 1, lettoDa: "Clo", },
+                        {id: "223", autore: "Haruichi Furudate", titolo: "Haikyuu 45", copie: 1, lettoDa: "Clo", },
+                        {id: "224", autore: "Haruki Murakami", titolo: "After Dark", copie: 1, lettoDa: "Entrambi",  },
+                        {id: "225", autore: "Haruki Murakami", titolo: "Tutti i figli di Dio danzano", copie: 1, lettoDa: "Entrambi",  },
+                        {id: "226", autore: "Haruki Murakami", titolo: "La ragazza dello Sputnik", copie: 1, lettoDa: "Entrambi",  },
                         {id: "227", autore: "Haruki Murakami", titolo: "L’elefante scomparso", copie: 1, },
-                        {id: "228", autore: "Haruki Murakami", titolo: "Norwegian Wood", copie: 1,lettoDa:"Clo",  },
+                        {id: "228", autore: "Haruki Murakami", titolo: "Norwegian Wood", copie: 1, lettoDa: "Clo",  },
                         {id: "229", autore: "Henri Troyat", titolo: "La vita quotidiana in Russia ai tempi dell’ultimo zar", copie: 1, },
-                        {id: "230", autore: "Herman Hesse", titolo: "Narciso e Boccadoro", copie: 1, lettoDa:"Entrambi", },
+                        {id: "230", autore: "Herman Hesse", titolo: "Narciso e Boccadoro", copie: 1, lettoDa: "Entrambi", },
                         {id: "231", autore: "Hermann Grimm", titolo: "Michelangelo", copie: 1, },
-                        {id: "232", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 1", copie: 1, lettoDa: "Entrambi"},
-                        {id: "233", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 2", copie: 1, lettoDa: "Entrambi"},
-                        {id: "234", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 3", copie: 1, lettoDa: "Entrambi"},
-                        {id: "235", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 4", copie: 1, lettoDa: "Entrambi"},
-                        {id: "236", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 5", copie: 1, lettoDa: "Entrambi"},
-                        {id: "237", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 6", copie: 1, lettoDa: "Entrambi"},
-                        {id: "238", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 7", copie: 1, lettoDa: "Entrambi"},
-                        {id: "239", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 8", copie: 1, lettoDa: "Entrambi"},
-                        {id: "240", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 9", copie: 1, lettoDa: "Entrambi"},
-                        {id: "241", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 10", copie: 1, lettoDa: "Entrambi"},
-                        {id: "242", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 11", copie: 1, lettoDa: "Entrambi"},
-                        {id: "243", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 12", copie: 1, lettoDa: "Entrambi"},
-                        {id: "244", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 13", copie: 1, lettoDa: "Entrambi"},
-                        {id: "245", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 14", copie: 1, lettoDa: "Entrambi"},
-                        {id: "246", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 15", copie: 1, lettoDa: "Entrambi"},
-                        {id: "247", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 16", copie: 1, lettoDa: "Entrambi"},
-                        {id: "248", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 17", copie: 1, lettoDa: "Entrambi"},
-                        {id: "249", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 18", copie: 1, lettoDa: "Entrambi"},
-                        {id: "250", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 19", copie: 1, lettoDa: "Entrambi"},
-                        {id: "251", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 20", copie: 1, lettoDa: "Entrambi"},
-                        {id: "252", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 21", copie: 1, lettoDa: "Entrambi"},
-                        {id: "253", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 22", copie: 1, lettoDa: "Entrambi"},
-                        {id: "254", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 23", copie: 1, lettoDa: "Entrambi"},
-                        {id: "255", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 24", copie: 1, lettoDa: "Entrambi"},
-                        {id: "256", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 25", copie: 1, lettoDa: "Entrambi"},
-                        {id: "257", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 26", copie: 1, lettoDa: "Entrambi"},
-                        {id: "258", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 27", copie: 1, lettoDa: "Entrambi"},
-                        {id: "259", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 28", copie: 1, lettoDa: "Entrambi"},                        
+                        {id: "232", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 1", copie: 1, lettoDa: "Entrambi", },
+                        {id: "233", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 2", copie: 1, lettoDa: "Entrambi", },
+                        {id: "234", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 3", copie: 1, lettoDa: "Entrambi", },
+                        {id: "235", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 4", copie: 1, lettoDa: "Entrambi", },
+                        {id: "236", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 5", copie: 1, lettoDa: "Entrambi", },
+                        {id: "237", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 6", copie: 1, lettoDa: "Entrambi", },
+                        {id: "238", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 7", copie: 1, lettoDa: "Entrambi", },
+                        {id: "239", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 8", copie: 1, lettoDa: "Entrambi", },
+                        {id: "240", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 9", copie: 1, lettoDa: "Entrambi", },
+                        {id: "241", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 10", copie: 1, lettoDa: "Entrambi", },
+                        {id: "242", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 11", copie: 1, lettoDa: "Entrambi", },
+                        {id: "243", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 12", copie: 1, lettoDa: "Entrambi", },
+                        {id: "244", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 13", copie: 1, lettoDa: "Entrambi", },
+                        {id: "245", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 14", copie: 1, lettoDa: "Entrambi", },
+                        {id: "246", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 15", copie: 1, lettoDa: "Entrambi", },
+                        {id: "247", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 16", copie: 1, lettoDa: "Entrambi", },
+                        {id: "248", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 17", copie: 1, lettoDa: "Entrambi", },
+                        {id: "249", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 18", copie: 1, lettoDa: "Entrambi", },
+                        {id: "250", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 19", copie: 1, lettoDa: "Entrambi", },
+                        {id: "251", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 20", copie: 1, lettoDa: "Entrambi", },
+                        {id: "252", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 21", copie: 1, lettoDa: "Entrambi", },
+                        {id: "253", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 22", copie: 1, lettoDa: "Entrambi", },
+                        {id: "254", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 23", copie: 1, lettoDa: "Entrambi", },
+                        {id: "255", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 24", copie: 1, lettoDa: "Entrambi", },
+                        {id: "256", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 25", copie: 1, lettoDa: "Entrambi", },
+                        {id: "257", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 26", copie: 1, lettoDa: "Entrambi", },
+                        {id: "258", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 27", copie: 1, lettoDa: "Entrambi", },
+                        {id: "259", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 28", copie: 1, lettoDa: "Entrambi", },                        
                         {id: "260", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist 20th", copie: 1, },
                         {id: "261", autore: "Hiromu Arakawa", titolo: "FullMetal Alchemist Artbook", copie: 4, },
-                        {id: "262", autore: "Hiromu Arakawa", titolo: "Hero Tales 1", copie: 1, lettoDa: "Clo"},
-                        {id: "263", autore: "Hiromu Arakawa", titolo: "Hero Tales 2", copie: 1, lettoDa: "Clo"},
-                        {id: "264", autore: "Hiromu Arakawa", titolo: "Hero Tales 3", copie: 1, lettoDa: "Clo"},
-                        {id: "265", autore: "Hiromu Arakawa", titolo: "Hero Tales 4", copie: 1, lettoDa: "Clo"},
-                        {id: "266", autore: "Hiromu Arakawa", titolo: "Hero Tales 5", copie: 1, lettoDa: "Clo"},
+                        {id: "262", autore: "Hiromu Arakawa", titolo: "Hero Tales 1", copie: 1, lettoDa: "Clo", },
+                        {id: "263", autore: "Hiromu Arakawa", titolo: "Hero Tales 2", copie: 1, lettoDa: "Clo", },
+                        {id: "264", autore: "Hiromu Arakawa", titolo: "Hero Tales 3", copie: 1, lettoDa: "Clo", },
+                        {id: "265", autore: "Hiromu Arakawa", titolo: "Hero Tales 4", copie: 1, lettoDa: "Clo", },
+                        {id: "266", autore: "Hiromu Arakawa", titolo: "Hero Tales 5", copie: 1, lettoDa: "Clo", },
                         {id: "267", autore: "Hiromu Arakawa", titolo: "Yomi no Tsugai 1", copie: 1},
                         {id: "268", autore: "Hiromu Arakawa", titolo: "Yomi no Tsugai 2", copie: 1},
                         {id: "269", autore: "Hiromu Arakawa", titolo: "Yomi no Tsugai 3", copie: 1},
@@ -1005,369 +995,369 @@
                         {id: "275", autore: "Hiromu Arakawa", titolo: "Yomi no Tsugai 9", copie: 1},
                         {id: "276", autore: "Hiromu Arakawa", titolo: "Yomi no Tsugai 10", copie: 1},
                         {id: "277", autore: "Hiromu Arakawa", titolo: "Yomi no Tsugai 11", copie: 1},
-                        {id: "278", autore: "Ingo F. Walther", titolo: "Van Gogh", copie: 1, lettoDa:"Clo", },
-                        {id: "279", autore: "Irene Marchesini, Carlotta Dicataldo", titolo: "Lyndon", copie: 1, lettoDa:"Clo", },
+                        {id: "278", autore: "Ingo F. Walther", titolo: "Van Gogh", copie: 1, lettoDa: "Clo", },
+                        {id: "279", autore: "Irene Marchesini, Carlotta Dicataldo", titolo: "Lyndon", copie: 1, lettoDa: "Clo", },
                         {id: "280", autore: "Irene Nemirovsky", titolo: "Suite francese", copie: 1, },
                         {id: "281", autore: "Italo Calvino", titolo: "Il cavaliere inesistente", copie: 1, },
                         {id: "282", autore: "Italo Calvino", titolo: "Il sentiro dei nidi di ragno", copie: 1, },
-                        {id: "283", autore: "Italo Svevo", titolo: "La Coscienza di Zeno", copie: 1, lettoDa:"Entrambi", },
+                        {id: "283", autore: "Italo Svevo", titolo: "La Coscienza di Zeno", copie: 1, lettoDa: "Entrambi", },
                         {id: "284", autore: "Jan Heaton", titolo: "Arte e tecnica dell'uncinetto", copie: 1, },
-                        {id: "285", autore: "Jane Austen", titolo: "Orgoglio e Pregiudizio", copie: 1, lettoDa:"Entrambi",  },
-                        {id: "286", autore: "Jay Kristoff", titolo: "L’impero del vampiro", copie: 1,lettoDa:"Clo",  },
-                        {id: "287", autore: "Jay Kristoff", titolo: "L’impero dei dannati", copie: 1,lettoDa:"Clo",  },
-                        {id: "288", autore: "Jay Kristoff", titolo: "L'impero dell'alba", copie: 1,lettoDa:"Clo",  },
-                        {id: "289", autore: "Jeffrey Eugenides", titolo: "Middle Sex", copie: 1, lettoDa:"Clo", },
-                        {id: "290", autore: "JK Rowling", titolo: "Harry Potter e la pietra filosofale", copie: 1,lettoDa:"Entrambi",  },
-                        {id: "291", autore: "JK Rowling", titolo: "Harry Potter e la camera dei segreti", copie: 1,lettoDa:"Entrambi",  },
-                        {id: "292", autore: "JK Rowling", titolo: "Harry Potter e il prigioniero di Azkaban", copie: 1, lettoDa:"Entrambi", },
-                        {id: "293", autore: "JK Rowling", titolo: "Harry Potter e il calice di fuoco", copie: 1, lettoDa:"Entrambi", },
-                        {id: "294", autore: "JK Rowling", titolo: "Harry Potter e l’ordine della fenice", copie: 1,lettoDa:"Entrambi",  },
-                        {id: "295", autore: "JK Rowling", titolo: "Harry Potter e il principe mezzosangue", copie: 1,lettoDa:"Entrambi",  },
-                        {id: "296", autore: "JK Rowling", titolo: "Harry Potter e i doni della morte", copie: 1, lettoDa:"Entrambi", },
-                        {id: "297", autore: "JK Rowling", titolo: "Harry Potter e la pietra filosofale (vol castello)", copie: 1,lettoDa:"Entrambi",  },
+                        {id: "285", autore: "Jane Austen", titolo: "Orgoglio e Pregiudizio", copie: 1, lettoDa: "Entrambi",  },
+                        {id: "286", autore: "Jay Kristoff", titolo: "L’impero del vampiro", copie: 1, lettoDa: "Clo",  },
+                        {id: "287", autore: "Jay Kristoff", titolo: "L’impero dei dannati", copie: 1, lettoDa: "Clo",  },
+                        {id: "288", autore: "Jay Kristoff", titolo: "L'impero dell'alba", copie: 1, lettoDa: "Clo",  },
+                        {id: "289", autore: "Jeffrey Eugenides", titolo: "Middle Sex", copie: 1, lettoDa: "Clo", },
+                        {id: "290", autore: "JK Rowling", titolo: "Harry Potter e la pietra filosofale", copie: 1, lettoDa: "Entrambi",  },
+                        {id: "291", autore: "JK Rowling", titolo: "Harry Potter e la camera dei segreti", copie: 1, lettoDa: "Entrambi",  },
+                        {id: "292", autore: "JK Rowling", titolo: "Harry Potter e il prigioniero di Azkaban", copie: 1, lettoDa: "Entrambi", },
+                        {id: "293", autore: "JK Rowling", titolo: "Harry Potter e il calice di fuoco", copie: 1, lettoDa: "Entrambi", },
+                        {id: "294", autore: "JK Rowling", titolo: "Harry Potter e l’ordine della fenice", copie: 1, lettoDa: "Entrambi",  },
+                        {id: "295", autore: "JK Rowling", titolo: "Harry Potter e il principe mezzosangue", copie: 1, lettoDa: "Entrambi",  },
+                        {id: "296", autore: "JK Rowling", titolo: "Harry Potter e i doni della morte", copie: 1, lettoDa: "Entrambi", },
+                        {id: "297", autore: "JK Rowling", titolo: "Harry Potter e la pietra filosofale (vol castello)", copie: 1, lettoDa: "Entrambi",  },
                         {id: "298", autore: "Jo Nesbo", titolo: "Il pipistrello", copie: 1, },
-                        {id: "299", autore: "Jo Nesbo", titolo: "Il cacciatore di teste", copie: 1,lettoDa:"Clo",  },
+                        {id: "299", autore: "Jo Nesbo", titolo: "Il cacciatore di teste", copie: 1, lettoDa: "Clo",  },
                         {id: "300", autore: "Jo Nesbo", titolo: "Luna Rossa", copie: 1, },
                         {id: "301", autore: "Jo Nesbo", titolo: "Il pettirosso", copie: 1, },
-                        {id: "302", autore: "Jo Nesbo", titolo: "Il confessore", copie: 1,lettoDa:"Clo",  },
-                        {id: "303", autore: "Joe Landsdale", titolo: "Acqua buia", copie: 1, lettoDa:"Clo",},
-                        {id: "304", autore: "Joe Landsdale", titolo: "Cielo di Sabbia", copie: 1,lettoDa:"Clo", },
+                        {id: "302", autore: "Jo Nesbo", titolo: "Il confessore", copie: 1, lettoDa: "Clo",  },
+                        {id: "303", autore: "Joe Landsdale", titolo: "Acqua buia", copie: 1, lettoDa: "Clo", },
+                        {id: "304", autore: "Joe Landsdale", titolo: "Cielo di Sabbia", copie: 1, lettoDa: "Clo", },
                         {id: "305", autore: "Joe Landsdale", titolo: "La foresta", copie: 1, },
-                        {id: "306", autore: "Joe Landsdale", titolo: "La sottile linea scura", copie: 1,lettoDa:"Clo", },
-                        {id: "307", autore: "Joe Landsdale", titolo: "Echi perduti", copie: 1, lettoDa:"Clo",},
-                        {id: "308", autore: "Joe Landsdale", titolo: "Sotto un cielo cremisi", copie: 1, lettoDa:"Clo",},
-                        {id: "309", autore: "Joh Stephens", titolo: "L’atlante di smeraldo", copie: 1,lettoDa:"Clo", },
-                        {id: "310", autore: "Joh Stephens", titolo: "L’atlante di fuoco", copie: 1,lettoDa:"Clo", },
-                        {id: "311", autore: "Joh Stephens", titolo: "L'atlante di tenebra", copie: 1,lettoDa:"Clo", },
-                        {id: "312", autore: "John Milton", titolo: "Paradiso Perduto", copie: 1,lettoDa:"Clo", },
+                        {id: "306", autore: "Joe Landsdale", titolo: "La sottile linea scura", copie: 1, lettoDa: "Clo", },
+                        {id: "307", autore: "Joe Landsdale", titolo: "Echi perduti", copie: 1, lettoDa: "Clo", },
+                        {id: "308", autore: "Joe Landsdale", titolo: "Sotto un cielo cremisi", copie: 1, lettoDa: "Clo", },
+                        {id: "309", autore: "Joh Stephens", titolo: "L’atlante di smeraldo", copie: 1, lettoDa: "Clo", },
+                        {id: "310", autore: "Joh Stephens", titolo: "L’atlante di fuoco", copie: 1, lettoDa: "Clo", },
+                        {id: "311", autore: "Joh Stephens", titolo: "L'atlante di tenebra", copie: 1, lettoDa: "Clo", },
+                        {id: "312", autore: "John Milton", titolo: "Paradiso Perduto", copie: 1, lettoDa: "Clo", },
                         {id: "313", autore: "Jorge Luis Borges", titolo: "Libro di sogni", copie: 1, },
                         {id: "314", autore: "JRR Tolkien", titolo: "Il libro dei racconti perduti parte I", copie: 1, },
                         {id: "315", autore: "JRR Tolkien", titolo: "Il libro dei racconti perduti parte II", copie: 1, },
-                        {id: "316", autore: "JRR Tolkien", titolo: "Il signore degli Anelli volume intero", copie: 1,lettoDa:"Clo", },
-                        {id: "317", autore: "JRR Tolkien", titolo: "Lo Hobbit", copie: 2, lettoDa:"Clo",},
-                        {id: "318", autore: "JRR Tolkien", titolo: "Silmarillion", copie: 1, lettoDa:"Entrambi",},
+                        {id: "316", autore: "JRR Tolkien", titolo: "Il signore degli Anelli volume intero", copie: 1, lettoDa: "Clo", },
+                        {id: "317", autore: "JRR Tolkien", titolo: "Lo Hobbit", copie: 2, lettoDa: "Clo", },
+                        {id: "318", autore: "JRR Tolkien", titolo: "Silmarillion", copie: 1, lettoDa: "Entrambi", },
                         {id: "319", autore: "JRR Tolkien", titolo: "La caduta di Gondolin", copie: 1, },
-                        {id: "320", autore: "Jun Mochizuki", titolo: "Pandora Hearts 1", copie: 1, lettoDa: "Entrambi"},
-                        {id: "321", autore: "Jun Mochizuki", titolo: "Pandora Hearts 2", copie: 1, lettoDa: "Entrambi"},
-                        {id: "322", autore: "Jun Mochizuki", titolo: "Pandora Hearts 3", copie: 1, lettoDa: "Entrambi"},
-                        {id: "323", autore: "Jun Mochizuki", titolo: "Pandora Hearts 4", copie: 1, lettoDa: "Entrambi"},
-                        {id: "324", autore: "Jun Mochizuki", titolo: "Pandora Hearts 5", copie: 1, lettoDa: "Entrambi"},
-                        {id: "325", autore: "Jun Mochizuki", titolo: "Pandora Hearts 6", copie: 1, lettoDa: "Entrambi"},
-                        {id: "326", autore: "Jun Mochizuki", titolo: "Pandora Hearts 7", copie: 1, lettoDa: "Entrambi"},
-                        {id: "327", autore: "Jun Mochizuki", titolo: "Pandora Hearts 8", copie: 1, lettoDa: "Entrambi"},
-                        {id: "328", autore: "Jun Mochizuki", titolo: "Pandora Hearts 9", copie: 1, lettoDa: "Entrambi"},
-                        {id: "329", autore: "Jun Mochizuki", titolo: "Pandora Hearts 10", copie: 1, lettoDa: "Entrambi"},
-                        {id: "330", autore: "Jun Mochizuki", titolo: "Pandora Hearts 11", copie: 1, lettoDa: "Entrambi"},
-                        {id: "331", autore: "Jun Mochizuki", titolo: "Pandora Hearts 12", copie: 1, lettoDa: "Entrambi"},
-                        {id: "332", autore: "Jun Mochizuki", titolo: "Pandora Hearts 13", copie: 1, lettoDa: "Entrambi"},
-                        {id: "333", autore: "Jun Mochizuki", titolo: "Pandora Hearts 14", copie: 1, lettoDa: "Entrambi"},
-                        {id: "334", autore: "Jun Mochizuki", titolo: "Pandora Hearts 15", copie: 1, lettoDa: "Entrambi"},
-                        {id: "335", autore: "Jun Mochizuki", titolo: "Pandora Hearts 16", copie: 1, lettoDa: "Entrambi"},
-                        {id: "336", autore: "Jun Mochizuki", titolo: "Pandora Hearts 17", copie: 1, lettoDa: "Entrambi"},
-                        {id: "337", autore: "Jun Mochizuki", titolo: "Pandora Hearts 18", copie: 1, lettoDa: "Entrambi"},
-                        {id: "338", autore: "Jun Mochizuki", titolo: "Pandora Hearts 19", copie: 1, lettoDa: "Entrambi"},
-                        {id: "339", autore: "Jun Mochizuki", titolo: "Pandora Hearts 20", copie: 1, lettoDa: "Entrambi"},
-                        {id: "340", autore: "Jun Mochizuki", titolo: "Pandora Hearts 21", copie: 1, lettoDa: "Entrambi"},
-                        {id: "341", autore: "Jun Mochizuki", titolo: "Pandora Hearts 22", copie: 1, lettoDa: "Entrambi"},
-                        {id: "342", autore: "Jun Mochizuki", titolo: "Pandora Hearts 23", copie: 1, lettoDa: "Entrambi"},
-                        {id: "343", autore: "Jun Mochizuki", titolo: "Pandora Hearts 24", copie: 1, lettoDa: "Entrambi"},
-                        {id: "344", autore: "Jun Mochizuki", titolo: "Pandora Hearts 25", copie: 1, lettoDa: "Entrambi"},
-                        {id: "345", autore: "Jun Mochizuki", titolo: "Pandora Hearts 26", copie: 1, lettoDa: "Entrambi"},
-                        {id: "346", autore: "Jun Mochizuki", titolo: "Pandora Hearts 27", copie: 1, lettoDa: "Entrambi"},
-                        {id: "347", autore: "Jun Mochizuki", titolo: "Pandora Hearts Artbook “Odds & Ends”", copie: 1,lettoDa:"Entrambi", },
-                        {id: "348", autore: "Jun Mochizuki", titolo: "Vanitas No Carte 1", copie: 1, lettoDa: "Clo"},
-                        {id: "349", autore: "Jun Mochizuki", titolo: "Vanitas No Carte 2", copie: 1, lettoDa: "Clo"},
-                        {id: "350", autore: "Jun Mochizuki", titolo: "Vanitas No Carte 3", copie: 1, lettoDa: "Clo"},
-                        {id: "351", autore: "Jun Mochizuki", titolo: "Vanitas No Carte 4", copie: 1, lettoDa: "Clo"},
-                        {id: "352", autore: "Jun Mochizuki", titolo: "Vanitas No Carte 5", copie: 1, lettoDa: "Clo"},
-                        {id: "353", autore: "Jun Mochizuki", titolo: "Vanitas No Carte 6", copie: 1, lettoDa: "Clo"},
-                        {id: "354", autore: "Jun Mochizuki", titolo: "Vanitas No Carte 7", copie: 1, lettoDa: "Clo"},
-                        {id: "355", autore: "Jun Mochizuki", titolo: "Vanitas No Carte 8", copie: 1, lettoDa: "Clo"},
-                        {id: "356", autore: "Jun Mochizuki", titolo: "Vanitas No Carte 9", copie: 1, lettoDa: "Clo"},
-                        {id: "357", autore: "Jun Mochizuki", titolo: "Vanitas No Carte 10", copie: 1, lettoDa: "Clo"},
-                        {id: "358", autore: "Jun Mochizuki", titolo: "Vanitas No Carte 11", copie: 1, lettoDa: "Clo"},
-                        {id: "359", autore: "Kaho Nashiki", titolo: "Un'estate con la strega dell'Ovest", copie: 1,lettoDa:"Maki", },
+                        {id: "320", autore: "Jun Mochizuki", titolo: "Pandora Hearts 1", copie: 1, lettoDa: "Entrambi", },
+                        {id: "321", autore: "Jun Mochizuki", titolo: "Pandora Hearts 2", copie: 1, lettoDa: "Entrambi", },
+                        {id: "322", autore: "Jun Mochizuki", titolo: "Pandora Hearts 3", copie: 1, lettoDa: "Entrambi", },
+                        {id: "323", autore: "Jun Mochizuki", titolo: "Pandora Hearts 4", copie: 1, lettoDa: "Entrambi", },
+                        {id: "324", autore: "Jun Mochizuki", titolo: "Pandora Hearts 5", copie: 1, lettoDa: "Entrambi", },
+                        {id: "325", autore: "Jun Mochizuki", titolo: "Pandora Hearts 6", copie: 1, lettoDa: "Entrambi", },
+                        {id: "326", autore: "Jun Mochizuki", titolo: "Pandora Hearts 7", copie: 1, lettoDa: "Entrambi", },
+                        {id: "327", autore: "Jun Mochizuki", titolo: "Pandora Hearts 8", copie: 1, lettoDa: "Entrambi", },
+                        {id: "328", autore: "Jun Mochizuki", titolo: "Pandora Hearts 9", copie: 1, lettoDa: "Entrambi", },
+                        {id: "329", autore: "Jun Mochizuki", titolo: "Pandora Hearts 10", copie: 1, lettoDa: "Entrambi", },
+                        {id: "330", autore: "Jun Mochizuki", titolo: "Pandora Hearts 11", copie: 1, lettoDa: "Entrambi", },
+                        {id: "331", autore: "Jun Mochizuki", titolo: "Pandora Hearts 12", copie: 1, lettoDa: "Entrambi", },
+                        {id: "332", autore: "Jun Mochizuki", titolo: "Pandora Hearts 13", copie: 1, lettoDa: "Entrambi", },
+                        {id: "333", autore: "Jun Mochizuki", titolo: "Pandora Hearts 14", copie: 1, lettoDa: "Entrambi", },
+                        {id: "334", autore: "Jun Mochizuki", titolo: "Pandora Hearts 15", copie: 1, lettoDa: "Entrambi", },
+                        {id: "335", autore: "Jun Mochizuki", titolo: "Pandora Hearts 16", copie: 1, lettoDa: "Entrambi", },
+                        {id: "336", autore: "Jun Mochizuki", titolo: "Pandora Hearts 17", copie: 1, lettoDa: "Entrambi", },
+                        {id: "337", autore: "Jun Mochizuki", titolo: "Pandora Hearts 18", copie: 1, lettoDa: "Entrambi", },
+                        {id: "338", autore: "Jun Mochizuki", titolo: "Pandora Hearts 19", copie: 1, lettoDa: "Entrambi", },
+                        {id: "339", autore: "Jun Mochizuki", titolo: "Pandora Hearts 20", copie: 1, lettoDa: "Entrambi", },
+                        {id: "340", autore: "Jun Mochizuki", titolo: "Pandora Hearts 21", copie: 1, lettoDa: "Entrambi", },
+                        {id: "341", autore: "Jun Mochizuki", titolo: "Pandora Hearts 22", copie: 1, lettoDa: "Entrambi", },
+                        {id: "342", autore: "Jun Mochizuki", titolo: "Pandora Hearts 23", copie: 1, lettoDa: "Entrambi", },
+                        {id: "343", autore: "Jun Mochizuki", titolo: "Pandora Hearts 24", copie: 1, lettoDa: "Entrambi", },
+                        {id: "344", autore: "Jun Mochizuki", titolo: "Pandora Hearts 25", copie: 1, lettoDa: "Entrambi", },
+                        {id: "345", autore: "Jun Mochizuki", titolo: "Pandora Hearts 26", copie: 1, lettoDa: "Entrambi", },
+                        {id: "346", autore: "Jun Mochizuki", titolo: "Pandora Hearts 27", copie: 1, lettoDa: "Entrambi", },
+                        {id: "347", autore: "Jun Mochizuki", titolo: "Pandora Hearts Artbook “Odds & Ends”", copie: 1, lettoDa: "Entrambi", },
+                        {id: "348", autore: "Jun Mochizuki", titolo: "Vanitas No Carte 1", copie: 1, lettoDa: "Clo", },
+                        {id: "349", autore: "Jun Mochizuki", titolo: "Vanitas No Carte 2", copie: 1, lettoDa: "Clo", },
+                        {id: "350", autore: "Jun Mochizuki", titolo: "Vanitas No Carte 3", copie: 1, lettoDa: "Clo", },
+                        {id: "351", autore: "Jun Mochizuki", titolo: "Vanitas No Carte 4", copie: 1, lettoDa: "Clo", },
+                        {id: "352", autore: "Jun Mochizuki", titolo: "Vanitas No Carte 5", copie: 1, lettoDa: "Clo", },
+                        {id: "353", autore: "Jun Mochizuki", titolo: "Vanitas No Carte 6", copie: 1, lettoDa: "Clo", },
+                        {id: "354", autore: "Jun Mochizuki", titolo: "Vanitas No Carte 7", copie: 1, lettoDa: "Clo", },
+                        {id: "355", autore: "Jun Mochizuki", titolo: "Vanitas No Carte 8", copie: 1, lettoDa: "Clo", },
+                        {id: "356", autore: "Jun Mochizuki", titolo: "Vanitas No Carte 9", copie: 1, lettoDa: "Clo", },
+                        {id: "357", autore: "Jun Mochizuki", titolo: "Vanitas No Carte 10", copie: 1, lettoDa: "Clo", },
+                        {id: "358", autore: "Jun Mochizuki", titolo: "Vanitas No Carte 11", copie: 1, lettoDa: "Clo", },
+                        {id: "359", autore: "Kaho Nashiki", titolo: "Un'estate con la strega dell'Ovest", copie: 1, lettoDa: "Maki", },
                         {id: "360", autore: "Kandisky", titolo: "Lo spirituale nell’arte", copie: 1, },
                         {id: "361", autore: "Karl Marx", titolo: "Il manifesto del partito comunista", copie: 1, },
                         {id: "362", autore: "Kass Morgan", titolo: "The 100 - tetralogia", copie: 1, },
                         {id: "363", autore: "Kate Moss", titolo: "L’ottavo arcano", copie: 1, },
-                        {id: "364", autore: "Kentaro Miura", titolo: "Berserk 1", copie: 1,lettoDa:"Clo", },
-                        {id: "365", autore: "Kentaro Miura", titolo: "Berserk 2", copie: 1,lettoDa:"Clo", },
-                        {id: "366", autore: "Kentaro Miura", titolo: "Berserk 3", copie: 1,lettoDa:"Clo", },
-                        {id: "367", autore: "Kohske", titolo: "Gangsta 1", copie: 1, lettoDa: "Clo"},
-                        {id: "368", autore: "Kohske", titolo: "Gangsta 2", copie: 1, lettoDa: "Clo"},
-                        {id: "369", autore: "Kohske", titolo: "Gangsta 3", copie: 1, lettoDa: "Clo"},
-                        {id: "370", autore: "Kohske", titolo: "Gangsta 4", copie: 1, lettoDa: "Clo"},
-                        {id: "371", autore: "Kohske", titolo: "Gangsta 5", copie: 1, lettoDa: "Clo"},
-                        {id: "372", autore: "Kohske", titolo: "Gangsta 6", copie: 1, lettoDa: "Clo"},
-                        {id: "373", autore: "Kohske", titolo: "Gangsta 7", copie: 1, lettoDa: "Clo"},
-                        {id: "374", autore: "Kohske", titolo: "Gangsta 8", copie: 1, lettoDa: "Clo"},
-                        {id: "375", autore: "Kohske", titolo: "Gangsta Adriano 1", copie: 1, lettoDa: "Clo"},
-                        {id: "376", autore: "Kohske", titolo: "Gangsta Adriano 2", copie: 1, lettoDa: "Clo"},
-                        {id: "377", autore: "Kohske", titolo: "Gangsta Adriano 3", copie: 1, lettoDa: "Clo"},
-                        {id: "378", autore: "Kohske", titolo: "Gangsta Adriano 4", copie: 1, lettoDa: "Clo"},
-                        {id: "379", autore: "Kohske", titolo: "Gangsta Adriano 5", copie: 1, lettoDa: "Clo"},
-                        {id: "380", autore: "Le Scouzec", titolo: "La lettura della mano", copie: 1, lettoDa:"Clo",},
-                        {id: "381", autore: "Leigh Bardugo", titolo: "Tenebre e Ossa", copie: 1, lettoDa:"Entrambi",},
-                        {id: "382", autore: "Leigh Bardugo", titolo: "Assedio e Tempesta", copie: 1,lettoDa:"Entrambi", },
-                        {id: "383", autore: "Leigh Bardugo", titolo: "Rovina e Ascesa", copie: 1,lettoDa:"Entrambi", },
-                        {id: "384", autore: "Leigh Bardugo", titolo: "Sei di corvi", copie: 1,lettoDa:"Entrambi", },
-                        {id: "385", autore: "Leigh Bardugo", titolo: "Il regno corrotto", copie: 1, lettoDa:"Clo",},
-                        {id: "386", autore: "Leonardo Sciascia", titolo: "Il giorno della civetta", copie: 1,lettoDa:"Clo", },
-                        {id: "387", autore: "Leslie Ann Jones", titolo: "Freddie Mercury I Will Rock You", copie: 1, lettoDa:"Clo",},
-                        {id: "388", autore: "Lev Tolstoj", titolo: "Anna Karenina", copie: 1,lettoDa:"Clo", },
-                        {id: "389", autore: "Lev Tolstoj", titolo: "La morte di Ivan Il'ič", copie: 1,lettoDa:"Clo", },
+                        {id: "364", autore: "Kentaro Miura", titolo: "Berserk 1", copie: 1, lettoDa: "Clo", },
+                        {id: "365", autore: "Kentaro Miura", titolo: "Berserk 2", copie: 1, lettoDa: "Clo", },
+                        {id: "366", autore: "Kentaro Miura", titolo: "Berserk 3", copie: 1, lettoDa: "Clo", },
+                        {id: "367", autore: "Kohske", titolo: "Gangsta 1", copie: 1, lettoDa: "Clo", },
+                        {id: "368", autore: "Kohske", titolo: "Gangsta 2", copie: 1, lettoDa: "Clo", },
+                        {id: "369", autore: "Kohske", titolo: "Gangsta 3", copie: 1, lettoDa: "Clo", },
+                        {id: "370", autore: "Kohske", titolo: "Gangsta 4", copie: 1, lettoDa: "Clo", },
+                        {id: "371", autore: "Kohske", titolo: "Gangsta 5", copie: 1, lettoDa: "Clo", },
+                        {id: "372", autore: "Kohske", titolo: "Gangsta 6", copie: 1, lettoDa: "Clo", },
+                        {id: "373", autore: "Kohske", titolo: "Gangsta 7", copie: 1, lettoDa: "Clo", },
+                        {id: "374", autore: "Kohske", titolo: "Gangsta 8", copie: 1, lettoDa: "Clo", },
+                        {id: "375", autore: "Kohske", titolo: "Gangsta Adriano 1", copie: 1, lettoDa: "Clo", },
+                        {id: "376", autore: "Kohske", titolo: "Gangsta Adriano 2", copie: 1, lettoDa: "Clo", },
+                        {id: "377", autore: "Kohske", titolo: "Gangsta Adriano 3", copie: 1, lettoDa: "Clo", },
+                        {id: "378", autore: "Kohske", titolo: "Gangsta Adriano 4", copie: 1, lettoDa: "Clo", },
+                        {id: "379", autore: "Kohske", titolo: "Gangsta Adriano 5", copie: 1, lettoDa: "Clo", },
+                        {id: "380", autore: "Le Scouzec", titolo: "La lettura della mano", copie: 1, lettoDa: "Clo", },
+                        {id: "381", autore: "Leigh Bardugo", titolo: "Tenebre e Ossa", copie: 1, lettoDa: "Entrambi", },
+                        {id: "382", autore: "Leigh Bardugo", titolo: "Assedio e Tempesta", copie: 1, lettoDa: "Entrambi", },
+                        {id: "383", autore: "Leigh Bardugo", titolo: "Rovina e Ascesa", copie: 1, lettoDa: "Entrambi", },
+                        {id: "384", autore: "Leigh Bardugo", titolo: "Sei di corvi", copie: 1, lettoDa: "Entrambi", },
+                        {id: "385", autore: "Leigh Bardugo", titolo: "Il regno corrotto", copie: 1, lettoDa: "Clo", },
+                        {id: "386", autore: "Leonardo Sciascia", titolo: "Il giorno della civetta", copie: 1, lettoDa: "Clo", },
+                        {id: "387", autore: "Leslie Ann Jones", titolo: "Freddie Mercury I Will Rock You", copie: 1, lettoDa: "Clo", },
+                        {id: "388", autore: "Lev Tolstoj", titolo: "Anna Karenina", copie: 1, lettoDa: "Clo", },
+                        {id: "389", autore: "Lev Tolstoj", titolo: "La morte di Ivan Il'ič", copie: 1, lettoDa: "Clo", },
                         {id: "390", autore: "Licofrone", titolo: "Alessandra", copie: 1, },
-                        {id: "391", autore: "Louis Carroll", titolo: "Le avventure di Alice nel Paese delle Meraviglie", copie: 1, lettoDa:"Entrambi",},
-                        {id: "392", autore: "Louisa May Alcott", titolo: "Piccole Donne", copie: 1, lettoDa:"Entrambi",},
-                        {id: "393", autore: "Louisa May Alcott", titolo: "Piccole Donne (vers, La mia piccola biblioteca)", copie: 1,lettoDa:"Entrambi", },
-                        {id: "394", autore: "Louisa May Alcott", titolo: "Piccole Donne Crescono", copie: 1,lettoDa:"Entrambi", },
-                        {id: "395", autore: "Louisa May Alcott", titolo: "Piccole Donne (GRAPHIC)", copie: 1,lettoDa:"Entrambi", },
+                        {id: "391", autore: "Louis Carroll", titolo: "Le avventure di Alice nel Paese delle Meraviglie", copie: 1, lettoDa: "Entrambi", },
+                        {id: "392", autore: "Louisa May Alcott", titolo: "Piccole Donne", copie: 1, lettoDa: "Entrambi", },
+                        {id: "393", autore: "Louisa May Alcott", titolo: "Piccole Donne (vers, La mia piccola biblioteca)", copie: 1, lettoDa: "Entrambi", },
+                        {id: "394", autore: "Louisa May Alcott", titolo: "Piccole Donne Crescono", copie: 1, lettoDa: "Entrambi", },
+                        {id: "395", autore: "Louisa May Alcott", titolo: "Piccole Donne (GRAPHIC)", copie: 1, lettoDa: "Entrambi", },
                         {id: "396", autore: "Lucia Impelluso", titolo: "Eroi e dei dell’antichità", copie: 1, },
-                        {id: "397", autore: "Luigi Pirandello", titolo: "Il fu Mattia Pascal", copie: 1,lettoDa:"Entrambi", },
-                        {id: "398", autore: "Luigi Surdich", titolo: "Il duecento e il trecento", copie: 1,lettoDa:"Clo", },
+                        {id: "397", autore: "Luigi Pirandello", titolo: "Il fu Mattia Pascal", copie: 1, lettoDa: "Entrambi", },
+                        {id: "398", autore: "Luigi Surdich", titolo: "Il duecento e il trecento", copie: 1, lettoDa: "Clo", },
                         {id: "399", autore: "Luis Royo", titolo: "Dead Moon: Epilogue", copie: 1, },
-                        {id: "400", autore: "Madeline Miller", titolo: "Circe", copie: 1,lettoDa:"Clo", },
-                        {id: "401", autore: "Madeline Miller", titolo: "La canzone di Achille", copie: 1,lettoDa:"Entrambi", },
-                        {id: "402", autore: "Madeline Miller", titolo: "Galatea", copie: 1,lettoDa:"Clo", },
-                        {id: "403", autore: "Malba Tahan", titolo: "L’uomo che sapeva contare", copie: 1, lettoDa:"Clo",},
-                        {id: "404", autore: "Marcela Serrano", titolo: "Dieci donne", copie: 1, lettoDa:"Entrambi",},
-                        {id: "405", autore: "Marguerite Yourcenar", titolo: "Memorie di Adriano", copie: 1, lettoDa:"Clo",},
-                        {id: "406", autore: "Mari Ela Panzeca", titolo: "Kore sprofonda negli inferi", copie: 1, lettoDa:"Maki",},
+                        {id: "400", autore: "Madeline Miller", titolo: "Circe", copie: 1, lettoDa: "Clo", },
+                        {id: "401", autore: "Madeline Miller", titolo: "La canzone di Achille", copie: 1, lettoDa: "Entrambi", },
+                        {id: "402", autore: "Madeline Miller", titolo: "Galatea", copie: 1, lettoDa: "Clo", },
+                        {id: "403", autore: "Malba Tahan", titolo: "L’uomo che sapeva contare", copie: 1, lettoDa: "Clo", },
+                        {id: "404", autore: "Marcela Serrano", titolo: "Dieci donne", copie: 1, lettoDa: "Entrambi", },
+                        {id: "405", autore: "Marguerite Yourcenar", titolo: "Memorie di Adriano", copie: 1, lettoDa: "Clo", },
+                        {id: "406", autore: "Mari Ela Panzeca", titolo: "Kore sprofonda negli inferi", copie: 1, lettoDa: "Maki",},
                         {id: "407", autore: "Marianne Eloise", titolo: "Obsessive intrusive magical thinking", copie: 1, },
-                        {id: "408", autore: "Marica Romolini", titolo: "Commento a la Bufera e altro di Montale", copie: 1,lettoDa:"Clo", },
+                        {id: "408", autore: "Marica Romolini", titolo: "Commento a la Bufera e altro di Montale", copie: 1, lettoDa: "Clo", },
                         {id: "409", autore: "Mario Fulgoni", titolo: "Manuale di Teoria Musicale vol 1", copie: 1, },
-                        {id: "410", autore: "Mark Blake", titolo: "Freddie Mercury, A kind of Magic", copie: 1, lettoDa:"Clo",},
+                        {id: "410", autore: "Mark Blake", titolo: "Freddie Mercury, A kind of Magic", copie: 1, lettoDa: "Clo", },
                         {id: "411", autore: "Marshall B.Rosemberg", titolo: "Le parole sono finestre (oppure muri)", copie: 1, },
-                        {id: "412", autore: "Mary Shelley", titolo: "Frankenstein", copie: 1,lettoDa:"Entrambi", },
-                        {id: "413", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 1", copie: 1, lettoDa: "Clo"},
-                        {id: "414", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 2", copie: 1, lettoDa: "Clo"},
-                        {id: "415", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 3", copie: 1, lettoDa: "Clo"},
-                        {id: "416", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 4", copie: 1, lettoDa: "Clo"},
-                        {id: "417", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 5", copie: 1, lettoDa: "Clo"},
-                        {id: "418", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 6", copie: 1, lettoDa: "Clo"},
-                        {id: "419", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 7", copie: 1, lettoDa: "Clo"},
-                        {id: "420", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 8", copie: 1, lettoDa: "Clo"},
-                        {id: "421", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 9", copie: 1, lettoDa: "Clo"},
-                        {id: "422", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 10", copie: 1, lettoDa: "Clo"},
-                        {id: "423", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 11", copie: 1, lettoDa: "Clo"},
-                        {id: "424", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 12", copie: 1, lettoDa: "Clo"},
-                        {id: "425", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 13", copie: 1, lettoDa: "Clo"},
-                        {id: "426", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 14", copie: 1, lettoDa: "Clo"},
-                        {id: "427", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 15", copie: 1, lettoDa: "Clo"},
-                        {id: "428", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 16", copie: 1, lettoDa: "Clo"},
-                        {id: "429", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 17", copie: 1, lettoDa: "Clo"},
-                        {id: "430", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 18", copie: 1, lettoDa: "Clo"},
-                        {id: "431", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 19", copie: 1, lettoDa: "Clo"},
-                        {id: "432", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 20", copie: 1, lettoDa: "Clo"},
-                        {id: "433", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 21", copie: 1, lettoDa: "Clo"},
-                        {id: "434", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 22", copie: 1, lettoDa: "Clo"},
-                        {id: "435", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 23", copie: 1, lettoDa: "Clo"},
-                        {id: "436", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 24", copie: 1, lettoDa: "Clo"},
-                        {id: "437", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 25", copie: 1, lettoDa: "Clo"},
-                        {id: "438", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 26", copie: 1, lettoDa: "Clo"},
-                        {id: "439", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 27", copie: 1, lettoDa: "Clo"},
-                        {id: "440", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 28", copie: 1, lettoDa: "Clo"},
-                        {id: "441", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 29", copie: 1, lettoDa: "Clo"},
-                        {id: "442", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 30", copie: 1, lettoDa: "Clo"},
-                        {id: "443", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 31", copie: 1, lettoDa: "Clo"},
-                        {id: "444", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 32", copie: 1, lettoDa: "Clo"},
-                        {id: "445", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 33", copie: 1, lettoDa: "Clo"},
-                        {id: "446", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 34", copie: 1, lettoDa: "Clo"},
-                        {id: "447", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 35", copie: 1, lettoDa: "Clo"},
-                        {id: "448", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 36", copie: 1, lettoDa: "Clo"},
-                        {id: "449", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 37", copie: 1, lettoDa: "Clo"},
-                        {id: "450", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 38", copie: 1, lettoDa: "Clo"},
-                        {id: "451", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 39", copie: 1, lettoDa: "Clo"},
-                        {id: "452", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 40", copie: 1, lettoDa: "Clo"},
-                        {id: "453", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 41", copie: 1, lettoDa: "Clo"},
-                        {id: "454", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 42", copie: 1, lettoDa: "Clo"},
-                        {id: "455", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 43", copie: 1, lettoDa: "Clo"},
-                        {id: "456", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 44", copie: 1, lettoDa: "Clo"},
-                        {id: "457", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 45", copie: 1, lettoDa: "Clo"},
-                        {id: "458", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 46", copie: 1, lettoDa: "Clo"},
-                        {id: "459", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 47", copie: 1, lettoDa: "Clo"},
-                        {id: "460", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 48", copie: 1, lettoDa: "Clo"},
-                        {id: "461", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 49", copie: 1, lettoDa: "Clo"},
-                        {id: "462", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 50", copie: 1, lettoDa: "Clo"},
+                        {id: "412", autore: "Mary Shelley", titolo: "Frankenstein", copie: 1, lettoDa: "Entrambi", },
+                        {id: "413", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 1", copie: 1, lettoDa: "Clo", },
+                        {id: "414", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 2", copie: 1, lettoDa: "Clo", },
+                        {id: "415", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 3", copie: 1, lettoDa: "Clo", },
+                        {id: "416", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 4", copie: 1, lettoDa: "Clo", },
+                        {id: "417", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 5", copie: 1, lettoDa: "Clo", },
+                        {id: "418", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 6", copie: 1, lettoDa: "Clo", },
+                        {id: "419", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 7", copie: 1, lettoDa: "Clo", },
+                        {id: "420", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 8", copie: 1, lettoDa: "Clo", },
+                        {id: "421", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 9", copie: 1, lettoDa: "Clo", },
+                        {id: "422", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 10", copie: 1, lettoDa: "Clo", },
+                        {id: "423", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 11", copie: 1, lettoDa: "Clo", },
+                        {id: "424", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 12", copie: 1, lettoDa: "Clo", },
+                        {id: "425", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 13", copie: 1, lettoDa: "Clo", },
+                        {id: "426", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 14", copie: 1, lettoDa: "Clo", },
+                        {id: "427", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 15", copie: 1, lettoDa: "Clo", },
+                        {id: "428", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 16", copie: 1, lettoDa: "Clo", },
+                        {id: "429", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 17", copie: 1, lettoDa: "Clo", },
+                        {id: "430", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 18", copie: 1, lettoDa: "Clo", },
+                        {id: "431", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 19", copie: 1, lettoDa: "Clo", },
+                        {id: "432", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 20", copie: 1, lettoDa: "Clo", },
+                        {id: "433", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 21", copie: 1, lettoDa: "Clo", },
+                        {id: "434", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 22", copie: 1, lettoDa: "Clo", },
+                        {id: "435", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 23", copie: 1, lettoDa: "Clo", },
+                        {id: "436", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 24", copie: 1, lettoDa: "Clo", },
+                        {id: "437", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 25", copie: 1, lettoDa: "Clo", },
+                        {id: "438", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 26", copie: 1, lettoDa: "Clo", },
+                        {id: "439", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 27", copie: 1, lettoDa: "Clo", },
+                        {id: "440", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 28", copie: 1, lettoDa: "Clo", },
+                        {id: "441", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 29", copie: 1, lettoDa: "Clo", },
+                        {id: "442", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 30", copie: 1, lettoDa: "Clo", },
+                        {id: "443", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 31", copie: 1, lettoDa: "Clo", },
+                        {id: "444", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 32", copie: 1, lettoDa: "Clo", },
+                        {id: "445", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 33", copie: 1, lettoDa: "Clo", },
+                        {id: "446", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 34", copie: 1, lettoDa: "Clo", },
+                        {id: "447", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 35", copie: 1, lettoDa: "Clo", },
+                        {id: "448", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 36", copie: 1, lettoDa: "Clo", },
+                        {id: "449", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 37", copie: 1, lettoDa: "Clo", },
+                        {id: "450", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 38", copie: 1, lettoDa: "Clo", },
+                        {id: "451", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 39", copie: 1, lettoDa: "Clo", },
+                        {id: "452", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 40", copie: 1, lettoDa: "Clo", },
+                        {id: "453", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 41", copie: 1, lettoDa: "Clo", },
+                        {id: "454", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 42", copie: 1, lettoDa: "Clo", },
+                        {id: "455", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 43", copie: 1, lettoDa: "Clo", },
+                        {id: "456", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 44", copie: 1, lettoDa: "Clo", },
+                        {id: "457", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 45", copie: 1, lettoDa: "Clo", },
+                        {id: "458", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 46", copie: 1, lettoDa: "Clo", },
+                        {id: "459", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 47", copie: 1, lettoDa: "Clo", },
+                        {id: "460", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 48", copie: 1, lettoDa: "Clo", },
+                        {id: "461", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 49", copie: 1, lettoDa: "Clo", },
+                        {id: "462", autore: "Masami Kurumada", titolo: "Saint Seiya Lost Canvas 50", copie: 1, lettoDa: "Clo", },
                         {id: "463", autore: "Matilde Battistini", titolo: "Simboli e allegorie", copie: 1, },
-                        {id: "464", autore: "Matteo Strukul", titolo: "I medici, la saga completa 4 volumi", copie: 1, lettoDa:"Clo",},
+                        {id: "464", autore: "Matteo Strukul", titolo: "I medici, la saga completa 4 volumi", copie: 1, lettoDa: "Clo", },
                         {id: "465", autore: "Matthew Sturgis", titolo: "Oscar", copie: 1, },
                         {id: "466", autore: "Maura Angeletti", titolo: "Il vero libro dei tarocchi", copie: 1, },
                         {id: "467", autore: "Mauro Corsaro, Luigi Gallo", titolo: "Storia greca", copie: 1, },
                         {id: "468", autore: "McGrath", titolo: "Follia", copie: 1, },
-                        {id: "469", autore: "Michael McDowell", titolo: "Katie", copie: 1, lettoDa:"Clo",},
-                        {id: "470", autore: "Michael McDowell", titolo: "Blackwater, La piena", copie: 1, lettoDa:"Entrambi",},
-                        {id: "471", autore: "Michael McDowell", titolo: "Blackwater, La diga", copie: 1, lettoDa:"Entrambi",},
-                        {id: "472", autore: "Michael McDowell", titolo: "Blackwater, La casa", copie: 1, lettoDa:"Entrambi",},
-                        {id: "473", autore: "Michael McDowell", titolo: "Blackwater, La guerra", copie: 1,lettoDa:"Entrambi", },
-                        {id: "474", autore: "Michael McDowell", titolo: "Blackwater, La fortuna", copie: 1, lettoDa:"Entrambi",},
-                        {id: "475", autore: "Michael McDowell", titolo: "Blackwater, La pioggia", copie: 1,lettoDa:"Entrambi", },
-                        {id: "476", autore: "Michael McDowell", titolo: "Gli aghi d'oro", copie: 1,lettoDa:"Clo", },
-                        {id: "477", autore: "Michael McDowell", titolo: "Luna Chiara su Babylon", copie: 1,lettoDa:"Clo", },
+                        {id: "469", autore: "Michael McDowell", titolo: "Katie", copie: 1, lettoDa: "Clo", },
+                        {id: "470", autore: "Michael McDowell", titolo: "Blackwater, La piena", copie: 1, lettoDa: "Entrambi", },
+                        {id: "471", autore: "Michael McDowell", titolo: "Blackwater, La diga", copie: 1, lettoDa: "Entrambi", },
+                        {id: "472", autore: "Michael McDowell", titolo: "Blackwater, La casa", copie: 1, lettoDa: "Entrambi", },
+                        {id: "473", autore: "Michael McDowell", titolo: "Blackwater, La guerra", copie: 1, lettoDa: "Entrambi", },
+                        {id: "474", autore: "Michael McDowell", titolo: "Blackwater, La fortuna", copie: 1, lettoDa: "Entrambi", },
+                        {id: "475", autore: "Michael McDowell", titolo: "Blackwater, La pioggia", copie: 1, lettoDa: "Entrambi", },
+                        {id: "476", autore: "Michael McDowell", titolo: "Gli aghi d'oro", copie: 1, lettoDa: "Clo", },
+                        {id: "477", autore: "Michael McDowell", titolo: "Luna Chiara su Babylon", copie: 1, lettoDa: "Clo", },
                         {id: "478", autore: "Michael McDowell", titolo: "L'Amuleto", copie: 1, },
                         {id: "479", autore: "Michel Bussi", titolo: "Codice 612: chi ha ucciso il piccolo principe?", copie: 1, },
-                        {id: "480", autore: "Michela Murgia", titolo: "Tre ciotole, rituali per un anno di crisi", copie: 1,lettoDa:"Clo", },
+                        {id: "480", autore: "Michela Murgia", titolo: "Tre ciotole, rituali per un anno di crisi", copie: 1, lettoDa: "Clo", },
                         {id: "481", autore: "Michelangelo", titolo: "Rime", copie: 1, },
-                        {id: "482", autore: "Milan Kundera", titolo: "L’insostenibile leggerezza dell’essere", copie: 1,lettoDa:"Entrambi", },
+                        {id: "482", autore: "Milan Kundera", titolo: "L’insostenibile leggerezza dell’essere", copie: 1, lettoDa: "Entrambi", },
                         {id: "483", autore: "Milan Kundera", titolo: "La lentezza", copie: 1, },
-                        {id: "484", autore: "Moony Witcher", titolo: "Geno Hastor Venti e il sigillo nero di Madame Crikken", copie: 1,lettoDa:"Clo", },
-                        {id: "485", autore: "Moony Witcher", titolo: "Geno Hastor Venti e la runa bianca del Girifalco d’oro", copie: 1,lettoDa:"Clo", },
-                        {id: "486", autore: "Moony Witcher", titolo: "Geno Hastor Venti e lo specchio rosso della verità", copie: 1, lettoDa:"Clo",},
-                        {id: "487", autore: "Naoko Takeuchi", titolo: "Sailor Moon 1", copie: 1,lettoDa:"Maki", },
-                        {id: "488", autore: "Naoko Takeuchi", titolo: "Sailor Moon 2", copie: 1,lettoDa:"Maki", },
-                        {id: "489", autore: "Natsuki Kizu", titolo: "Given 1", copie: 1, lettoDa: "Clo"},
-                        {id: "490", autore: "Natsuki Kizu", titolo: "Given 2", copie: 1, lettoDa: "Clo"},
-                        {id: "491", autore: "Natsuki Kizu", titolo: "Given 3", copie: 1, lettoDa: "Clo"},
-                        {id: "492", autore: "Natsuki Kizu", titolo: "Given 4", copie: 1, lettoDa: "Clo"},
-                        {id: "493", autore: "Natsuki Kizu", titolo: "Given 5", copie: 1, lettoDa: "Clo"},
-                        {id: "494", autore: "Natsuki Kizu", titolo: "Given 6", copie: 1, lettoDa: "Clo"},
-                        {id: "495", autore: "Natsuki Kizu", titolo: "Given 7", copie: 1, lettoDa: "Clo"},
-                        {id: "496", autore: "Natsuki Kizu", titolo: "Given 8", copie: 1, lettoDa: "Clo"},
-                        {id: "497", autore: "Natsuki Kizu", titolo: "Given 9", copie: 1, lettoDa: "Clo"},
-                        {id: "498", autore: "Natsuki Kizu", titolo: "Given 10", copie: 1, lettoDa: "Clo"},                        
-                        {id: "499", autore: "Natsuki Kizu", titolo: "Doujinshi IwaOi 1", copie:1, lettoDa:"Entrambi",},
-                        {id: "500", autore: "Natsuki Kizu", titolo: "Doujinshi IwaOi 2", copie:1, lettoDa:"Entrambi",},
-                        {id: "501", autore: "Natsuki Kizu", titolo: "Doujinshi IwaOi 3", copie:1, lettoDa:"Entrambi",},
-                        {id: "502", autore: "Neil Gaiman", titolo: "Miti del Nord", copie: 1, lettoDa:"Clo",},
-                        {id: "503", autore: "Nicola Pesce", titolo: "Il piccolo principe delle tenebre", copie: 1,lettoDa:"Clo", },
+                        {id: "484", autore: "Moony Witcher", titolo: "Geno Hastor Venti e il sigillo nero di Madame Crikken", copie: 1, lettoDa: "Clo", },
+                        {id: "485", autore: "Moony Witcher", titolo: "Geno Hastor Venti e la runa bianca del Girifalco d’oro", copie: 1, lettoDa: "Clo", },
+                        {id: "486", autore: "Moony Witcher", titolo: "Geno Hastor Venti e lo specchio rosso della verità", copie: 1, lettoDa: "Clo", },
+                        {id: "487", autore: "Naoko Takeuchi", titolo: "Sailor Moon 1", copie: 1, lettoDa: "Maki", },
+                        {id: "488", autore: "Naoko Takeuchi", titolo: "Sailor Moon 2", copie: 1, lettoDa: "Maki", },
+                        {id: "489", autore: "Natsuki Kizu", titolo: "Given 1", copie: 1, lettoDa: "Clo", },
+                        {id: "490", autore: "Natsuki Kizu", titolo: "Given 2", copie: 1, lettoDa: "Clo", },
+                        {id: "491", autore: "Natsuki Kizu", titolo: "Given 3", copie: 1, lettoDa: "Clo", },
+                        {id: "492", autore: "Natsuki Kizu", titolo: "Given 4", copie: 1, lettoDa: "Clo", },
+                        {id: "493", autore: "Natsuki Kizu", titolo: "Given 5", copie: 1, lettoDa: "Clo", },
+                        {id: "494", autore: "Natsuki Kizu", titolo: "Given 6", copie: 1, lettoDa: "Clo", },
+                        {id: "495", autore: "Natsuki Kizu", titolo: "Given 7", copie: 1, lettoDa: "Clo", },
+                        {id: "496", autore: "Natsuki Kizu", titolo: "Given 8", copie: 1, lettoDa: "Clo", },
+                        {id: "497", autore: "Natsuki Kizu", titolo: "Given 9", copie: 1, lettoDa: "Clo", },
+                        {id: "498", autore: "Natsuki Kizu", titolo: "Given 10", copie: 1, lettoDa: "Clo", },                        
+                        {id: "499", autore: "Natsuki Kizu", titolo: "Doujinshi IwaOi 1", copie:1, lettoDa: "Entrambi", },
+                        {id: "500", autore: "Natsuki Kizu", titolo: "Doujinshi IwaOi 2", copie:1, lettoDa: "Entrambi", },
+                        {id: "501", autore: "Natsuki Kizu", titolo: "Doujinshi IwaOi 3", copie:1, lettoDa: "Entrambi", },
+                        {id: "502", autore: "Neil Gaiman", titolo: "Miti del Nord", copie: 1, lettoDa: "Clo", },
+                        {id: "503", autore: "Nicola Pesce", titolo: "Il piccolo principe delle tenebre", copie: 1, lettoDa: "Clo", },
                         {id: "504", autore: "Oliver Sacks", titolo: "L’occhio della mente", copie: 1, },
-                        {id: "505", autore: "Oliver Sacks", titolo: "Vedere voci", copie: 1,lettoDa:"Clo", },
-                        {id: "506", autore: "Oliver Sacks", titolo: "Allucinazioni", copie: 1, lettoDa:"Clo",},
+                        {id: "505", autore: "Oliver Sacks", titolo: "Vedere voci", copie: 1, lettoDa: "Clo", },
+                        {id: "506", autore: "Oliver Sacks", titolo: "Allucinazioni", copie: 1, lettoDa: "Clo", },
                         {id: "507", autore: "Oliver Sacks", titolo: "L'uomo che scambio sua moglie per un cappello", copie: 1, },
                         {id: "508", autore: "Oliver Sacks", titolo: "Emicrania", copie: 1, },
                         {id: "509", autore: "Oliver Sacks", titolo: "Musicofilia", copie: 1, },
-                        {id: "510", autore: "Omero", titolo: "Odissea (GRAPHIC)", copie: 1,lettoDa:"Entrambi", },
-                        {id: "511", autore: "Omero", titolo: "Odissea", copie: 3,lettoDa:"Entrambi", },
-                        {id: "512", autore: "Omero", titolo: "Iliade", copie: 2,lettoDa:"Entrambi", },
+                        {id: "510", autore: "Omero", titolo: "Odissea (GRAPHIC)", copie: 1, lettoDa: "Entrambi", },
+                        {id: "511", autore: "Omero", titolo: "Odissea", copie: 3, lettoDa: "Entrambi", },
+                        {id: "512", autore: "Omero", titolo: "Iliade", copie: 2, lettoDa: "Entrambi", },
                         {id: "513", autore: "Orazio", titolo: "Le satire", copie: 1, },
-                        {id: "514", autore: "Oscar Wilde", titolo: "Il principe felice", copie: 1,lettoDa:"Entrambi", },
-                        {id: "515", autore: "Oscar Wilde", titolo: "Aforismi", copie: 1,lettoDa:"Clo", },
-                        {id: "516", autore: "Oscar Wilde", titolo: "Per sempre tuo", copie: 1,lettoDa:"Clo", },
+                        {id: "514", autore: "Oscar Wilde", titolo: "Il principe felice", copie: 1, lettoDa: "Entrambi", },
+                        {id: "515", autore: "Oscar Wilde", titolo: "Aforismi", copie: 1, lettoDa: "Clo", },
+                        {id: "516", autore: "Oscar Wilde", titolo: "Per sempre tuo", copie: 1, lettoDa: "Clo", },
                         {id: "517", autore: "Oscar Wilde", titolo: "Il prete e l’accolito e altre opere", copie: 1, },
-                        {id: "518", autore: "Oscar Wilde", titolo: "Una casa di melograni", copie: 1,lettoDa:"Clo", },
-                        {id: "519", autore: "Oscar Wilde", titolo: "Il fantasma di Canterville", copie: 1,lettoDa:"Clo", },
-                        {id: "520", autore: "Oscar Wilde", titolo: "Salomé", copie: 1,lettoDa:"Clo", },
-                        {id: "521", autore: "Oscar Wilde", titolo: "Il critico come artista", copie: 1,lettoDa:"Clo", },
-                        {id: "522", autore: "Oscar Wilde", titolo: "De Profundis", copie: 1, lettoDa:"Clo",},
-                        {id: "523", autore: "Oscar Wilde", titolo: "Il ritratto di Dorian Gray", copie: 1,lettoDa:"Clo", },
-                        {id: "524", autore: "Oscar Wilde", titolo: "Vera o i nichilisti", copie: 1, lettoDa:"Clo",},
-                        {id: "525", autore: "Oscar Wilde", titolo: "La ballata del carcere di Reading", copie: 2,lettoDa:"Clo",},
-                        {id: "526", autore: "Oscar Wilde", titolo: "Il delitto di Lord Arthur Savile", copie: 1,lettoDa:"Clo", },
-                        {id: "527", autore: "Oscar Wilde", titolo: "Il ritratto di Mr. W. H.", copie: 1,lettoDa:"Clo", },
-                        {id: "528", autore: "Oscar Wilde", titolo: "Il ventaglio di Lady Windermere e Salomé", copie: 1,lettoDa:"Clo", },
-                        {id: "529", autore: "Oscar Wilde", titolo: "Autobiografia di un dandy", copie: 1, lettoDa:"Clo",},
-                        {id: "530", autore: "Oscar Wilde", titolo: "L’importanza di chiamarsi Ernesto", copie: 1,lettoDa:"Clo", },
-                        {id: "531", autore: "Ovidio", titolo: "Le Metamorfosi", copie: 1,lettoDa:"Clo", },
+                        {id: "518", autore: "Oscar Wilde", titolo: "Una casa di melograni", copie: 1, lettoDa: "Clo", },
+                        {id: "519", autore: "Oscar Wilde", titolo: "Il fantasma di Canterville", copie: 1, lettoDa: "Clo", },
+                        {id: "520", autore: "Oscar Wilde", titolo: "Salomé", copie: 1, lettoDa: "Clo", },
+                        {id: "521", autore: "Oscar Wilde", titolo: "Il critico come artista", copie: 1, lettoDa: "Clo", },
+                        {id: "522", autore: "Oscar Wilde", titolo: "De Profundis", copie: 1, lettoDa: "Clo", },
+                        {id: "523", autore: "Oscar Wilde", titolo: "Il ritratto di Dorian Gray", copie: 1, lettoDa: "Clo", },
+                        {id: "524", autore: "Oscar Wilde", titolo: "Vera o i nichilisti", copie: 1, lettoDa: "Clo", },
+                        {id: "525", autore: "Oscar Wilde", titolo: "La ballata del carcere di Reading", copie: 2, lettoDa: "Clo", },
+                        {id: "526", autore: "Oscar Wilde", titolo: "Il delitto di Lord Arthur Savile", copie: 1, lettoDa: "Clo", },
+                        {id: "527", autore: "Oscar Wilde", titolo: "Il ritratto di Mr. W. H.", copie: 1, lettoDa: "Clo", },
+                        {id: "528", autore: "Oscar Wilde", titolo: "Il ventaglio di Lady Windermere e Salomé", copie: 1, lettoDa: "Clo", },
+                        {id: "529", autore: "Oscar Wilde", titolo: "Autobiografia di un dandy", copie: 1, lettoDa: "Clo", },
+                        {id: "530", autore: "Oscar Wilde", titolo: "L’importanza di chiamarsi Ernesto", copie: 1, lettoDa: "Clo", },
+                        {id: "531", autore: "Ovidio", titolo: "Le Metamorfosi", copie: 1, lettoDa: "Clo", },
                         {id: "532", autore: "Paolo Ghezzi", titolo: "La rosa bianca", copie: 1, },
                         {id: "533", autore: "Paolo Mastrocola", titolo: "L’amore prima di noi", copie: 1, },
-                        {id: "534", autore: "Park Ji-Yeon", titolo: "Wolf in the House 1", copie: 1, lettoDa: "Clo"},
-                        {id: "535", autore: "Park Ji-Yeon", titolo: "Wolf in the House 2", copie: 1, lettoDa: "Clo"},
-                        {id: "536", autore: "Park Ji-Yeon", titolo: "Wolf in the House 3", copie: 1, lettoDa: "Clo"},
-                        {id: "537", autore: "Park Ji-Yeon", titolo: "Wolf in the House 4", copie: 1, lettoDa: "Clo"},
-                        {id: "538", autore: "Park Ji-Yeon", titolo: "Wolf in the House 5", copie: 1, lettoDa: "Clo"},
+                        {id: "534", autore: "Park Ji-Yeon", titolo: "Wolf in the House 1", copie: 1, lettoDa: "Clo", },
+                        {id: "535", autore: "Park Ji-Yeon", titolo: "Wolf in the House 2", copie: 1, lettoDa: "Clo", },
+                        {id: "536", autore: "Park Ji-Yeon", titolo: "Wolf in the House 3", copie: 1, lettoDa: "Clo", },
+                        {id: "537", autore: "Park Ji-Yeon", titolo: "Wolf in the House 4", copie: 1, lettoDa: "Clo", },
+                        {id: "538", autore: "Park Ji-Yeon", titolo: "Wolf in the House 5", copie: 1, lettoDa: "Clo", },
                         {id: "539", autore: "Pat Patfoort", titolo: "Difendersi senza aggredire", copie: 1, },
                         {id: "540", autore: "Pat Patfoort", titolo: "Io voglio, tu non vuoi", copie: 1, }, 
                         {id: "541", autore: "Pat Patfoort", titolo: "Mamma viene a morire da noi domenica", copie: 1, },
-                        {id: "542", autore: "Patrick Suskind", titolo: "Profumo", copie: 1,lettoDa:"Clo", },
-                        {id: "543", autore: "Paulo Coelho", titolo: "Veronika decide di morire", copie: 1,lettoDa:"Clo", },
+                        {id: "542", autore: "Patrick Suskind", titolo: "Profumo", copie: 1, lettoDa: "Clo", },
+                        {id: "543", autore: "Paulo Coelho", titolo: "Veronika decide di morire", copie: 1, lettoDa: "Clo", },
                         {id: "544", autore: "Penelope Bagieu", titolo: "Indomite Vol 2", copie: 1, },
-                        {id: "545", autore: "Petronio", titolo: "Satyricon", copie: 1, lettoDa:"Clo",},
-                        {id: "546", autore: "Phil Sutcliffe", titolo: "QUEEN", copie: 1,lettoDa:"Clo", },
+                        {id: "545", autore: "Petronio", titolo: "Satyricon", copie: 1, lettoDa: "Clo", },
+                        {id: "546", autore: "Phil Sutcliffe", titolo: "QUEEN", copie: 1, lettoDa: "Clo", },
                         {id: "547", autore: "Philip Pullman", titolo: "Queste oscure materie la trilogia completa", copie: 1, },
                         {id: "548", autore: "Platone", titolo: "La settima lettera", copie: 1, },
-                        {id: "549", autore: "Primo Levi", titolo: "Il sistema periodico", copie: 1,lettoDa:"Clo", },
-                        {id: "550", autore: "Primo Levi", titolo: "Se questo è un uomo", copie: 1,lettoDa:"Clo", },
-                        {id: "551", autore: "Primo Levi", titolo: "Sommersi e salvati", copie: 1, lettoDa:"Clo",},
-                        {id: "552", autore: "Primo Levi", titolo: "La tregua", copie: 1,lettoDa:"Clo", },
+                        {id: "549", autore: "Primo Levi", titolo: "Il sistema periodico", copie: 1, lettoDa: "Clo", },
+                        {id: "550", autore: "Primo Levi", titolo: "Se questo è un uomo", copie: 1, lettoDa: "Clo", },
+                        {id: "551", autore: "Primo Levi", titolo: "Sommersi e salvati", copie: 1, lettoDa: "Clo", },
+                        {id: "552", autore: "Primo Levi", titolo: "La tregua", copie: 1, lettoDa: "Clo", },
                         {id: "553", autore: "Raffaella Milandri", titolo: "Nativi americani", copie: 1, },
                         {id: "554", autore: "Randall Sullivan", titolo: "Michael Jackson", copie: 1, },
-                        {id: "555", autore: "Renate Ulmer", titolo: "Alfons Mucha", copie: 1, lettoDa:"Clo",},
-                        {id: "556", autore: "Renato Stella", titolo: "Sociologia dei New Media", copie: 1, lettoDa:"Clo",},
-                        {id: "557", autore: "Riccardo Falcinelli", titolo: "Visus", copie: 1, lettoDa:"Clo",},
-                        {id: "558", autore: "Riccardo Falcinelli", titolo: "Critica portatile al visual design. Da Gutenberg ai social network.", copie: 1,lettoDa:"Clo", },
-                        {id: "559", autore: "Riccardo Falcinelli", titolo: "Cromorama", copie: 1, lettoDa:"Clo",},
+                        {id: "555", autore: "Renate Ulmer", titolo: "Alfons Mucha", copie: 1, lettoDa: "Clo", },
+                        {id: "556", autore: "Renato Stella", titolo: "Sociologia dei New Media", copie: 1, lettoDa: "Clo", },
+                        {id: "557", autore: "Riccardo Falcinelli", titolo: "Visus", copie: 1, lettoDa: "Clo", },
+                        {id: "558", autore: "Riccardo Falcinelli", titolo: "Critica portatile al visual design. Da Gutenberg ai social network.", copie: 1, lettoDa: "Clo", },
+                        {id: "559", autore: "Riccardo Falcinelli", titolo: "Cromorama", copie: 1, lettoDa: "Clo", },
                         {id: "560", autore: "Riccardo Falcinelli", titolo: "Figure", copie: 1, },
-                        {id: "561", autore: "Rick Riordan", titolo: "Percy Jackson e gli dei dell’Olimpo, Il ladro di fulmini", copie: 1,lettoDa:"Entrambi", },
-                        {id: "562", autore: "Rick Riordan", titolo: "Percy Jackson e gli dei dell’Olimpo, Il mare dei mostri", copie: 1, lettoDa:"Entrambi",},
-                        {id: "563", autore: "Rick Riordan", titolo: "Percy Jackson e gli dei dell’Olimpo, La maledizione del titano", copie: 1, lettoDa:"Entrambi",},
-                        {id: "564", autore: "Rick Riordan", titolo: "Percy Jackson e gli dei dell’Olimpo, La battaglia del labirinto", copie: 1, lettoDa:"Entrambi",},
-                        {id: "565", autore: "Rick Riordan", titolo: "Percy Jackson e gli dei dell’Olimpo, Lo scontro finale", copie: 1,lettoDa:"Entrambi", },
-                        {id: "566", autore: "Rick Riordan", titolo: "Percy Jackson e gli dei dell’Olimpo, Il ladro di fulmini (volume baby)", copie: 1,lettoDa:"Entrambi", },
-                        {id: "567", autore: "Rick Riordan", titolo: "Eroi dell’Olimpo, L’eroe perduto", copie: 1,lettoDa:"Entrambi", },
-                        {id: "568", autore: "Rick Riordan", titolo: "Eroi dell’Olimpo, Il figlio di Nettuno", copie: 1, lettoDa:"Entrambi",},
-                        {id: "569", autore: "Rick Riordan", titolo: "Eroi dell’Olimpo, Il marchio di Atena", copie: 1,lettoDa:"Entrambi", },
-                        {id: "570", autore: "Rick Riordan", titolo: "Eroi dell’Olimpo, La casa di Ade", copie: 1, lettoDa:"Entrambi",},
-                        {id: "571", autore: "Rick Riordan", titolo: "Eroi dell’Olimpo, Il sangue dell’Olimpo", copie: 1,lettoDa:"Entrambi", },
-                        {id: "572", autore: "Rick Riordan", titolo: "Sfide di Apollo, L’oracolo nascosto", copie: 1,lettoDa:"Entrambi", },
-                        {id: "573", autore: "Rick Riordan", titolo: "Sfide di Apollo, La profezia oscura", copie: 1,lettoDa:"Entrambi", },
-                        {id: "574", autore: "Rick Riordan", titolo: "Sfide di Apollo, Il labirinto di fuoco", copie: 1,lettoDa:"Entrambi", },
-                        {id: "575", autore: "Rick Riordan", titolo: "Sfide di Apollo, La tomba del tiranno", copie: 1,lettoDa:"Entrambi", },
-                        {id: "576", autore: "Rick Riordan", titolo: "Sfide di Apollo, La torre di Nerone", copie: 1,lettoDa:"Entrambi", },
-                        {id: "577", autore: "Rick Riordan", titolo: "Magnus Chase e Gli Dei di Asgard, La spada del guerriero", copie: 1,lettoDa:"Entrambi", },
-                        {id: "578", autore: "Rick Riordan", titolo: "Magnus Chase e Gli Dei di Asgard, Il martello di Thor", copie: 1,lettoDa:"Entrambi", },
-                        {id: "579", autore: "Rick Riordan", titolo: "Magnus Chase e Gli Dei di Asgard, La nave degli scomparsi", copie: 1, lettoDa:"Entrambi",},
+                        {id: "561", autore: "Rick Riordan", titolo: "Percy Jackson e gli dei dell’Olimpo, Il ladro di fulmini", copie: 1, lettoDa: "Entrambi", },
+                        {id: "562", autore: "Rick Riordan", titolo: "Percy Jackson e gli dei dell’Olimpo, Il mare dei mostri", copie: 1, lettoDa: "Entrambi", },
+                        {id: "563", autore: "Rick Riordan", titolo: "Percy Jackson e gli dei dell’Olimpo, La maledizione del titano", copie: 1, lettoDa: "Entrambi", },
+                        {id: "564", autore: "Rick Riordan", titolo: "Percy Jackson e gli dei dell’Olimpo, La battaglia del labirinto", copie: 1, lettoDa: "Entrambi", },
+                        {id: "565", autore: "Rick Riordan", titolo: "Percy Jackson e gli dei dell’Olimpo, Lo scontro finale", copie: 1, lettoDa: "Entrambi", },
+                        {id: "566", autore: "Rick Riordan", titolo: "Percy Jackson e gli dei dell’Olimpo, Il ladro di fulmini (volume baby)", copie: 1, lettoDa: "Entrambi", },
+                        {id: "567", autore: "Rick Riordan", titolo: "Eroi dell’Olimpo, L’eroe perduto", copie: 1, lettoDa: "Entrambi", },
+                        {id: "568", autore: "Rick Riordan", titolo: "Eroi dell’Olimpo, Il figlio di Nettuno", copie: 1, lettoDa: "Entrambi", },
+                        {id: "569", autore: "Rick Riordan", titolo: "Eroi dell’Olimpo, Il marchio di Atena", copie: 1, lettoDa: "Entrambi", },
+                        {id: "570", autore: "Rick Riordan", titolo: "Eroi dell’Olimpo, La casa di Ade", copie: 1, lettoDa: "Entrambi", },
+                        {id: "571", autore: "Rick Riordan", titolo: "Eroi dell’Olimpo, Il sangue dell’Olimpo", copie: 1, lettoDa: "Entrambi", },
+                        {id: "572", autore: "Rick Riordan", titolo: "Sfide di Apollo, L’oracolo nascosto", copie: 1, lettoDa: "Entrambi", },
+                        {id: "573", autore: "Rick Riordan", titolo: "Sfide di Apollo, La profezia oscura", copie: 1, lettoDa: "Entrambi", },
+                        {id: "574", autore: "Rick Riordan", titolo: "Sfide di Apollo, Il labirinto di fuoco", copie: 1, lettoDa: "Entrambi", },
+                        {id: "575", autore: "Rick Riordan", titolo: "Sfide di Apollo, La tomba del tiranno", copie: 1, lettoDa: "Entrambi", },
+                        {id: "576", autore: "Rick Riordan", titolo: "Sfide di Apollo, La torre di Nerone", copie: 1, lettoDa: "Entrambi", },
+                        {id: "577", autore: "Rick Riordan", titolo: "Magnus Chase e Gli Dei di Asgard, La spada del guerriero", copie: 1, lettoDa: "Entrambi", },
+                        {id: "578", autore: "Rick Riordan", titolo: "Magnus Chase e Gli Dei di Asgard, Il martello di Thor", copie: 1, lettoDa: "Entrambi", },
+                        {id: "579", autore: "Rick Riordan", titolo: "Magnus Chase e Gli Dei di Asgard, La nave degli scomparsi", copie: 1, lettoDa: "Entrambi", },
                         {id: "580", autore: "Rick Riordan", titolo: "Kane Chronicles , La piramide rossa", copie: 1, },
                         {id: "581", autore: "Rick Riordan", titolo: "Kane Chronicles , Il trono di fuoco", copie: 1, },
                         {id: "582", autore: "Rick Riordan", titolo: "Kane Chronicles , L’ombra del serpente", copie: 1, },
-                        {id: "583", autore: "Rick Riordan", titolo: "Percy Jackson e gli dei greci", copie: 1,lettoDa:"Entrambi", },
-                        {id: "584", autore: "Rick Riordan", titolo: "Percy Jackson e gli eroi greci", copie: 1,lettoDa:"Entrambi", },
-                        {id: "585", autore: "Rick Riordan", titolo: "Le storie segrete Magnus Chase", copie: 1, lettoDa:"Entrambi",},
-                        {id: "586", autore: "Rick Riordan", titolo: "Il campo mezzosangue", copie: 1,lettoDa:"Entrambi", },
-                        {id: "587", autore: "Rick Riordan", titolo: "Il campo giove", copie: 1, lettoDa:"Entrambi",},
-                        {id: "588", autore: "Rick Riordan", titolo: "La spada del guerriero", copie: 1,lettoDa:"Entrambi", },
-                        {id: "589", autore: "Rick Riordan", titolo: "Il libro segreto", copie: 1, lettoDa:"Entrambi",},
-                        {id: "590", autore: "Rick Riordan", titolo: "Eroi dell’olimpo, i racconti perduti", copie: 1, lettoDa:"Entrambi",},
-                        {id: "591", autore: "Rick Riordan", titolo: "Luce e tenebra", copie: 3,lettoDa:"Entrambi", },
-                        {id: "592", autore: "Rick Riordan", titolo: "La Corte dei Mostri", copie: 1,lettoDa:"Entrambi", },
-                        {id: "593", autore: "Rick Riordan", titolo: "Il calice degli Dei", copie: 1, lettoDa:"Entrambi",},
-                        {id: "594", autore: "Rick Riordan", titolo: "Il furore della Dea", copie: 1,lettoDa:"Entrambi", },
-                        {id: "595", autore: "RL Stevenson", titolo: "L’isola del tesoro", copie: 1, lettoDa:"Clo",},
-                        {id: "596", autore: "RL Stevenson", titolo: "Lo strano caso del Dottor Jekyll e Mr Hyde", copie: 1,lettoDa:"Entrambi", },
-                        {id: "597", autore: "Sakae Esuno", titolo: "Mirai Nikki 1", copie: 1, lettoDa: "Clo"},
-                        {id: "598", autore: "Sakae Esuno", titolo: "Mirai Nikki 2", copie: 1, lettoDa: "Clo"},
-                        {id: "599", autore: "Sakae Esuno", titolo: "Mirai Nikki 3", copie: 1, lettoDa: "Clo"},
-                        {id: "600", autore: "Sakae Esuno", titolo: "Mirai Nikki 4", copie: 1, lettoDa: "Clo"},
-                        {id: "601", autore: "Sakae Esuno", titolo: "Mirai Nikki 5", copie: 1, lettoDa: "Clo"},
-                        {id: "602", autore: "Sakae Esuno", titolo: "Mirai Nikki 6", copie: 1, lettoDa: "Clo"},
-                        {id: "603", autore: "Sakae Esuno", titolo: "Mirai Nikki 7", copie: 1, lettoDa: "Clo"},
-                        {id: "604", autore: "Sakae Esuno", titolo: "Mirai Nikki 8", copie: 1, lettoDa: "Clo"},
-                        {id: "605", autore: "Sakae Esuno", titolo: "Mirai Nikki 9", copie: 1, lettoDa: "Clo"},
-                        {id: "606", autore: "Sakae Esuno", titolo: "Mirai Nikki 10", copie: 1, lettoDa: "Clo"},
-                        {id: "607", autore: "Sakae Esuno", titolo: "Mirai Nikki 11", copie: 1, lettoDa: "Clo"},
-                        {id: "608", autore: "Sakae Esuno", titolo: "Mirai Nikki 12", copie: 1, lettoDa: "Clo"},
-                        {id: "609", autore: "Sakae Esuno", titolo: "Mirai Nikki Mosaic", copie: 1, lettoDa: "Clo"},
-                        {id: "610", autore: "Sakae Esuno", titolo: "Mirai Nikki Paradox", copie: 1, lettoDa: "Clo"},
-                        {id: "611", autore: "Samuel Spano", titolo: "Nine Stones 1", copie: 1, lettoDa:"Clo",},
-                        {id: "612", autore: "Samuel Spano", titolo: "Nine Stones 2", copie: 1, lettoDa:"Clo",},
+                        {id: "583", autore: "Rick Riordan", titolo: "Percy Jackson e gli dei greci", copie: 1, lettoDa: "Entrambi", },
+                        {id: "584", autore: "Rick Riordan", titolo: "Percy Jackson e gli eroi greci", copie: 1, lettoDa: "Entrambi", },
+                        {id: "585", autore: "Rick Riordan", titolo: "Le storie segrete Magnus Chase", copie: 1, lettoDa: "Entrambi", },
+                        {id: "586", autore: "Rick Riordan", titolo: "Il campo mezzosangue", copie: 1, lettoDa: "Entrambi", },
+                        {id: "587", autore: "Rick Riordan", titolo: "Il campo giove", copie: 1, lettoDa: "Entrambi", },
+                        {id: "588", autore: "Rick Riordan", titolo: "La spada del guerriero", copie: 1, lettoDa: "Entrambi", },
+                        {id: "589", autore: "Rick Riordan", titolo: "Il libro segreto", copie: 1, lettoDa: "Entrambi", },
+                        {id: "590", autore: "Rick Riordan", titolo: "Eroi dell’olimpo, i racconti perduti", copie: 1, lettoDa: "Entrambi", },
+                        {id: "591", autore: "Rick Riordan", titolo: "Luce e tenebra", copie: 3, lettoDa: "Entrambi", },
+                        {id: "592", autore: "Rick Riordan", titolo: "La Corte dei Mostri", copie: 1, lettoDa: "Entrambi", },
+                        {id: "593", autore: "Rick Riordan", titolo: "Il calice degli Dei", copie: 1, lettoDa: "Entrambi", },
+                        {id: "594", autore: "Rick Riordan", titolo: "Il furore della Dea", copie: 1, lettoDa: "Entrambi", },
+                        {id: "595", autore: "RL Stevenson", titolo: "L’isola del tesoro", copie: 1, lettoDa: "Clo", },
+                        {id: "596", autore: "RL Stevenson", titolo: "Lo strano caso del Dottor Jekyll e Mr Hyde", copie: 1, lettoDa: "Entrambi", },
+                        {id: "597", autore: "Sakae Esuno", titolo: "Mirai Nikki 1", copie: 1, lettoDa: "Clo", },
+                        {id: "598", autore: "Sakae Esuno", titolo: "Mirai Nikki 2", copie: 1, lettoDa: "Clo", },
+                        {id: "599", autore: "Sakae Esuno", titolo: "Mirai Nikki 3", copie: 1, lettoDa: "Clo", },
+                        {id: "600", autore: "Sakae Esuno", titolo: "Mirai Nikki 4", copie: 1, lettoDa: "Clo", },
+                        {id: "601", autore: "Sakae Esuno", titolo: "Mirai Nikki 5", copie: 1, lettoDa: "Clo", },
+                        {id: "602", autore: "Sakae Esuno", titolo: "Mirai Nikki 6", copie: 1, lettoDa: "Clo", },
+                        {id: "603", autore: "Sakae Esuno", titolo: "Mirai Nikki 7", copie: 1, lettoDa: "Clo", },
+                        {id: "604", autore: "Sakae Esuno", titolo: "Mirai Nikki 8", copie: 1, lettoDa: "Clo", },
+                        {id: "605", autore: "Sakae Esuno", titolo: "Mirai Nikki 9", copie: 1, lettoDa: "Clo", },
+                        {id: "606", autore: "Sakae Esuno", titolo: "Mirai Nikki 10", copie: 1, lettoDa: "Clo", },
+                        {id: "607", autore: "Sakae Esuno", titolo: "Mirai Nikki 11", copie: 1, lettoDa: "Clo", },
+                        {id: "608", autore: "Sakae Esuno", titolo: "Mirai Nikki 12", copie: 1, lettoDa: "Clo", },
+                        {id: "609", autore: "Sakae Esuno", titolo: "Mirai Nikki Mosaic", copie: 1, lettoDa: "Clo", },
+                        {id: "610", autore: "Sakae Esuno", titolo: "Mirai Nikki Paradox", copie: 1, lettoDa: "Clo", },
+                        {id: "611", autore: "Samuel Spano", titolo: "Nine Stones 1", copie: 1, lettoDa: "Clo", },
+                        {id: "612", autore: "Samuel Spano", titolo: "Nine Stones 2", copie: 1, lettoDa: "Clo", },
                         {id: "613", autore: "Sandro Veronesi", titolo: "Non dirlo: il vangelo di Marco", copie: 1, },
                         {id: "614", autore: "Saxena And Zimmerman", titolo: "Basic witches", copie: 1, },
-                        {id: "615", autore: "Schneider", titolo: "Heike riprende a respirare", copie: 1,lettoDa:"Clo", },
-                        {id: "616", autore: "Schneider", titolo: "Il rogo di Berlino", copie: 1,lettoDa:"Clo", },
+                        {id: "615", autore: "Schneider", titolo: "Heike riprende a respirare", copie: 1, lettoDa: "Clo", },
+                        {id: "616", autore: "Schneider", titolo: "Il rogo di Berlino", copie: 1, lettoDa: "Clo", },
                         {id: "617", autore: "Schneider", titolo: "Lasciami andare, madre", copie: 1, },
-                        {id: "618", autore: "Sebastian Schutze", titolo: "Caravaggio", copie: 1, lettoDa:"Clo",},
+                        {id: "618", autore: "Sebastian Schutze", titolo: "Caravaggio", copie: 1, lettoDa: "Clo", },
                         {id: "619", autore: "Sergio Risaliti", titolo: "Maratona Michelangelo", copie: 1, },
-                        {id: "620", autore: "Sergio Splendore", titolo: "Giornalismo Ibrido", copie: 1,lettoDa:"Clo", },
+                        {id: "620", autore: "Sergio Splendore", titolo: "Giornalismo Ibrido", copie: 1, lettoDa: "Clo", },
                         {id: "621", autore: "Simon Scarrow", titolo: "Il Gladiatore, il figlio di Spartaco", copie: 1, },
-                        {id: "622", autore: "Snorri Sturluson", titolo: "Edda", copie: 1,lettoDa:"Clo", },
-                        {id: "623", autore: "Stefano Benni", titolo: "La compagnia dei Celestini", copie: 1, lettoDa:"Clo",},
+                        {id: "622", autore: "Snorri Sturluson", titolo: "Edda", copie: 1, lettoDa: "Clo", },
+                        {id: "623", autore: "Stefano Benni", titolo: "La compagnia dei Celestini", copie: 1, lettoDa: "Clo", },
                         {id: "624", autore: "Stefano Benni", titolo: "Di tutte le ricchezze", copie: 1, },
                         {id: "625", autore: "Stefano Benni", titolo: "Giura", copie: 1, },
-                        {id: "626", autore: "Stephanie Meyer", titolo: "Twilight", copie: 1,lettoDa:"Clo", },
-                        {id: "627", autore: "Stephanie Meyer", titolo: "New Moon", copie: 1,lettoDa:"Clo", },
-                        {id: "628", autore: "Stephanie Meyer", titolo: "Eclipse", copie: 1,lettoDa:"Clo", },
-                        {id: "629", autore: "Stephanie Meyer", titolo: "Breaking Dawn", copie: 1, lettoDa:"Clo",},
+                        {id: "626", autore: "Stephanie Meyer", titolo: "Twilight", copie: 1, lettoDa: "Clo", },
+                        {id: "627", autore: "Stephanie Meyer", titolo: "New Moon", copie: 1, lettoDa: "Clo", },
+                        {id: "628", autore: "Stephanie Meyer", titolo: "Eclipse", copie: 1, lettoDa: "Clo", },
+                        {id: "629", autore: "Stephanie Meyer", titolo: "Breaking Dawn", copie: 1, lettoDa: "Clo", },
                         {id: "630", autore: "Stephen King", titolo: "Cuori in Atlantide", copie: 1, },
                         {id: "631", autore: "Susan Smith", titolo: "150 bordi all'uncinetto", copie: 1, },
-                        {id: "632", autore: "Suzanne Collins", titolo: "Hunger Games (versione baby 1,2,3)", copie: 1,lettoDa:"Entrambi", },
-                        {id: "633", autore: "Suzanne Collins", titolo: "Hunger Games", copie: 1, lettoDa:"Entrambi",},
-                        {id: "634", autore: "Suzanne Collins", titolo: "La ragazza di fuoco", copie: 1, lettoDa:"Entrambi",},
-                        {id: "635", autore: "Suzanne Collins", titolo: "Il canto della rivolta", copie: 1, lettoDa:"Entrambi",},
-                        {id: "636", autore: "Suzanne Collins", titolo: "L'alba della mietitura", copie: 1,lettoDa:"Entrambi", },
-                        {id: "637", autore: "Suzanne Collins", titolo: "La ballata dell'usignolo e del serpente", copie: 1,lettoDa:"Entrambi", },
-                        {id: "638", autore: "Teresa Radice, Stefano Turconi", titolo: "Il porto proibito", copie: 1, lettoDa:"Clo",},
+                        {id: "632", autore: "Suzanne Collins", titolo: "Hunger Games (versione baby 1,2,3)", copie: 1, lettoDa: "Entrambi", },
+                        {id: "633", autore: "Suzanne Collins", titolo: "Hunger Games", copie: 1, lettoDa: "Entrambi", },
+                        {id: "634", autore: "Suzanne Collins", titolo: "La ragazza di fuoco", copie: 1, lettoDa: "Entrambi", },
+                        {id: "635", autore: "Suzanne Collins", titolo: "Il canto della rivolta", copie: 1, lettoDa: "Entrambi", },
+                        {id: "636", autore: "Suzanne Collins", titolo: "L'alba della mietitura", copie: 1, lettoDa: "Entrambi", },
+                        {id: "637", autore: "Suzanne Collins", titolo: "La ballata dell'usignolo e del serpente", copie: 1, lettoDa: "Entrambi", },
+                        {id: "638", autore: "Teresa Radice, Stefano Turconi", titolo: "Il porto proibito", copie: 1, lettoDa: "Clo", },
                         {id: "639", autore: "Terry Pratchett e Neil Gaiman", titolo: "Good Omens", copie: 1, },
-                        {id: "640", autore: "Theodoros Papakostas", titolo: "Omero in ascensone", copie: 1,lettoDa:"Clo", },
+                        {id: "640", autore: "Theodoros Papakostas", titolo: "Omero in ascensone", copie: 1, lettoDa: "Clo", },
                         {id: "641", autore: "Thomas Eliot", titolo: "La terra desolata", copie: 1, },
                         {id: "642", autore: "Thomas Malory", titolo: "Storia di Re Artù e i suoi cavalieri", copie: 1, },
                         {id: "643", autore: "Tomani di Lampedua", titolo: "Il gattopardo", copie: 1, },
@@ -1375,325 +1365,353 @@
                         {id: "645", autore: "Toshikazu Kwaguchi", titolo: "Basta un caffè per essere felici", copie: 1, },
                         {id: "646", autore: "Tracy Chevalier", titolo: "La ragazza con l’orecchino di perla", copie: 1, },
                         {id: "647", autore: "Ueda Akinari", titolo: "Racconti di pioggia e di luna", copie: 1, },
-                        {id: "648", autore: "Umberto Eco", titolo: "Il nome della rosa illustrato vol 1", copie: 1, lettoDa:"Clo",},
-                        {id: "649", autore: "Umberto Eco", titolo: "Il nome della rosa illustrato vol 2", copie: 1, lettoDa:"Clo",},
+                        {id: "648", autore: "Umberto Eco", titolo: "Il nome della rosa illustrato vol 1", copie: 1, lettoDa: "Clo", },
+                        {id: "649", autore: "Umberto Eco", titolo: "Il nome della rosa illustrato vol 2", copie: 1, lettoDa: "Clo", },
                         {id: "650", autore: "Ursula K. Le Guin", titolo: "La saga di Terramare", copie: 1, },
-                        {id: "651", autore: "Val Emmich", titolo: "Caro Evan Hansen", copie: 1,lettoDa:"Entrambi", },
-                        {id: "652", autore: "Valentina Meloni", titolo: "Il destino ha la sua puntualità", copie: 1, lettoDa:"Clo",},
+                        {id: "651", autore: "Val Emmich", titolo: "Caro Evan Hansen", copie: 1, lettoDa: "Entrambi", },
+                        {id: "652", autore: "Valentina Meloni", titolo: "Il destino ha la sua puntualità", copie: 1, lettoDa: "Clo", },
                         {id: "653", autore: "Valerio Evangelisti", titolo: "Trilogia dei Pirati", copie: 1, },
-                        {id: "654", autore: "Vercors", titolo: "Le Armi della notte", copie: 1, lettoDa:"Clo",},
-                        {id: "655", autore: "Victor Hugo", titolo: "Notre Dame de Paris", copie: 1, lettoDa:"Clo",},
-                        {id: "656", autore: "Vincet Van Gogh", titolo: "Lettere a Theo", copie: 1, lettoDa:"Clo",},
-                        {id: "657", autore: "Virgilio", titolo: "Eneide", copie: 3,lettoDa:"Entrambi", },
-                        {id: "658", autore: "Virginia Woolf", titolo: "Mrs. Dalloway", copie: 1, lettoDa:"Clo",},
-                        {id: "659", autore: "Voltaire", titolo: "Candido", copie: 1, lettoDa:"Clo",},
+                        {id: "654", autore: "Vercors", titolo: "Le Armi della notte", copie: 1, lettoDa: "Clo", },
+                        {id: "655", autore: "Victor Hugo", titolo: "Notre Dame de Paris", copie: 1, lettoDa: "Clo", },
+                        {id: "656", autore: "Vincet Van Gogh", titolo: "Lettere a Theo", copie: 1, lettoDa: "Clo", },
+                        {id: "657", autore: "Virgilio", titolo: "Eneide", copie: 3, lettoDa: "Entrambi", },
+                        {id: "658", autore: "Virginia Woolf", titolo: "Mrs. Dalloway", copie: 1, lettoDa: "Clo", },
+                        {id: "659", autore: "Voltaire", titolo: "Candido", copie: 1, lettoDa: "Clo", },
                         {id: "660", autore: "Vyvyan Holland", titolo: "Essere figlio di Oscar Wilde", copie: 1, },
                         {id: "661", autore: "Wilhelm Arnold", titolo: "Dizionario di Psicologia", copie: 1, },
-                        {id: "662", autore: "William Beckford", titolo: "Vathek", copie: 1,lettoDa:"Clo", },
+                        {id: "662", autore: "William Beckford", titolo: "Vathek", copie: 1, lettoDa: "Clo", },
                         {id: "663", autore: "William Shakespeare", titolo: "Il mercante di Venezia -edizione nera-", copie: 1, },
                         {id: "664", autore: "William Shakespeare", titolo: "Sogno d'una notte di mezza estate -edizione nera-", copie: 1, },
-                        
-                        { id: "665", autore: "William Shakespeare", titolo: "Enrico IV -edizione nera-", "copie": 1 },
-                        { id: "666", autore: "William Shakespeare", titolo: "Re Giovanni", "copie": 1 },
-                        { id: "667", autore: "William Shakespeare", titolo: "Riccardo II", "copie": 1 },
-                        { id: "668", autore: "William Shakespeare", titolo: "Enrico IV (Parte prima)", "copie": 1 },
-                        { id: "669", autore: "William Shakespeare", titolo: "Enrico IV (Parte seconda)", "copie": 1 },
-                        { id: "670", autore: "William Shakespeare", titolo: "Enrico V", "copie": 1 },
-                        { id: "671", autore: "William Shakespeare", titolo: "Enrico VI (Parte prima)", "copie": 1 },
-                        { id: "672", autore: "William Shakespeare", titolo: "Enrico VI (Parte seconda)", "copie": 1 },
-                        { id: "673", autore: "William Shakespeare", titolo: "Enrico VI (Parte terza)", "copie": 1 },
-                        { id: "674", autore: "William Shakespeare", titolo: "Riccardo III", "copie": 1 },
-                        { id: "675", autore: "William Shakespeare", titolo: "Enrico VIII", "copie": 1 },
-                        { id: "676", autore: "William Shakespeare", titolo: "La commedia degli errori", "copie": 1 },
-                        { id: "677", autore: "William Shakespeare", titolo: "La bisbetica domata", "copie": 1 },
-                        { id: "678", autore: "William Shakespeare", titolo: "I due gentiluomini di Verona", "copie": 1 },
-                        { id: "679", autore: "William Shakespeare", titolo: "Pene d'amor perdute", "copie": 1 },
-                        { id: "680", autore: "William Shakespeare", titolo: "Sogno di una notte di mezza estate", "copie": 1 },
-                        { id: "681", autore: "William Shakespeare", titolo: "Il mercante di Venezia", "copie": 1 },
-                        { id: "682", autore: "William Shakespeare", titolo: "Le allegre comari di Windsor", "copie": 1 },
-                        { id: "683", autore: "William Shakespeare", titolo: "Molto rumore per nulla", "copie": 1 },
-                        { id: "684", autore: "William Shakespeare", titolo: "Come vi piace", "copie": 1 },
-                        { id: "685", autore: "William Shakespeare", titolo: "La dodicesima notte", "copie": 1 },
-                        { id: "686", autore: "William Shakespeare", titolo: "Misura per misura", "copie": 1 },
-                        { id: "687", autore: "William Shakespeare", titolo: "Tutto è bene quel che finisce bene", "copie": 1 },
-                        { id: "688", autore: "William Shakespeare", titolo: "Pericle, principe di Tiro", "copie": 1 },
-                        { id: "689", autore: "William Shakespeare", titolo: "Cimbelino", "copie": 1 },
-                        { id: "690", autore: "William Shakespeare", titolo: "Il racconto d'inverno", "copie": 1 },
-                        { id: "691", autore: "William Shakespeare", titolo: "La tempesta", "copie": 1 },
-                        { id: "692", autore: "William Shakespeare", titolo: "I due nobili congiunti", "copie": 1 },
-                        { id: "693", autore: "William Shakespeare", titolo: "Tito Andronico", "copie": 1 },
-                        { id: "694", autore: "William Shakespeare", titolo: "Romeo e Giulietta", "copie": 1 },
-                        { id: "695", autore: "William Shakespeare", titolo: "Giulio Cesare", "copie": 1 },
-                        { id: "696", autore: "William Shakespeare", titolo: "Amleto", "copie": 1 },
-                        { id: "697", autore: "William Shakespeare", titolo: "Otello", "copie": 1 },
-                        { id: "698", autore: "William Shakespeare", titolo: "Re Lear", "copie": 1 },
-                        { id: "699", autore: "William Shakespeare", titolo: "Macbeth", "copie": 1 },
-                        { id: "700", autore: "William Shakespeare", titolo: "Antonio e Cleopatra", "copie": 1 },
-                        { id: "701", autore: "William Shakespeare", titolo: "Coriolano", "copie": 1 },
-                        { id: "702", autore: "William Shakespeare", titolo: "Timone d'Atene", "copie": 1 },
-                        { id: "703", autore: "William Shakespeare", titolo: "Troilo e Cressida", "copie": 1 },
-                        { id: "704", autore: "William Shakespeare", titolo: "I Sonetti e Poemi", "copie": 1 },
-                        { id: "705", autore: "Yoshida Shuici", titolo: "Appartamento 401", "copie": 1, "lettoDa": "Maki" },
-                        { id: "706", autore: "Zecharia Sitchin", titolo: "Gli dei dalle lacrime d’oro", "copie": 1 },
-                        { id: "707", autore: "Zecharia Sitchin", titolo: "Il codice del cosmo", "copie": 1 },
-                        { id: "708", autore: "Zecharia Sitchin", titolo: "Il pianeta degli dei", "copie": 1 },
-                        { id: "709", autore: "Zeffiro Ciuffoletti", titolo: "Breve storia sociale della comunicazione", "copie": 1, "lettoDa": "Clo" },
-                        { id: "710", autore: "haey1", titolo: "All my cards are here", "copie": 2, "lettoDa": "Entrambi" },
-                        { id: "711", autore: "MsKingBean89", titolo: "All the young dudes 1", "copie": 1, "lettoDa": "Entrambi" },
-                        { id: "712", autore: "MsKingBean89", titolo: "All the young dudes 2", "copie": 1, "lettoDa": "Entrambi" },
-                        { id: "713", autore: "MsKingBean89", titolo: "All the young dudes 3", "copie": 1, "lettoDa": "Clo" },
-                        { id: "714", autore: "Mastellaro", titolo: "Il libro delle citazioni latine e greche", "copie": 1 },
-                        { id: "715", autore: "", titolo: "Lirici Greci", "copie": 1 },
-                        { id: "716", autore: "", titolo: "Astronomia: un’introduzione all’universo delle stelle", "copie": 1, "lettoDa": "Clo" },
-                        { id: "717", autore: "", titolo: "I capolavori dell’arte: Van Gogh girasoli", "copie": 1, "lettoDa": "Clo" },
-                        { id: "718", autore: "", titolo: "Alessandro Magno - i protagonisti della storia", "copie": 1 },
-                        { id: "719", autore: "", titolo: "Augusto - i protagonisti della storia", "copie": 1 },
-                        { id: "720", autore: "", titolo: "Grandi miti Greci - Apollo", "copie": 1 },
-                        { id: "721", autore: "", titolo: "La bella e la bestia, edizione Ippocampo", "copie": 1, "lettoDa": "Clo" },
-                        { id: "722", autore: "", titolo: "C’era una svolta, 18 favole con un finale diverso", "copie": 1 },
-                        { id: "723", autore: "", titolo: "Castlevania Artbook", "copie": 1, "lettoDa": "Clo" },
-                        { id: "724", autore: "", titolo: "Batman volume 1", "copie": 1, "lettoDa": "Clo" },
-                        { id: "725", autore: "Lightning Strikes", titolo: "Sheith Artbook 1", "copie": 1, "lettoDa": "Entrambi" },
-                        { id: "726", autore: "Lightning Strikes", titolo: "Sheith Artbook 2", "copie": 1, "lettoDa": "Entrambi" },
-                        { id: "727", autore: "Lightning Strikes", titolo: "Sheith Artbook 3", "copie": 1, "lettoDa": "Entrambi" },
-                        { id: "728", autore: "Lightning Strikes", titolo: "Stucky Artbook", "copie": 1, "lettoDa": "Entrambi" },
-                        { id: "729", autore: "Vèna e Xelessia", titolo: "Mismatch 1", "copie": 1, "lettoDa": "Clo" },
-                        { id: "730", autore: "Vèna e Xelessia", titolo: "Mismatch 2", "copie": 1, "lettoDa": "Clo" },
-                        { id: "731", autore: "Vèna e Xelessia", titolo: "Shades of us Artbook", "copie": 1, "lettoDa": "Entrambi" },
-                        { id: "732", autore: "Yuto Tsukuda, Shun Saeki, Eiichirō Oda", titolo: "Sanji Food Wars", "copie": 1, "lettoDa": "Clo" },
-                        { id: "733", autore: "", titolo: "The vikings runes (fotocopiato)", "copie": 1, "lettoDa": "Clo" },
-                        { id: "734", autore: "Diego Meldi", titolo: "Tarocchi, Il manuale completo", "copie": 1, "lettoDa": "Clo" },
-                        { id: "735", autore: "", titolo: "Dizionario illustrato di mitologia greco e romana", "copie": 1 },
-                        { id: "736", autore: "", titolo: "Bibbia", "copie": 1 },
-                        { id: "737", autore: "", titolo: "DDR Museum guida - il libro dell'esposizione", "copie": 1 },
+                        {id: "665", autore: "William Shakespeare", titolo: "Enrico IV -edizione nera-",copie: 1 },
+                        {id: "666", autore: "William Shakespeare", titolo: "Re Giovanni",copie: 1 },
+                        {id: "667", autore: "William Shakespeare", titolo: "Riccardo II",copie: 1 },
+                        {id: "668", autore: "William Shakespeare", titolo: "Enrico IV (Parte prima)",copie: 1 },
+                        {id: "669", autore: "William Shakespeare", titolo: "Enrico IV (Parte seconda)",copie: 1 },
+                        {id: "670", autore: "William Shakespeare", titolo: "Enrico V",copie: 1 },
+                        {id: "671", autore: "William Shakespeare", titolo: "Enrico VI (Parte prima)",copie: 1 },
+                        {id: "672", autore: "William Shakespeare", titolo: "Enrico VI (Parte seconda)",copie: 1 },
+                        {id: "673", autore: "William Shakespeare", titolo: "Enrico VI (Parte terza)",copie: 1 },
+                        {id: "674", autore: "William Shakespeare", titolo: "Riccardo III",copie: 1 },
+                        {id: "675", autore: "William Shakespeare", titolo: "Enrico VIII",copie: 1 },
+                        {id: "676", autore: "William Shakespeare", titolo: "La commedia degli errori",copie: 1 },
+                        {id: "677", autore: "William Shakespeare", titolo: "La bisbetica domata",copie: 1 },
+                        {id: "678", autore: "William Shakespeare", titolo: "I due gentiluomini di Verona",copie: 1 },
+                        {id: "679", autore: "William Shakespeare", titolo: "Pene d'amor perdute",copie: 1 },
+                        {id: "680", autore: "William Shakespeare", titolo: "Sogno di una notte di mezza estate",copie: 1 },
+                        {id: "681", autore: "William Shakespeare", titolo: "Il mercante di Venezia",copie: 1 },
+                        {id: "682", autore: "William Shakespeare", titolo: "Le allegre comari di Windsor",copie: 1 },
+                        {id: "683", autore: "William Shakespeare", titolo: "Molto rumore per nulla",copie: 1 },
+                        {id: "684", autore: "William Shakespeare", titolo: "Come vi piace",copie: 1 },
+                        {id: "685", autore: "William Shakespeare", titolo: "La dodicesima notte",copie: 1 },
+                        {id: "686", autore: "William Shakespeare", titolo: "Misura per misura",copie: 1 },
+                        {id: "687", autore: "William Shakespeare", titolo: "Tutto è bene quel che finisce bene",copie: 1 },
+                        {id: "688", autore: "William Shakespeare", titolo: "Pericle, principe di Tiro",copie: 1 },
+                        {id: "689", autore: "William Shakespeare", titolo: "Cimbelino",copie: 1 },
+                        {id: "690", autore: "William Shakespeare", titolo: "Il racconto d'inverno",copie: 1 },
+                        {id: "691", autore: "William Shakespeare", titolo: "La tempesta",copie: 1 },
+                        {id: "692", autore: "William Shakespeare", titolo: "I due nobili congiunti",copie: 1 },
+                        {id: "693", autore: "William Shakespeare", titolo: "Tito Andronico",copie: 1 },
+                        {id: "694", autore: "William Shakespeare", titolo: "Romeo e Giulietta",copie: 1 },
+                        {id: "695", autore: "William Shakespeare", titolo: "Giulio Cesare",copie: 1 },
+                        {id: "696", autore: "William Shakespeare", titolo: "Amleto",copie: 1 },
+                        {id: "697", autore: "William Shakespeare", titolo: "Otello",copie: 1 },
+                        {id: "698", autore: "William Shakespeare", titolo: "Re Lear",copie: 1 },
+                        {id: "699", autore: "William Shakespeare", titolo: "Macbeth",copie: 1 },
+                        {id: "700", autore: "William Shakespeare", titolo: "Antonio e Cleopatra",copie: 1 },
+                        {id: "701", autore: "William Shakespeare", titolo: "Coriolano",copie: 1 },
+                        {id: "702", autore: "William Shakespeare", titolo: "Timone d'Atene",copie: 1 },
+                        {id: "703", autore: "William Shakespeare", titolo: "Troilo e Cressida",copie: 1 },
+                        {id: "704", autore: "William Shakespeare", titolo: "I Sonetti e Poemi",copie: 1 },
+                        {id: "705", autore: "Yoshida Shuici", titolo: "Appartamento 401",copie: 1, "lettoDa": "Maki", },
+                        {id: "706", autore: "Zecharia Sitchin", titolo: "Gli dei dalle lacrime d’oro",copie: 1 },
+                        {id: "707", autore: "Zecharia Sitchin", titolo: "Il codice del cosmo",copie: 1 },
+                        {id: "708", autore: "Zecharia Sitchin", titolo: "Il pianeta degli dei",copie: 1 },
+                        {id: "709", autore: "Zeffiro Ciuffoletti", titolo: "Breve storia sociale della comunicazione",copie: 1, "lettoDa": "Clo", },
+                        {id: "710", autore: "haey1", titolo: "All my cards are here",copie: 2, "lettoDa": "Entrambi", },
+                        {id: "711", autore: "MsKingBean89", titolo: "All the young dudes 1",copie: 1, "lettoDa": "Entrambi", },
+                        {id: "712", autore: "MsKingBean89", titolo: "All the young dudes 2",copie: 1, "lettoDa": "Entrambi", },
+                        {id: "713", autore: "MsKingBean89", titolo: "All the young dudes 3",copie: 1, "lettoDa": "Clo", },
+                        {id: "714", autore: "Mastellaro", titolo: "Il libro delle citazioni latine e greche",copie: 1 },
+                        {id: "715", autore: "", titolo: "Lirici Greci",copie: 1 },
+                        {id: "716", autore: "", titolo: "Astronomia: un’introduzione all’universo delle stelle",copie: 1, "lettoDa": "Clo", },
+                        {id: "717", autore: "", titolo: "I capolavori dell’arte: Van Gogh girasoli",copie: 1, "lettoDa": "Clo", },
+                        {id: "718", autore: "", titolo: "Alessandro Magno - i protagonisti della storia",copie: 1 },
+                        {id: "719", autore: "", titolo: "Augusto - i protagonisti della storia",copie: 1 },
+                        {id: "720", autore: "", titolo: "Grandi miti Greci - Apollo",copie: 1 },
+                        {id: "721", autore: "", titolo: "La bella e la bestia, edizione Ippocampo",copie: 1, "lettoDa": "Clo", },
+                        {id: "722", autore: "", titolo: "C’era una svolta, 18 favole con un finale diverso",copie: 1 },
+                        {id: "723", autore: "", titolo: "Castlevania Artbook",copie: 1, "lettoDa": "Clo", },
+                        {id: "724", autore: "", titolo: "Batman volume 1",copie: 1, "lettoDa": "Clo", },
+                        {id: "725", autore: "Lightning Strikes", titolo: "Sheith Artbook 1",copie: 1, "lettoDa": "Entrambi", },
+                        {id: "726", autore: "Lightning Strikes", titolo: "Sheith Artbook 2",copie: 1, "lettoDa": "Entrambi", },
+                        {id: "727", autore: "Lightning Strikes", titolo: "Sheith Artbook 3",copie: 1, "lettoDa": "Entrambi", },
+                        {id: "728", autore: "Lightning Strikes", titolo: "Stucky Artbook",copie: 1, "lettoDa": "Entrambi", },
+                        {id: "729", autore: "Vèna e Xelessia", titolo: "Mismatch 1",copie: 1, "lettoDa": "Clo", },
+                        {id: "730", autore: "Vèna e Xelessia", titolo: "Mismatch 2",copie: 1, "lettoDa": "Clo", },
+                        {id: "731", autore: "Vèna e Xelessia", titolo: "Shades of us Artbook",copie: 1, "lettoDa": "Entrambi", },
+                        {id: "732", autore: "Yuto Tsukuda, Shun Saeki, Eiichirō Oda", titolo: "Sanji Food Wars",copie: 1, "lettoDa": "Clo", },
+                        {id: "733", autore: "", titolo: "The vikings runes (fotocopiato)",copie: 1, "lettoDa": "Clo", },
+                        {id: "734", autore: "Diego Meldi", titolo: "Tarocchi, Il manuale completo",copie: 1, "lettoDa": "Clo", },
+                        {id: "735", autore: "", titolo: "Dizionario illustrato di mitologia greco e romana",copie: 1 },
+                        {id: "736", autore: "", titolo: "Bibbia",copie: 1 },
+                        {id: "737", autore: "", titolo: "DDR Museum guida - il libro dell'esposizione",copie: 1 },
                     ];
      
-        let libri = JSON.parse(localStorage.getItem('libreria_calda_v9_1'));
-        if (!libri || libri.length === 0) {
-            libri = defaultBooks;
-            localStorage.setItem('libreria_calda_v9_1', JSON.stringify(libri));
-        }
-
-        let selectedReader = "";
-        let selectedAuthor = "";
-        let html5QrCode = null;
-
-        const bookForm = document.getElementById('bookForm');
-        const formCard = document.getElementById('formCard');
-        const authorsList = document.getElementById('authorsList');
-        const searchInput = document.getElementById('searchInput');
-        const statsBar = document.getElementById('statsBar');
-        const authorPillsBar = document.getElementById('authorPillsBar');
+        let currentReaderFilter = "";
+        let currentAuthorFilter = "";
 
         function toggleForm() {
-            if (formCard.style.display === 'block' && document.getElementById('editId').value === '') {
+            const formCard = document.getElementById('formCard');
+            if (formCard.style.display === 'block') {
                 formCard.style.display = 'none';
-                chiudiScanner();
             } else {
-                resetFormToCreate();
                 formCard.style.display = 'block';
+                formCard.scrollIntoView({ behavior: 'smooth' });
             }
         }
 
-        function resetFormToCreate() {
-            bookForm.reset();
-            document.getElementById('editId').value = '';
-            document.getElementById('formTitle').textContent = "Aggiungi un Nuovo Libro";
-            document.getElementById('submitBtn').textContent = "Salva Libro";
-            document.getElementById('scanner-section').style.display = 'block';
-            document.getElementById('cancelEditBtn').style.display = 'none';
-        }
-
         function setReaderFilter(reader) {
-            selectedReader = reader;
+            currentReaderFilter = reader;
             document.querySelectorAll('#readerPillsBar .filter-pill').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.value === reader);
+                if (btn.getAttribute('data-value') === reader) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
             });
             renderLibrary();
         }
 
         function setAuthorFilter(author) {
-            selectedAuthor = (selectedAuthor === author) ? "" : author;
+            currentAuthorFilter = (currentAuthorFilter === author) ? "" : author;
+            renderAuthorsFilter();
             renderLibrary();
         }
 
-        function avviaScanner() {
-            const container = document.getElementById('reader-container');
-            container.style.display = 'block';
-            if (!html5QrCode) html5QrCode = new Html5Qrcode("reader");
-            html5QrCode.start(
-                {facingMode: "environment"},
-                {fps: 10, qrbox: {width: 250, height: 100}},
-                (decodedText) => {chiudiScanner(); cercaLibroAutomatico(decodedText);},
-                () => { }
-            ).catch(err => alert("Errore fotocamera: " + err));
-        }
-
-        function chiudiScanner() {
-            if (html5QrCode && html5QrCode.isScanning) {
-                html5QrCode.stop().then(() => document.getElementById('reader-container').style.display = 'none');
-            } else {
-                document.getElementById('reader-container').style.display = 'none';
-            }
-        }
-
-        async function cercaLibroAutomatico(query) {
-            query = query.trim();
-            if (/^\d{10,13}$/.test(query)) {
-                document.getElementById('isbn').value = query;
-                let res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${query}`);
-                let dati = await res.json();
-                if (dati.totalItems > 0) {
-                    let info = dati.items[0].volumeInfo;
-                    if (info.title) document.getElementById('titolo').value = info.title;
-                    if (info.authors) document.getElementById('autore').value = info.authors.join(", ");
-                    return;
-                }
-            }
-            alert("Libro non trovato automaticamente. Inserisci i dati a mano.");
-        }
-
-        function cercaPerTitoloWeb() {
-            let termine = prompt("Inserisci il Titolo o l'Autore da cercare:");
-            if (termine) alert("Funzione di ricerca attiva per: " + termine);
-        }
-
-        bookForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const idEdit = document.getElementById('editId').value;
-
-            const nuovoLibro = {
-                id: idEdit ? idEdit : Date.now().toString(),
-                titolo: document.getElementById('titolo').value,
-                autore: document.getElementById('autore').value,
-                isbn: document.getElementById('isbn').value,
-                copie: parseInt(document.getElementById('copie').value) || 1,
-                lettoDa: document.getElementById('lettoDa').value
-            };
-
-            if (idEdit) {
-                const index = libri.findIndex(l => l.id === idEdit);
-                if (index !== -1) libri[index] = nuovoLibro;
-            } else {
-                libri.push(nuovoLibro);
-            }
-
-            localStorage.setItem('libreria_calda_v9_1', JSON.stringify(libri));
-            resetFormToCreate();
-            formCard.style.display = 'none';
-            renderLibrary();
-        });
-
-        function eliminaLibro(id) {
-            if (confirm("Vuoi davvero eliminare questo libro?")) {
-                libri = libri.filter(l => l.id !== id);
-                localStorage.setItem('libreria_calda_v9_1', JSON.stringify(libri));
-                renderLibrary();
-            }
-        }
-
-        function modificaLibro(id) {
-            const libro = libri.find(l => l.id === id);
-            if (!libro) return;
-            document.getElementById('editId').value = libro.id;
-            document.getElementById('titolo').value = libro.titolo;
-            document.getElementById('autore').value = libro.autore;
-            document.getElementById('isbn').value = libro.isbn || '';
-            document.getElementById('copie').value = libro.copie || 1;
-            document.getElementById('lettoDa').value = libro.lettoDa || 'Nessuno';
-
-            document.getElementById('formTitle').textContent = "Modifica Libro";
-            document.getElementById('submitBtn').textContent = "Aggiorna Libro";
-            document.getElementById('scanner-section').style.display = 'none';
-            document.getElementById('cancelEditBtn').style.display = 'block';
-            formCard.style.display = 'block';
-            formCard.scrollIntoView({behavior: 'smooth'});
+        function renderAuthorsFilter() {
+            const authorsBar = document.getElementById('authorPillsBar');
+            const authorsSet = [...new Set(books.map(b => b.autore))].sort();
+            
+            let html = `<button class="filter-pill ${currentAuthorFilter === '' ? 'active' : ''}" onclick="setAuthorFilter('')"><span>Tutti gli autori</span></button>`;
+            authorsSet.forEach(author => {
+                html += `<button class="filter-pill ${currentAuthorFilter === author ? 'active' : ''}" onclick="setAuthorFilter('${author.replace(/'/g, "\\'")}')"><span>${author}</span></button>`;
+            });
+            authorsBar.innerHTML = html;
         }
 
         function renderLibrary() {
-            const searchVal = searchInput.value.toLowerCase();
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            const authorsList = document.getElementById('authorsList');
+            const statsBar = document.getElementById('statsBar');
 
-            const filtrati = libri.filter(l => {
-                const matchSearch = l.titolo.toLowerCase().includes(searchVal) || l.autore.toLowerCase().includes(searchVal);
-                const matchReader = !selectedReader || (l.lettoDa || 'Nessuno') === selectedReader;
-                const matchAuthor = !selectedAuthor || l.autore === selectedAuthor;
-                return matchSearch && matchReader && matchAuthor;
+            let filteredBooks = books.filter(b => {
+                const matchesSearch = b.titolo.toLowerCase().includes(searchQuery) || b.autore.toLowerCase().includes(searchQuery);
+                const matchesAuthor = currentAuthorFilter === "" || b.autore === currentAuthorFilter;
+                
+                let matchesReader = true;
+                if (currentReaderFilter === "Nessuno") {
+                    matchesReader = !b.lettoDa || b.lettoDa === "Nessuno";
+                } else if (currentReaderFilter !== "") {
+                    matchesReader = b.lettoDa === currentReaderFilter;
+                }
+
+                return matchesSearch && matchesAuthor && matchesReader;
             });
 
-            // Statistiche
-            const lettiClo = libri.filter(l => l.lettoDa === 'Clo' || l.lettoDa === 'Entrambi').length;
-            const lettiMaki = libri.filter(l => l.lettoDa === 'Maki' || l.lettoDa === 'Entrambi').length;
-            statsBar.innerHTML = `<span>Collezione totale: <strong>${libri.length}</strong></span><span>Letti da Clo: <strong>${lettiClo}</strong></span><span>Letti da Maki: <strong>${lettiMaki}</strong></span>`;
-
-            // Aggiorna lista autori nella sidebar
-            const autoriUnici = [...new Set(libri.map(l => l.autore))].sort();
-            authorPillsBar.innerHTML = `<button class="filter-pill ${selectedAuthor === '' ? 'active' : ''}" onclick="setAuthorFilter('')"><span>Tutti gli autori</span></button>`;
-
-            autoriUnici.forEach(autore => {
-                const count = libri.filter(l => l.autore === autore).length;
-                authorPillsBar.innerHTML += `<button class="filter-pill ${selectedAuthor === autore ? 'active' : ''}" onclick="setAuthorFilter('${autore.replace(/'/g, "\\'")}')"><span>${autore}</span><span class="author-badge">${count}</span></button>`;
+            // Calcolo dei conteggi sui libri attualmente filtrati
+            let makiCount = 0;
+            let cloCount = 0;
+            filteredBooks.forEach(b => {
+                if (b.lettoDa === "Maki") {
+                    makiCount++;
+                } else if (b.lettoDa === "Clo") {
+                    cloCount++;
+                } else if (b.lettoDa === "Entrambi") {
+                    makiCount++;
+                    cloCount++;
+                }
             });
 
-            if (filtrati.length === 0) {
+            // Aggiornamento della barra delle statistiche affiancata
+            statsBar.innerHTML = `
+                <span>Totale: <strong>${filteredBooks.length}</strong></span>
+                <span style="margin-left: 15px;">📖 Clo: <strong>${cloCount}</strong> su ${filteredBooks.length}</span>
+                <span style="margin-left: 15px;">📖 Maki: <strong>${makiCount} </strong> su ${filteredBooks.length}</span>
+            `;
+
+            if (filteredBooks.length === 0) {
                 authorsList.innerHTML = `<div class="empty-state">Nessun libro trovato con i filtri selezionati.</div>`;
                 return;
             }
 
             // Raggruppa per autore
-            const autoriFiltrati = [...new Set(filtrati.map(l => l.autore))].sort();
+            const grouped = {};
+            filteredBooks.forEach(b => {
+                if (!grouped[b.autore]) grouped[b.autore] = [];
+                grouped[b.autore].push(b);
+            });
 
-            let html = '';
-            autoriFiltrati.forEach(autore => {
-                const libriAutore = filtrati.filter(l => l.autore === autore);
-                const isAuthorActive = (selectedAuthor !== "" && selectedAuthor === autore) || autoriFiltrati.length === 1;
-
+            let html = "";
+            for (const [author, authorBooks] of Object.entries(grouped).sort()) {
                 html += `
-                    <div class="author-item ${isAuthorActive ? 'active' : ''}">
+                    <div class="author-item">
                         <div class="author-header" onclick="this.parentElement.classList.toggle('active')">
                             <div class="author-name">
-                                <span>${autore}</span>
-                                <span class="author-badge">${libriAutore.length}</span>
+                                <span>${author}</span>
+                                <span class="author-badge">${authorBooks.length}</span>
                             </div>
                             <span>▾</span>
                         </div>
                         <div class="author-content">
                 `;
 
-                libriAutore.forEach(libro => {
-                    let statusClass = 'nessuno';
-                    let statusText = 'Non letto';
-                    if (libro.lettoDa === 'Clo') {statusClass = 'clo'; statusText = 'Letto da Clo';}
-                    else if (libro.lettoDa === 'Maki') {statusClass = 'maki'; statusText = 'Letto da Maki';}
-                    else if (libro.lettoDa === 'Entrambi') {statusClass = 'entrambi'; statusText = 'Letto da Entrambi';}
+                authorBooks.forEach(b => {
+                    let statusClass = "nessuno";
+                    let statusText = "Non letto";
+                    if (b.lettoDa === "Clo") { statusClass = "clo"; statusText = "Letto da Clo"; }
+                    else if (b.lettoDa === "Maki") { statusClass = "maki"; statusText = "Letto da Maki"; }
+                    else if (b.lettoDa === "Entrambi") { statusClass = "entrambi"; statusText = "Letto da Entrambi"; }
 
                     html += `
                         <div class="book-card">
                             <div class="book-info">
-                                <h4>${libro.titolo}</h4>
+                                <h4>${b.titolo}</h4>
                                 <div class="book-tags">
                                     <span class="read-status ${statusClass}">${statusText}</span>
-                                    ${libro.copie > 1 ? `<span class="genre-tag">Copie: ${libro.copie}</span>` : ''}
+                                    ${b.copie > 1 ? `<span class="genre-tag">Copie: ${b.copie}</span>` : ''}
                                 </div>
                             </div>
                             <div class="book-actions">
-                                <button class="btn-edit" onclick="modificaLibro('${libro.id}')">Modifica</button>
-                                <button class="btn-delete" onclick="eliminaLibro('${libro.id}')">Elimina</button>
+                                <button class="btn-edit" onclick="editBook('${b.id}')">Modifica</button>
+                                <button class="btn-delete" onclick="deleteBook('${b.id}')">Elimina</button>
                             </div>
                         </div>
                     `;
                 });
 
-                html += `
-                        </div>
-                    </div>
-                `;
-            });
+                html += `</div></div>`;
+            }
 
             authorsList.innerHTML = html;
         }
 
-        // Avvio iniziale
-        renderLibrary();
+        function saveBook(event) {
+            event.preventDefault();
+            const id = document.getElementById('editId').value;
+            const titolo = document.getElementById('titolo').value;
+            const autore = document.getElementById('autore').value;
+            const isbn = document.getElementById('isbn').value;
+            const copie = parseInt(document.getElementById('copie').value) || 1;
+            const lettoDa = document.getElementById('lettoDa').value;
+
+            if (id) {
+                const book = books.find(b => b.id === id);
+                if (book) {
+                    book.titolo = titolo;
+                    book.autore = autore;
+                    book.isbn = isbn;
+                    book.copie = copie;
+                    book.lettoDa = lettoDa;
+                }
+            } else {
+                const newBook = {
+                    id: Date.now().toString(),
+                    titolo,
+                    autore,
+                    isbn,
+                    copie,
+                    lettoDa
+                };
+                books.push(newBook);
+            }
+
+            resetFormToCreate();
+            renderAuthorsFilter();
+            renderLibrary();
+            toggleForm();
+        }
+
+        function editBook(id) {
+            const book = books.find(b => b.id === id);
+            if (!book) return;
+
+            document.getElementById('editId').value = book.id;
+            document.getElementById('titolo').value = book.titolo;
+            document.getElementById('autore').value = book.autore;
+            document.getElementById('isbn').value = book.isbn || '';
+            document.getElementById('copie').value = book.copie || 1;
+            document.getElementById('lettoDa').value = book.lettoDa || 'Nessuno';
+
+            document.getElementById('formTitle').innerText = "Modifica Libro";
+            document.getElementById('submitBtn').innerText = "Aggiorna Libro";
+            document.getElementById('cancelEditBtn').style.display = "block";
+
+            document.getElementById('formCard').style.display = 'block';
+            document.getElementById('formCard').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function deleteBook(id) {
+            if (confirm("Sei sicuro di voler eliminare questo libro?")) {
+                books = books.filter(b => b.id !== id);
+                renderAuthorsFilter();
+                renderLibrary();
+            }
+        }
+
+        function resetFormToCreate() {
+            document.getElementById('bookForm').reset();
+            document.getElementById('editId').value = "";
+            document.getElementById('formTitle').innerText = "Aggiungi un Nuovo Libro";
+            document.getElementById('submitBtn').innerText = "Salva Libro";
+            document.getElementById('cancelEditBtn').style.display = "none";
+        }
+
+        function avviaScanner() {
+            const container = document.getElementById('reader-container');
+            container.style.display = 'block';
+            const html5QrCode = new Html5Qrcode("reader");
+            html5QrCode.start(
+                { facingMode: "environment" },
+                { fps: 10, qrbox: { width: 250, height: 150 } },
+                (decodedText) => {
+                    document.getElementById('isbn').value = decodedText;
+                    chiudiScanner();
+                },
+                (errorMessage) => {}
+            ).catch(err => {
+                alert("Impossibile avviare la fotocamera.");
+                chiudiScanner();
+            });
+            window.activeScanner = html5QrCode;
+        }
+
+        function chiudiScanner() {
+            if (window.activeScanner) {
+                window.activeScanner.stop().then(() => {
+                    document.getElementById('reader-container').style.display = 'none';
+                }).catch(() => {
+                    document.getElementById('reader-container').style.display = 'none';
+                });
+            } else {
+                document.getElementById('reader-container').style.display = 'none';
+            }
+        }
+
+        function cercaPerTitoloWeb() {
+            const titolo = document.getElementById('titolo').value;
+            if (!titolo) {
+                alert("Inserisci prima un titolo nel campo apposito.");
+                return;
+            }
+            window.open(`https://www.google.com/search?q=libro+${encodeURIComponent(titolo)}`, '_blank');
+        }
+
+        // Inizializzazione pagina
+        window.onload = function() {
+            renderAuthorsFilter();
+            renderLibrary();
+        };
+        
     </script>
 </body>
 
