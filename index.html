@@ -767,38 +767,76 @@ function chiudiScanner() {
 async function cercaDatiPerISBN(isbn) {
     if (!isbn) return;
     
-    // Pulisce l'ISBN rimuovendo trattini, spazi o caratteri speciali del codice a barre
+    // Pulisce l'ISBN rimuovendo trattini o spazi indesiderati
     const cleanIsbn = isbn.replace(/[^0-9X]/gi, '').trim();
-    console.log("Cerco ISBN pulito:", cleanIsbn);
-    
     const url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${cleanIsbn}`;
 
     try {
         const response = await fetch(url);
         const data = await response.json();
-        console.log("Risposta ricevuta da Google Books:", data);
         
         if (data.items && data.items.length > 0) {
             const bookInfo = data.items[0].volumeInfo;
             
-            // Compila il titolo
             if (bookInfo.title) {
                 document.getElementById('titolo').value = bookInfo.title;
             }
-
-            // Compila l'autore
             if (bookInfo.authors && bookInfo.authors.length > 0) {
                 document.getElementById('autore').value = bookInfo.authors.join(', ');
             }
             
-            console.log(" Campi compilati con successo!");
+            // Mostra un pop-up visivo a scomparsa sullo schermo del telefono
+            mostraNotificaPopUp("Libro trovato e compilato!", "success");
         } else {
-            alert("Il codice ISBN (" + cleanIsbn + ") è valido ma Google Books non ha trovato questo libro specifico.");
+            mostraNotificaPopUp("ISBN non trovato online", "warning");
         }
     } catch (error) {
-        console.error(" Errore di rete o API:", error);
-        alert("Errore di connessione durante la ricerca online.");
+        console.error("Errore di rete:", error);
+        mostraNotificaPopUp("Errore di connessione", "error");
     }
+}
+
+// Funzione di supporto per creare un pop-up grafico sul telefono
+function mostraNotificaPopUp(messaggio, tipo) {
+    // Rimuove eventuali notifiche precedenti
+    const vecchiaNotifica = document.getElementById('toast-notifica');
+    if (vecchiaNotifica) vecchiaNotifica.remove();
+
+    // Crea l'elemento grafico del pop-up
+    const toast = document.createElement('div');
+    toast.id = 'toast-notifica';
+    toast.textContent = messaggio;
+    
+    // Stile CSS integrato per farlo apparire in basso al centro sullo schermo
+    toast.style.position = 'fixed';
+    toast.style.bottom = '20px';
+    toast.style.left = '50%';
+    toast.style.transform = 'translateX(-50%)';
+    toast.style.padding = '12px 20px';
+    toast.style.borderRadius = '25px';
+    toast.style.color = '#fff';
+    toast.style.fontWeight = 'bold';
+    toast.style.zIndex = '9999';
+    toast.style.boxShadow = '0px 4px 10px rgba(0,0,0,0.3)';
+    toast.style.transition = 'opacity 0.3s ease';
+
+    // Colore in base al tipo di messaggio
+    if (tipo === 'success') {
+        toast.style.backgroundColor = '#28a745'; // Verde
+    } else if (tipo === 'warning') {
+        toast.style.backgroundColor = '#ffc107'; // Giallo/Arancio
+        toast.style.color = '#333';
+    } else {
+        toast.style.backgroundColor = '#dc3545'; // Rosso
+    }
+
+    document.body.appendChild(toast);
+
+    // Fa sparire il pop-up automaticamente dopo 3 secondi
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
 }
         let books = [
                         {id: "1", autore: "A.Summers", titolo: "La fine degli zar", copie: 1, },
