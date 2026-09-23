@@ -767,16 +767,18 @@ function chiudiScanner() {
 async function cercaDatiPerISBN(isbn) {
     if (!isbn) return;
     
-    // Pulisce l'ISBN da spazi o trattini
-    const cleanIsbn = isbn.trim();
+    // Pulisce l'ISBN rimuovendo trattini, spazi o caratteri speciali del codice a barre
+    const cleanIsbn = isbn.replace(/[^0-9X]/gi, '').trim();
+    console.log("Cerco ISBN pulito:", cleanIsbn);
+    
     const url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${cleanIsbn}`;
 
     try {
         const response = await fetch(url);
         const data = await response.json();
+        console.log("Risposta ricevuta da Google Books:", data);
         
-        // Controlla se Google ha trovato risultati
-        if (data.totalItems && data.totalItems > 0) {
+        if (data.items && data.items.length > 0) {
             const bookInfo = data.items[0].volumeInfo;
             
             // Compila il titolo
@@ -784,18 +786,18 @@ async function cercaDatiPerISBN(isbn) {
                 document.getElementById('titolo').value = bookInfo.title;
             }
 
-            // Compila l'autore (se ci sono più autori, li unisce)
+            // Compila l'autore
             if (bookInfo.authors && bookInfo.authors.length > 0) {
                 document.getElementById('autore').value = bookInfo.authors.join(', ');
             }
             
-            alert("Libro trovato con successo!");
+            console.log(" Campi compilati con successo!");
         } else {
-            throw new Error("Nessun libro trovato con questo ISBN.");
+            alert("Il codice ISBN (" + cleanIsbn + ") è valido ma Google Books non ha trovato questo libro specifico.");
         }
     } catch (error) {
-        console.warn(error);
-        alert("ISBN (" + cleanIsbn + ") non trovato online. Inserisci i dati manualmente.");
+        console.error(" Errore di rete o API:", error);
+        alert("Errore di connessione durante la ricerca online.");
     }
 }
         let books = [
