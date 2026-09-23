@@ -764,40 +764,38 @@ function chiudiScanner() {
     }
 }
 
-// Funzione per recuperare titolo e autore da Open Library usando l'ISBN
 async function cercaDatiPerISBN(isbn) {
     if (!isbn) return;
     
-    // Pulisci l'ISBN da spazi o trattini
+    // Pulisce l'ISBN da spazi o trattini
     const cleanIsbn = isbn.trim();
-    const url = `https://openlibrary.org/isbn/${cleanIsbn}.json`;
+    const url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${cleanIsbn}`;
 
     try {
         const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error("Libro non trovato nel database online.");
-        }
         const data = await response.json();
         
-        // Imposta il titolo se presente
-        if (data.title) {
-            document.getElementById('titolo').value = data.title;
-        }
-
-        // Open Library restituisce gli autori come un array di riferimenti (chiavi)
-        if (data.authors && data.authors.length > 0) {
-            const authorKey = data.authors[0].key;
-            const authorResponse = await fetch(`https://openlibrary.org${authorKey}.json`);
-            const authorData = await authorResponse.json();
-            if (authorData.name) {
-                document.getElementById('autore').value = authorData.name;
+        // Controlla se Google ha trovato risultati
+        if (data.totalItems && data.totalItems > 0) {
+            const bookInfo = data.items[0].volumeInfo;
+            
+            // Compila il titolo
+            if (bookInfo.title) {
+                document.getElementById('titolo').value = bookInfo.title;
             }
+
+            // Compila l'autore (se ci sono più autori, li unisce)
+            if (bookInfo.authors && bookInfo.authors.length > 0) {
+                document.getElementById('autore').value = bookInfo.authors.join(', ');
+            }
+            
+            alert("Libro trovato con successo!");
+        } else {
+            throw new Error("Nessun libro trovato con questo ISBN.");
         }
-        
-        alert("Dati del libro recuperati con successo!");
     } catch (error) {
         console.warn(error);
-        alert("ISBN scansionato (" + cleanIsbn + "), ma i dettagli automatici non sono stati trovati. Inseriscili manualmente.");
+        alert("ISBN (" + cleanIsbn + ") non trovato online. Inserisci i dati manualmente.");
     }
 }
         let books = [
