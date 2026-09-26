@@ -157,7 +157,7 @@
             align-items: start;
         }
 
-        /* --- SIDEBAR FILTRI (ACCORDION STILE) --- */
+        /* --- SIDEBAR FILTRI (ACCORDION) --- */
         .sidebar {
             display: flex;
             flex-direction: column;
@@ -439,7 +439,7 @@
         }
 
         .author-content {
-            display: none;
+            display: none; /* Chiuso di default */
             padding: 12px;
             border-top: 1px solid var(--border-color);
             background: #fcfdfd;
@@ -448,7 +448,7 @@
         }
 
         .author-item.active .author-content {
-            display: flex;
+            display: flex; /* Si apre solo se ha la classe active */
         }
 
         .book-card {
@@ -623,7 +623,7 @@
         </header>
 
         <div class="main-layout">
-            <!-- SIDEBAR FILTRI (CHIUSI DI DEFAULT COME ACCORDION) -->
+            <!-- SIDEBAR FILTRI (CHIUSI DI DEFAULT) -->
             <aside class="sidebar">
                 <div class="filter-section" id="filterReader">
                     <div class="filter-header"
@@ -717,7 +717,10 @@
 
     <!-- SCRIPT LOGICO -->
     <script>
-        // Inizializzazione: carica i libri dal localStorage oppure usa quelli di default se è la prima volta
+        let currentReaderFilter = '';
+        let currentAuthorFilter = '';
+        let html5QrCode = null;
+
         let books = JSON.parse(localStorage.getItem('library_books')) || [
                         {id: "1", autore: "A.Summers", titolo: "La fine degli zar", copie: 1, },
                         {id: "2", autore: "Aa. Vv. Pomo di Venerə", titolo: "Cose del Gender. Testimonianze LGBTQIAP+", copie: 1, },
@@ -1458,55 +1461,139 @@
                         {id: "737", autore: "", titolo: "DDR Museum guida - il libro dell'esposizione",copie: 1 },
                     ];
      
-       let currentAuthorFilter = '';
+       function toggleForm() {
+            const formCard = document.getElementById('formCard');
+            if (formCard.style.display === 'block') {
+                formCard.style.display = 'none';
+            } else {
+                formCard.style.display = 'block';
+                resetFormToCreate();
+            }
+        }
 
-        // Funzione per salvare i dati nel localStorage
-        function salvaSuLocalStorage() {
-            localStorage.setItem('library_books', JSON.stringify(books));
+        function setReaderFilter(reader) {
+            currentReaderFilter = reader;
+            document.querySelectorAll('#readerPillsBar .filter-pill').forEach(btn => {
+                if (btn.getAttribute('data-value') === reader) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            renderLibrary();
+        }
+
+        function setAuthorFilter(author) {
+            if (currentAuthorFilter === author) {
+                currentAuthorFilter = '';
+            } else {
+                currentAuthorFilter = author;
+            }
+            renderAuthorPills();
+            renderLibrary();
+        }
+
+        function renderAuthorPills() {
+            const authorPillsBar = document.getElementById('authorPillsBar');
+            const authors = [...new Set(books.map(b => b.autore))].sort();
+            
+            let html = `<button class="filter-pill ${currentAuthorFilter === '' ? 'active' : ''}" onclick="setAuthorFilter('')"><span>Tutti gli autori</span></button>`;
+            authors.forEach(auth => {
+                const activeClass = currentAuthorFilter === auth ? 'active' : '';
+                html += `<button class="filter-pill ${activeClass}" onclick="setAuthorFilter('${auth.replace(/'/g, "\\'")}')"><span>${auth}</span></button>`;
+            });
+            authorPillsBar.innerHTML = html;
         }
 
         function renderLibrary() {
-            const tbody = document.getElementById('libraryTableBody');
-            tbody.innerHTML = '';
+            const searchVal = document.getElementById('searchInput').value.toLowerCase();
+            const authorsList = document.getElementById('authorsList');
+            const statsBar = document.getElementById('statsBar');
 
-            let filteredBooks = books;
-            if (currentAuthorFilter) {
-                filteredBooks = books.filter(b => b.autore === currentAuthorFilter);
-            }
+            let filtered = books.filter(b => {
+                const matchesSearch = b.titolo.toLowerCase().includes(searchVal) || b.autore.toLowerCase().includes(searchVal);
+                const matchesAuthor = currentAuthorFilter === '' || b.autore === currentAuthorFilter;
+                
+                let matchesReader = true;
+                if (currentReaderFilter === 'Nessuno') {
+                    matchesReader = !b.lettoDa || b.lettoDa === 'Nessuno';
+                } else if (currentReaderFilter !== '') {
+                    matchesReader = b.lettoDa === currentReaderFilter;
+                }
+                return matchesSearch && matchesAuthor && matchesReader;
+            });
 
-            if (filteredBooks.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-gray-500">Nessun libro trovato.</td></tr>`;
+            // Statistiche
+            statsBar.innerHTML = `<span>Totale libri visualizzati: <strong>${filtered.length}</strong> (su ${books.length} totali)</span>`;
+
+            if (filtered.length === 0) {
+                authorsList.innerHTML = `<div class="empty-state">Nessun libro trovato con i criteri selezionati.</div>`;
                 return;
             }
 
-            filteredBooks.forEach(book => {
-                const tr = document.createElement('tr');
-                tr.className = "border-b hover:bg-gray-50";
-                tr.innerHTML = `
-                    <td class="py-3 px-4 font-medium text-gray-800">${escapeHtml(book.titolo)}</td>
-                    <td class="py-3 px-4 text-gray-600">${escapeHtml(book.autore)}</td>
-                    <td class="py-3 px-4 text-gray-600">${escapeHtml(book.isbn || '-')}</td>
-                    <td class="py-3 px-4 text-center text-gray-600">${book.copie}</td>
-                    <td class="py-3 px-4 text-gray-600">${escapeHtml(book.lettoDa || '-')}</td>
-                    <td class="py-3 px-4 text-center">
-                        <button onclick="editBook('${book.id}')" class="text-blue-600 hover:text-blue-800 mr-2"><i class="fas fa-edit"></i></button>
-                        <button onclick="deleteBook('${book.id}')" class="text-red-600 hover:text-red-800"><i class="fas fa-trash-alt"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
+            // Raggruppa per autore
+            const grouped = {};
+            filtered.forEach(b => {
+                if (!grouped[b.autore]) grouped[b.autore] = [];
+                grouped[b.autore].push(b);
             });
+
+            let html = '';
+            for (const [author, authBooks] of Object.entries(grouped).sort()) {
+                // NOTA: Senza la classe 'active', l'autore parte chiuso di default e si apre al click sull'header
+                html += `
+                    <div class="author-item">
+                        <div class="author-header" onclick="this.parentElement.classList.toggle('active')">
+                            <div class="author-name">
+                                <span>${author}</span>
+                                <span class="author-badge">${authBooks.length}</span>
+                            </div>
+                            <span>▾</span>
+                        </div>
+                        <div class="author-content">
+                `;
+
+                authBooks.forEach(b => {
+                    let statusClass = 'nessuno';
+                    let statusText = 'Non letto';
+                    if (b.lettoDa === 'Clo') { statusClass = 'clo'; statusText = 'Letto da Clo'; }
+                    else if (b.lettoDa === 'Maki') { statusClass = 'maki'; statusText = 'Letto da Maki'; }
+                    else if (b.lettoDa === 'Entrambi') { statusClass = 'entrambi'; statusText = 'Entrambi'; }
+
+                    html += `
+                        <div class="book-card">
+                            <div class="book-info">
+                                <h4>${b.titolo}</h4>
+                                <div class="book-tags">
+                                    <span class="read-status ${statusClass}">${statusText}</span>
+                                    ${b.copie > 1 ? `<span style="font-size: 0.75rem; color: var(--text-light);">Copie: ${b.copie}</span>` : ''}
+                                </div>
+                            </div>
+                            <div class="book-actions">
+                                <button class="btn-edit" onclick="editBook('${b.id}')">Modifica</button>
+                                <button class="btn-delete" onclick="deleteBook('${b.id}')">Elimina</button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `</div></div>`;
+            }
+
+            authorsList.innerHTML = html;
         }
 
-        function saveBook(event) {
-            event.preventDefault();
+        function saveBook(e) {
+            e.preventDefault();
             const id = document.getElementById('editId').value;
-            const titolo = document.getElementById('titolo').value;
-            const autore = document.getElementById('autore').value;
-            const isbn = document.getElementById('isbn').value;
+            const titolo = document.getElementById('titolo').value.trim();
+            const autore = document.getElementById('autore').value.trim();
+            const isbn = document.getElementById('isbn').value.trim();
             const copie = parseInt(document.getElementById('copie').value) || 1;
             const lettoDa = document.getElementById('lettoDa').value;
 
             if (id) {
+                // Modifica
                 const book = books.find(b => b.id === id);
                 if (book) {
                     book.titolo = titolo;
@@ -1516,6 +1603,7 @@
                     book.lettoDa = lettoDa;
                 }
             } else {
+                // Inserimento
                 const newBook = {
                     id: Date.now().toString(),
                     titolo,
@@ -1527,25 +1615,11 @@
                 books.push(newBook);
             }
 
-            // SALVA NEL LOCALSTORAGE
-            salvaSuLocalStorage();
-
+            localStorage.setItem('library_books', JSON.stringify(books));
             resetFormToCreate();
-            renderAuthorsFilter();
+            document.getElementById('formCard').style.display = 'none';
+            renderAuthorPills();
             renderLibrary();
-            toggleForm();
-        }
-
-        function deleteBook(id) {
-            if (confirm("Sei sicuro di voler eliminare questo libro?")) {
-                books = books.filter(b => b.id !== id);
-                
-                // SALVA NEL LOCALSTORAGE DOPO L'ELIMINAZIONE
-                salvaSuLocalStorage();
-
-                renderAuthorsFilter();
-                renderLibrary();
-            }
         }
 
         function editBook(id) {
@@ -1556,71 +1630,164 @@
             document.getElementById('titolo').value = book.titolo;
             document.getElementById('autore').value = book.autore;
             document.getElementById('isbn').value = book.isbn || '';
-            document.getElementById('copie').value = book.copie;
-            document.getElementById('lettoDa').value = book.lettoDa || '';
+            document.getElementById('copie').value = book.copie || 1;
+            document.getElementById('lettoDa').value = book.lettoDa || 'Nessuno';
 
-            document.getElementById('formTitle').innerText = "Modifica Libro";
-            document.getElementById('submitBtnText').innerText = "Aggiorna Libro";
-            
-            const formContainer = document.getElementById('bookFormContainer');
-            if (formContainer.classList.contains('hidden')) {
-                toggleForm();
-            }
+            document.getElementById('formTitle').innerText = 'Modifica Libro';
+            document.getElementById('submitBtn').innerText = 'Aggiorna Libro';
+            document.getElementById('cancelEditBtn').style.display = 'block';
+            document.getElementById('formCard').style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function deleteBook(id) {
+            if (confirm('Sei sicuro di voler eliminare questo libro?')) {
+                books = books.filter(b => b.id !== id);
+                localStorage.setItem('library_books', JSON.stringify(books));
+                renderAuthorPills();
+                renderLibrary();
+            }
         }
 
         function resetFormToCreate() {
             document.getElementById('bookForm').reset();
             document.getElementById('editId').value = '';
-            document.getElementById('formTitle').innerText = "Aggiungi Nuovo Libro";
-            document.getElementById('submitBtnText').innerText = "Salva Libro";
+            document.getElementById('formTitle').innerText = 'Aggiungi un Nuovo Libro';
+            document.getElementById('submitBtn').innerText = 'Salva Libro';
+            document.getElementById('cancelEditBtn').style.display = 'none';
         }
 
-        function toggleForm() {
-            const container = document.getElementById('bookFormContainer');
-            container.classList.toggle('hidden');
-            if (!container.classList.contains('hidden')) {
-                document.getElementById('titolo').focus();
+        function avviaScanner() {
+            const container = document.getElementById('reader-container');
+            container.style.display = 'block';
+            html5QrCode = new Html5Qrcode("reader");
+            html5QrCode.start(
+                { facingMode: "environment" },
+                { fps: 10, qrbox: { width: 250, height: 100 } },
+                (decodedText) => {
+                    document.getElementById('isbn').value = decodedText;
+                    chiudiScanner();
+                    alert('Codice ISBN scansionato con successo: ' + decodedText);
+                },
+                (error) => {}
+            ).catch(err => {
+                alert("Errore nell'avvio della fotocamera: " + err);
+                container.style.display = 'none';
+            });
+        }
+
+        function chiudiScanner() {
+            if (html5QrCode) {
+                html5QrCode.stop().then(() => {
+                    document.getElementById('reader-container').style.display = 'none';
+                }).catch(err => {
+                    document.getElementById('reader-container').style.display = 'none';
+                });
             } else {
-                resetFormToCreate();
+                document.getElementById('reader-container').style.display = 'none';
             }
         }
 
-        function renderAuthorsFilter() {
-            const select = document.getElementById('authorFilter');
-            const currentVal = select.value;
-            
-            // Estrai autori unici
-            const authors = [...new Set(books.map(b => b.autore))].sort();
+        function cercaPerTitoloWeb() {
+            const titolo = prompt("Inserisci il titolo del libro da cercare sul web:");
+            if (titolo) {
+                window.open(`https://www.google.com/search?q=libro+${encodeURIComponent(titolo)}`, '_blank');
+            }
+        }
+        function renderLibrary() {
+            const searchVal = document.getElementById('searchInput').value.toLowerCase();
+            const authorsList = document.getElementById('authorsList');
+            const statsBar = document.getElementById('statsBar');
 
-            select.innerHTML = '<option value="">Tutti gli autori</option>';
-            authors.forEach(author => {
-                const opt = document.createElement('option');
-                opt.value = author;
-                opt.textContent = author;
-                select.appendChild(opt);
+            let filtered = books.filter(b => {
+                const matchesSearch = b.titolo.toLowerCase().includes(searchVal) || b.autore.toLowerCase().includes(searchVal);
+                const matchesAuthor = currentAuthorFilter === '' || b.autore === currentAuthorFilter;
+                
+                let matchesReader = true;
+                if (currentReaderFilter === 'Nessuno') {
+                    matchesReader = !b.lettoDa || b.lettoDa === 'Nessuno';
+                } else if (currentReaderFilter !== '') {
+                    matchesReader = b.lettoDa === currentReaderFilter;
+                }
+                return matchesSearch && matchesAuthor && matchesReader;
             });
-            select.value = currentVal;
+
+            // Calcolo dei conteggi totali sulla libreria (o sui filtrati)
+            const totalClo = books.filter(b => b.lettoDa === 'Clo').length;
+            const totalMaki = books.filter(b => b.lettoDa === 'Maki').length;
+            const totalEntrambi = books.filter(b => b.lettoDa === 'Entrambi').length;
+            const totalNessuno = books.filter(b => !b.lettoDa || b.lettoDa === 'Nessuno').length;
+
+            // Aggiorna la barra delle statistiche con i contatori individuali
+            statsBar.innerHTML = `
+                <span>Totali: <strong>${filtered.length}</strong> visualizzati (su ${books.length})</span>
+                <div style="display: flex; gap: 10px; font-size: 0.85rem; flex-wrap: wrap;">
+                    <span style="background: var(--clo-bg); color: var(--clo-color); padding: 2px 6px; border-radius: 4px;">Clo: <strong>${totalClo}</strong></span>
+                    <span style="background: var(--maki-bg); color: var(--maki-color); padding: 2px 6px; border-radius: 4px;">Maki: <strong>${totalMaki}</strong></span>
+                  </div>
+            `;
+
+            if (filtered.length === 0) {
+                authorsList.innerHTML = `<div class="empty-state">Nessun libro trovato con i criteri selezionati.</div>`;
+                return;
+            }
+
+            // Raggruppa per autore
+            const grouped = {};
+            filtered.forEach(b => {
+                if (!grouped[b.autore]) grouped[b.autore] = [];
+                grouped[b.autore].push(b);
+            });
+
+            let html = '';
+            for (const [author, authBooks] of Object.entries(grouped).sort()) {
+                html += `
+                    <div class="author-item">
+                        <div class="author-header" onclick="this.parentElement.classList.toggle('active')">
+                            <div class="author-name">
+                                <span>${author}</span>
+                                <span class="author-badge">${authBooks.length}</span>
+                            </div>
+                            <span>▾</span>
+                        </div>
+                        <div class="author-content">
+                `;
+
+                authBooks.forEach(b => {
+                    let statusClass = 'nessuno';
+                    let statusText = 'Non letto';
+                    if (b.lettoDa === 'Clo') { statusClass = 'clo'; statusText = 'Letto da Clo'; }
+                    else if (b.lettoDa === 'Maki') { statusClass = 'maki'; statusText = 'Letto da Maki'; }
+                    else if (b.lettoDa === 'Entrambi') { statusClass = 'entrambi'; statusText = 'Entrambi'; }
+
+                    html += `
+                        <div class="book-card">
+                            <div class="book-info">
+                                <h4>${b.titolo}</h4>
+                                <div class="book-tags">
+                                    <span class="read-status ${statusClass}">${statusText}</span>
+                                    ${b.copie > 1 ? `<span style="font-size: 0.75rem; color: var(--text-light);">Copie: ${b.copie}</span>` : ''}
+                                </div>
+                            </div>
+                            <div class="book-actions">
+                                <button class="btn-edit" onclick="editBook('${b.id}')">Modifica</button>
+                                <button class="btn-delete" onclick="deleteBook('${b.id}')">Elimina</button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `</div></div>`;
+            }
+
+            authorsList.innerHTML = html;
         }
 
-        function filterByAuthor() {
-            currentAuthorFilter = document.getElementById('authorFilter').value;
+        // Inizializzazione iniziale all'avvio della pagina
+        window.onload = function() {
+            renderAuthorPills();
             renderLibrary();
-        }
-
-        function escapeHtml(str) {
-            return str.replace(/&/g, "&amp;")
-                      .replace(/</g, "&lt;")
-                      .replace(/>/g, "&gt;")
-                      .replace(/"/g, "&quot;")
-                      .replace(/'/g, "&#039;");
-        }
-
-        // Avvio iniziale all'apertura della pagina
-        document.addEventListener('DOMContentLoaded', () => {
-            renderAuthorsFilter();
-            renderLibrary();
-        });
+        };
     </script>
 </body>
 
