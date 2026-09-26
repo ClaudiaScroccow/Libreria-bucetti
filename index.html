@@ -717,128 +717,8 @@
 
     <!-- SCRIPT LOGICO -->
     <script>
-        let html5QrCode = null;
-
-// Avvia la fotocamera per scannerizzare l'ISBN
-function avviaScanner() {
-    const container = document.getElementById('reader-container');
-    container.style.display = 'block';
-    
-    if (!html5QrCode) {
-        html5QrCode = new Html5Qrcode("reader");
-    }
-
-    html5QrCode.start(
-        { facingMode: "environment" }, // Usa la fotocamera posteriore se disponibile
-        {
-            fps: 10,
-            qrbox: { width: 250, height: 100 }
-        },
-        (decodedText, decodedResult) => {
-            // Successo nella scansione
-            document.getElementById('isbn').value = decodedText;
-            chiudiScanner();
-            // Cerca automaticamente i dati tramite ISBN
-            cercaDatiPerISBN(decodedText);
-        },
-        (errorMessage) => {
-            // Errori di scansione ignorati per continuità del flusso
-        }
-    ).catch(err => {
-        alert("Impossibile accedere alla fotocamera: " + err);
-        container.style.display = 'none';
-    });
-}
-
-// Chiude la fotocamera
-function chiudiScanner() {
-    if (html5QrCode) {
-        html5QrCode.stop().then(() => {
-            document.getElementById('reader-container').style.display = 'none';
-        }).catch(err => {
-            console.log("Errore durante la chiusura dello scanner", err);
-            document.getElementById('reader-container').style.display = 'none';
-        });
-    } else {
-        document.getElementById('reader-container').style.display = 'none';
-    }
-}
-
-async function cercaDatiPerISBN(isbn) {
-    if (!isbn) return;
-    
-    // Pulisce l'ISBN rimuovendo trattini o spazi indesiderati
-    const cleanIsbn = isbn.replace(/[^0-9X]/gi, '').trim();
-    const url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${cleanIsbn}`;
-
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
-        
-        if (data.items && data.items.length > 0) {
-            const bookInfo = data.items[0].volumeInfo;
-            
-            if (bookInfo.title) {
-                document.getElementById('titolo').value = bookInfo.title;
-            }
-            if (bookInfo.authors && bookInfo.authors.length > 0) {
-                document.getElementById('autore').value = bookInfo.authors.join(', ');
-            }
-            
-            // Mostra un pop-up visivo a scomparsa sullo schermo del telefono
-            mostraNotificaPopUp("Libro trovato e compilato!", "success");
-        } else {
-            mostraNotificaPopUp("ISBN non trovato online", "warning");
-        }
-    } catch (error) {
-        console.error("Errore di rete:", error);
-        mostraNotificaPopUp("Errore di connessione", "error");
-    }
-}
-
-// Funzione di supporto per creare un pop-up grafico sul telefono
-function mostraNotificaPopUp(messaggio, tipo) {
-    // Rimuove eventuali notifiche precedenti
-    const vecchiaNotifica = document.getElementById('toast-notifica');
-    if (vecchiaNotifica) vecchiaNotifica.remove();
-
-    // Crea l'elemento grafico del pop-up
-    const toast = document.createElement('div');
-    toast.id = 'toast-notifica';
-    toast.textContent = messaggio;
-    
-    // Stile CSS integrato per farlo apparire in basso al centro sullo schermo
-    toast.style.position = 'fixed';
-    toast.style.bottom = '20px';
-    toast.style.left = '50%';
-    toast.style.transform = 'translateX(-50%)';
-    toast.style.padding = '12px 20px';
-    toast.style.borderRadius = '25px';
-    toast.style.color = '#fff';
-    toast.style.fontWeight = 'bold';
-    toast.style.zIndex = '9999';
-    toast.style.boxShadow = '0px 4px 10px rgba(0,0,0,0.3)';
-    toast.style.transition = 'opacity 0.3s ease';
-
-    // Colore in base al tipo di messaggio
-    if (tipo === 'success') {
-        toast.style.backgroundColor = '#28a745'; // Verde
-    } else if (tipo === 'warning') {
-        toast.style.backgroundColor = '#ffc107'; // Giallo/Arancio
-        toast.style.color = '#333';
-    } else {
-        toast.style.backgroundColor = '#dc3545'; // Rosso
-    }
-
-    document.body.appendChild(toast);
-
-    // Fa sparire il pop-up automaticamente dopo 3 secondi
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 300);
-    }, 3000);
-}
-        let books = [
+        // Inizializzazione: carica i libri dal localStorage oppure usa quelli di default se è la prima volta
+        let books = JSON.parse(localStorage.getItem('library_books')) || [
                         {id: "1", autore: "A.Summers", titolo: "La fine degli zar", copie: 1, },
                         {id: "2", autore: "Aa. Vv. Pomo di Venerə", titolo: "Cose del Gender. Testimonianze LGBTQIAP+", copie: 1, },
                         {id: "3", autore: "Adriano Fabris", titolo: "L’etica del giornalismo negli attuali scenari comunicativi", copie: 1, lettoDa: "Clo", },
@@ -1578,142 +1458,43 @@ function mostraNotificaPopUp(messaggio, tipo) {
                         {id: "737", autore: "", titolo: "DDR Museum guida - il libro dell'esposizione",copie: 1 },
                     ];
      
-        let currentReaderFilter = "";
-        let currentAuthorFilter = "";
+       let currentAuthorFilter = '';
 
-        function toggleForm() {
-            const formCard = document.getElementById('formCard');
-            if (formCard.style.display === 'block') {
-                formCard.style.display = 'none';
-            } else {
-                formCard.style.display = 'block';
-                formCard.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-
-        function setReaderFilter(reader) {
-            currentReaderFilter = reader;
-            document.querySelectorAll('#readerPillsBar .filter-pill').forEach(btn => {
-                if (btn.getAttribute('data-value') === reader) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
-            renderLibrary();
-        }
-
-        function setAuthorFilter(author) {
-            currentAuthorFilter = (currentAuthorFilter === author) ? "" : author;
-            renderAuthorsFilter();
-            renderLibrary();
-        }
-
-        function renderAuthorsFilter() {
-            const authorsBar = document.getElementById('authorPillsBar');
-            const authorsSet = [...new Set(books.map(b => b.autore))].sort();
-            
-            let html = `<button class="filter-pill ${currentAuthorFilter === '' ? 'active' : ''}" onclick="setAuthorFilter('')"><span>Tutti gli autori</span></button>`;
-            authorsSet.forEach(author => {
-                html += `<button class="filter-pill ${currentAuthorFilter === author ? 'active' : ''}" onclick="setAuthorFilter('${author.replace(/'/g, "\\'")}')"><span>${author}</span></button>`;
-            });
-            authorsBar.innerHTML = html;
+        // Funzione per salvare i dati nel localStorage
+        function salvaSuLocalStorage() {
+            localStorage.setItem('library_books', JSON.stringify(books));
         }
 
         function renderLibrary() {
-            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
-            const authorsList = document.getElementById('authorsList');
-            const statsBar = document.getElementById('statsBar');
+            const tbody = document.getElementById('libraryTableBody');
+            tbody.innerHTML = '';
 
-            let filteredBooks = books.filter(b => {
-                const matchesSearch = b.titolo.toLowerCase().includes(searchQuery) || b.autore.toLowerCase().includes(searchQuery);
-                const matchesAuthor = currentAuthorFilter === "" || b.autore === currentAuthorFilter;
-                
-                let matchesReader = true;
-                if (currentReaderFilter === "Nessuno") {
-                    matchesReader = !b.lettoDa || b.lettoDa === "Nessuno";
-                } else if (currentReaderFilter !== "") {
-                    matchesReader = b.lettoDa === currentReaderFilter;
-                }
-
-                return matchesSearch && matchesAuthor && matchesReader;
-            });
-
-            // Calcolo dei conteggi sui libri attualmente filtrati
-            let makiCount = 0;
-            let cloCount = 0;
-            filteredBooks.forEach(b => {
-                if (b.lettoDa === "Maki") {
-                    makiCount++;
-                } else if (b.lettoDa === "Clo") {
-                    cloCount++;
-                } else if (b.lettoDa === "Entrambi") {
-                    makiCount++;
-                    cloCount++;
-                }
-            });
-
-            // Aggiornamento della barra delle statistiche affiancata
-            statsBar.innerHTML = `
-                <span>Totale: <strong>${filteredBooks.length}</strong></span>
-                <span style="margin-left: 15px;">📖 Clo: <strong>${cloCount}</strong> su ${filteredBooks.length}</span>
-                <span style="margin-left: 15px;">📖 Maki: <strong>${makiCount} </strong> su ${filteredBooks.length}</span>
-            `;
+            let filteredBooks = books;
+            if (currentAuthorFilter) {
+                filteredBooks = books.filter(b => b.autore === currentAuthorFilter);
+            }
 
             if (filteredBooks.length === 0) {
-                authorsList.innerHTML = `<div class="empty-state">Nessun libro trovato con i filtri selezionati.</div>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-gray-500">Nessun libro trovato.</td></tr>`;
                 return;
             }
 
-            // Raggruppa per autore
-            const grouped = {};
-            filteredBooks.forEach(b => {
-                if (!grouped[b.autore]) grouped[b.autore] = [];
-                grouped[b.autore].push(b);
-            });
-
-            let html = "";
-            for (const [author, authorBooks] of Object.entries(grouped).sort()) {
-                html += `
-                    <div class="author-item">
-                        <div class="author-header" onclick="this.parentElement.classList.toggle('active')">
-                            <div class="author-name">
-                                <span>${author}</span>
-                                <span class="author-badge">${authorBooks.length}</span>
-                            </div>
-                            <span>▾</span>
-                        </div>
-                        <div class="author-content">
+            filteredBooks.forEach(book => {
+                const tr = document.createElement('tr');
+                tr.className = "border-b hover:bg-gray-50";
+                tr.innerHTML = `
+                    <td class="py-3 px-4 font-medium text-gray-800">${escapeHtml(book.titolo)}</td>
+                    <td class="py-3 px-4 text-gray-600">${escapeHtml(book.autore)}</td>
+                    <td class="py-3 px-4 text-gray-600">${escapeHtml(book.isbn || '-')}</td>
+                    <td class="py-3 px-4 text-center text-gray-600">${book.copie}</td>
+                    <td class="py-3 px-4 text-gray-600">${escapeHtml(book.lettoDa || '-')}</td>
+                    <td class="py-3 px-4 text-center">
+                        <button onclick="editBook('${book.id}')" class="text-blue-600 hover:text-blue-800 mr-2"><i class="fas fa-edit"></i></button>
+                        <button onclick="deleteBook('${book.id}')" class="text-red-600 hover:text-red-800"><i class="fas fa-trash-alt"></i></button>
+                    </td>
                 `;
-
-                authorBooks.forEach(b => {
-                    let statusClass = "nessuno";
-                    let statusText = "Non letto";
-                    if (b.lettoDa === "Clo") { statusClass = "clo"; statusText = "Letto da Clo"; }
-                    else if (b.lettoDa === "Maki") { statusClass = "maki"; statusText = "Letto da Maki"; }
-                    else if (b.lettoDa === "Entrambi") { statusClass = "entrambi"; statusText = "Letto da Entrambi"; }
-
-                    html += `
-                        <div class="book-card">
-                            <div class="book-info">
-                                <h4>${b.titolo}</h4>
-                                <div class="book-tags">
-                                    <span class="read-status ${statusClass}">${statusText}</span>
-                                    ${b.copie > 1 ? `<span class="genre-tag">Copie: ${b.copie}</span>` : ''}
-                                </div>
-                            </div>
-                            <div class="book-actions">
-                                <button class="btn-edit" onclick="editBook('${b.id}')">Modifica</button>
-                                <button class="btn-delete" onclick="deleteBook('${b.id}')">Elimina</button>
-                            </div>
-                        </div>
-                    `;
-                });
-
-                html += `</div></div>`;
-            }
-
-            authorsList.innerHTML = html;
+                tbody.appendChild(tr);
+            });
         }
 
         function saveBook(event) {
@@ -1746,10 +1527,25 @@ function mostraNotificaPopUp(messaggio, tipo) {
                 books.push(newBook);
             }
 
+            // SALVA NEL LOCALSTORAGE
+            salvaSuLocalStorage();
+
             resetFormToCreate();
             renderAuthorsFilter();
             renderLibrary();
             toggleForm();
+        }
+
+        function deleteBook(id) {
+            if (confirm("Sei sicuro di voler eliminare questo libro?")) {
+                books = books.filter(b => b.id !== id);
+                
+                // SALVA NEL LOCALSTORAGE DOPO L'ELIMINAZIONE
+                salvaSuLocalStorage();
+
+                renderAuthorsFilter();
+                renderLibrary();
+            }
         }
 
         function editBook(id) {
@@ -1760,79 +1556,71 @@ function mostraNotificaPopUp(messaggio, tipo) {
             document.getElementById('titolo').value = book.titolo;
             document.getElementById('autore').value = book.autore;
             document.getElementById('isbn').value = book.isbn || '';
-            document.getElementById('copie').value = book.copie || 1;
-            document.getElementById('lettoDa').value = book.lettoDa || 'Nessuno';
+            document.getElementById('copie').value = book.copie;
+            document.getElementById('lettoDa').value = book.lettoDa || '';
 
             document.getElementById('formTitle').innerText = "Modifica Libro";
-            document.getElementById('submitBtn').innerText = "Aggiorna Libro";
-            document.getElementById('cancelEditBtn').style.display = "block";
-
-            document.getElementById('formCard').style.display = 'block';
-            document.getElementById('formCard').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function deleteBook(id) {
-            if (confirm("Sei sicuro di voler eliminare questo libro?")) {
-                books = books.filter(b => b.id !== id);
-                renderAuthorsFilter();
-                renderLibrary();
+            document.getElementById('submitBtnText').innerText = "Aggiorna Libro";
+            
+            const formContainer = document.getElementById('bookFormContainer');
+            if (formContainer.classList.contains('hidden')) {
+                toggleForm();
             }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function resetFormToCreate() {
             document.getElementById('bookForm').reset();
-            document.getElementById('editId').value = "";
-            document.getElementById('formTitle').innerText = "Aggiungi un Nuovo Libro";
-            document.getElementById('submitBtn').innerText = "Salva Libro";
-            document.getElementById('cancelEditBtn').style.display = "none";
+            document.getElementById('editId').value = '';
+            document.getElementById('formTitle').innerText = "Aggiungi Nuovo Libro";
+            document.getElementById('submitBtnText').innerText = "Salva Libro";
         }
 
-        function avviaScanner() {
-            const container = document.getElementById('reader-container');
-            container.style.display = 'block';
-            const html5QrCode = new Html5Qrcode("reader");
-            html5QrCode.start(
-                { facingMode: "environment" },
-                { fps: 10, qrbox: { width: 250, height: 150 } },
-                (decodedText) => {
-                    document.getElementById('isbn').value = decodedText;
-                    chiudiScanner();
-                },
-                (errorMessage) => {}
-            ).catch(err => {
-                alert("Impossibile avviare la fotocamera.");
-                chiudiScanner();
-            });
-            window.activeScanner = html5QrCode;
-        }
-
-        function chiudiScanner() {
-            if (window.activeScanner) {
-                window.activeScanner.stop().then(() => {
-                    document.getElementById('reader-container').style.display = 'none';
-                }).catch(() => {
-                    document.getElementById('reader-container').style.display = 'none';
-                });
+        function toggleForm() {
+            const container = document.getElementById('bookFormContainer');
+            container.classList.toggle('hidden');
+            if (!container.classList.contains('hidden')) {
+                document.getElementById('titolo').focus();
             } else {
-                document.getElementById('reader-container').style.display = 'none';
+                resetFormToCreate();
             }
         }
 
-        function cercaPerTitoloWeb() {
-            const titolo = document.getElementById('titolo').value;
-            if (!titolo) {
-                alert("Inserisci prima un titolo nel campo apposito.");
-                return;
-            }
-            window.open(`https://www.google.com/search?q=libro+${encodeURIComponent(titolo)}`, '_blank');
+        function renderAuthorsFilter() {
+            const select = document.getElementById('authorFilter');
+            const currentVal = select.value;
+            
+            // Estrai autori unici
+            const authors = [...new Set(books.map(b => b.autore))].sort();
+
+            select.innerHTML = '<option value="">Tutti gli autori</option>';
+            authors.forEach(author => {
+                const opt = document.createElement('option');
+                opt.value = author;
+                opt.textContent = author;
+                select.appendChild(opt);
+            });
+            select.value = currentVal;
         }
 
-        // Inizializzazione pagina
-        window.onload = function() {
+        function filterByAuthor() {
+            currentAuthorFilter = document.getElementById('authorFilter').value;
+            renderLibrary();
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;")
+                      .replace(/</g, "&lt;")
+                      .replace(/>/g, "&gt;")
+                      .replace(/"/g, "&quot;")
+                      .replace(/'/g, "&#039;");
+        }
+
+        // Avvio iniziale all'apertura della pagina
+        document.addEventListener('DOMContentLoaded', () => {
             renderAuthorsFilter();
             renderLibrary();
-        };
-        
+        });
     </script>
 </body>
 
