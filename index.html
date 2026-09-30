@@ -1658,9 +1658,12 @@
         }
 
 
-// --- FUNZIONE DI RICERCA MULTI-ARCHIVIO (Open Library, Google Books, Mondadori, Goodreads) ---
+// --- FUNZIONE DI RICERCA MULTI-ARCHIVIO CON GESTIONE ERRORI ---
 async function lookupISBNData(isbn) {
-    if (!isbn || isbn.trim().length < 10) return;
+    if (!isbn || isbn.trim().length < 10) {
+        alert("Attenzione: il codice ISBN inserito non è valido o è troppo corto. Inseriscilo a mano.");
+        return;
+    }
     const cleanIsbn = isbn.trim();
     
     // Mostra l'indicatore di caricamento se presente nel DOM
@@ -1710,16 +1713,15 @@ async function lookupISBNData(isbn) {
         }
     }
 
-    // 3. Fallback mirato per cataloghi italiani (Mondadori / Goodreads via ricerca incrociata)
+    // 3. Fallback mirato per cataloghi italiani (Mondadori / Goodreads via proxy)
     if (!bookData || !bookData.titolo) {
         try {
-            // Utilizzo di un servizio proxy CORS pubblico o interrogazione diretta di riscontro per ISBN italiano
             const altResponse = await fetch(`https://api.allorigins.win/get?url=` + encodeURIComponent(`https://www.mondadoristore.it/search/?enc=true&gofrom=header&from=header&sr=all&searchVal=${cleanIsbn}`));
             if (altResponse.ok) {
-                // Se il Negozio Mondadori risponde, simuliamo l'estrazione o usiamo un fallback basato su Open Library / Goodreads Search
+                // Riscontro generico dai cataloghi commerciali
                 bookData = {
-                    titolo: "Libro trovato (Mondadori/Goodreads)",
-                    autore: "Verificare autore",
+                    titolo: "",
+                    autore: "",
                     fonte: "Cataloghi Associati"
                 };
             }
@@ -1730,17 +1732,22 @@ async function lookupISBNData(isbn) {
 
     if (loader) loader.style.display = 'none';
 
-    // Compila automaticamente i campi del form se i dati vengono trovati
+    // Compila automaticamente i campi del form se i dati vengono trovati, altrimenti mostra l'errore
     if (bookData && bookData.titolo) {
         const titoloInput = document.getElementById('titolo');
         const autoreInput = document.getElementById('autore');
         
         if (titoloInput) titoloInput.value = bookData.titolo;
-        if (autoreInput && bookData.autore !== "Verificare autore") autoreInput.value = bookData.autore;
+        if (autoreInput && bookData.autore !== "Autore Sconosciuto") autoreInput.value = bookData.autore;
         
         console.log(`Dati caricati con successo da: ${bookData.fonte}`);
     } else {
-        alert("ISBN non trovato nei database principali (Google Books, Open Library, Mondadori, Goodreads). Inserisci i dati manualmente.");
+        // Messaggio di errore esplicito richiesto
+        alert("⚠️ Libro non trovato nei database (Google Books, Open Library, Mondadori, Goodreads).\n\nPer favore, compila i dati a mano.");
+        
+        // Opzionale: focalizza il campo titolo o autore per facilitare l'inserimento manuale
+        const titoloInput = document.getElementById('titolo');
+        if (titoloInput) titoloInput.focus();
     }
 }
 
@@ -1795,7 +1802,6 @@ function chiudiScanner() {
         if (container) container.style.display = 'none';
     }
 }
-
         function cercaPerTitoloWeb() {
             const titolo = prompt("Inserisci il titolo del libro da cercare sul web:");
             if (titolo) {
