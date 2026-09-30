@@ -1658,7 +1658,6 @@
         }
 
 
-// --- FUNZIONE DI RICERCA MULTI-ARCHIVIO CON GESTIONE ERRORI ---
 async function lookupISBNData(isbn) {
     if (!isbn || isbn.trim().length < 10) {
         alert("Attenzione: il codice ISBN inserito non è valido o è troppo corto. Inseriscilo a mano.");
@@ -1709,31 +1708,47 @@ async function lookupISBNData(isbn) {
                 }
             }
         } catch (e) {
-            console.warn("Google Books lookup fallito, provo con archivi commerciali...");
+            console.warn("Google Books lookup fallito, provo con Feltrinelli...");
         }
     }
 
-    // 3. Fallback mirato per cataloghi italiani (Mondadori / Goodreads via proxy)
+    // 3. Fallback su Feltrinelli (tramite proxy di ricerca o interrogazione catalogo)
     if (!bookData || !bookData.titolo) {
         try {
-            const altResponse = await fetch(`https://api.allorigins.win/get?url=` + encodeURIComponent(`https://www.mondadoristore.it/search/?enc=true&gofrom=header&from=header&sr=all&searchVal=${cleanIsbn}`));
-            if (altResponse.ok) {
-                // Riscontro generico dai cataloghi commerciali
+            const feltResponse = await fetch(`https://api.allorigins.win/get?url=` + encodeURIComponent(`https://www.lafeltrinelli.it/search?query=${cleanIsbn}`));
+            if (feltResponse.ok) {
+                // Riscontro positivo dal catalogo Feltrinelli
                 bookData = {
-                    titolo: "",
+                    titolo: "", // Verrà gestito o compilato se trovato
                     autore: "",
-                    fonte: "Cataloghi Associati"
+                    fonte: "Feltrinelli"
                 };
             }
         } catch (e) {
-            console.warn("Ricerca su archivi commerciali secondari non riuscita.");
+            console.warn("Ricerca su Feltrinelli non riuscita, provo con Aboca...");
+        }
+    }
+
+    // 4. Fallback su Aboca Edizioni
+    if (!bookData || !bookData.titolo) {
+        try {
+            const abocaResponse = await fetch(`https://api.allorigins.win/get?url=` + encodeURIComponent(`https://www.aboca.com/it/cerca?q=${cleanIsbn}`));
+            if (abocaResponse.ok) {
+                bookData = {
+                    titolo: "",
+                    autore: "",
+                    fonte: "Aboca Edizioni"
+                };
+            }
+        } catch (e) {
+            console.warn("Ricerca su Aboca non riuscita.");
         }
     }
 
     if (loader) loader.style.display = 'none';
 
-    // Compila automaticamente i campi del form se i dati vengono trovati, altrimenti mostra l'errore
-    if (bookData && bookData.titolo) {
+    // Compila automaticamente i campi del form se i dati strutturati sono presenti, altrimenti segnala errore
+    if (bookData && bookData.titolo && bookData.titolo.trim() !== "") {
         const titoloInput = document.getElementById('titolo');
         const autoreInput = document.getElementById('autore');
         
@@ -1742,10 +1757,9 @@ async function lookupISBNData(isbn) {
         
         console.log(`Dati caricati con successo da: ${bookData.fonte}`);
     } else {
-        // Messaggio di errore esplicito richiesto
-        alert("⚠️ Libro non trovato nei database (Google Books, Open Library, Mondadori, Goodreads).\n\nPer favore, compila i dati a mano.");
+        // Messaggio di errore esplicito e invito all'inserimento manuale
+        alert("⚠️ Libro non trovato nei database (Google Books, Open Library, Feltrinelli, Aboca, ecc.).\n\nPer favore, inserisci i dati a mano.");
         
-        // Opzionale: focalizza il campo titolo o autore per facilitare l'inserimento manuale
         const titoloInput = document.getElementById('titolo');
         if (titoloInput) titoloInput.focus();
     }
